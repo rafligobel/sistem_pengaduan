@@ -6,9 +6,9 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PublicComplaintController;
 use App\Http\Controllers\PublicStatusController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -20,6 +20,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+/*
+|--------------------------------------------------------------------------
+| BIARKAN INI. INI ADALAH ROUTE YANG BENAR UNTUK LANDING PAGE ANDA
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::prefix('lapor')->name('complaint.public.')->group(function () {
