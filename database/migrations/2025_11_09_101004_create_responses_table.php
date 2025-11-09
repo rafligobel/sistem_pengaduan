@@ -13,9 +13,18 @@ return new class extends Migration
     {
         Schema::create('responses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('complaint_id')->constrained('complaints');
-            $table->foreignId('user_id')->constrained('users'); // Petugas/Admin yg menjawab
-            $table->text('content');
+
+            // Relasi ke Complaint (Disempurnakan)
+            // onDelete('cascade') berarti jika pengaduan dihapus, tanggapannya ikut terhapus.
+            $table->foreignId('complaint_id')->constrained('complaints')->onDelete('cascade');
+
+            // Relasi ke User (Petugas) (Disempurnakan)
+            // onDelete('set null') berarti jika petugas dihapus, tanggapannya tetap ada
+            // tapi user_id nya jadi NULL.
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
+
+            $table->text('content'); // 'content' sudah benar
+
             $table->timestamps();
         });
     }

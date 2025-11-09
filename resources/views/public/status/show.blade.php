@@ -1,73 +1,101 @@
-<x-guest-layout>
-    <div class="w-full max-w-3xl mx-auto">
-        <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Detail Status Pengaduan</h2>
-        <p class_="text-center text-lg text-gray-600 dark:text-gray-300">Token: <code
-                class="font-mono font-bold">{{ $complaint->token }}</code></p>
+{{-- Menggunakan layout publik yang lebar, bukan guest-layout --}}
+<x-public-layout>
+    <x-slot name="header">
+        <h2 class="font-bold text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight">
+            Status Pengaduan Anda
+        </h2>
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+            Token: <code class="font-mono">{{ $complaint->token }}</code>
+        </span>
+    </x-slot>
 
-        <div class="mt-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-            <div class="px-6 py-4">
-                <div class="flex justify-between items-baseline">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ $complaint->title }}</h3>
-                    <span
-                        class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                        {{ $complaint->status }}
-                    </span>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Kategori: <strong>{{ $complaint->category->name }}</strong>
-                </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Dilaporkan oleh: <strong>{{ $complaint->nama_pelapor }}</strong> pada
-                    {{ $complaint->created_at->format('d F Y, H:i') }}
-                </p>
+    <div class="py-12">
+        {{-- Styling ini sengaja dibuat mirip dengan admin/show.blade.php untuk konsistensi --}}
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                <div class="mt-4 text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none">
-                    <p>{{ $complaint->content }}</p>
-                </div>
-
-                @if ($complaint->attachment)
-                    <div class="mt-4">
-                        <a href="{{ asset('storage/' . $complaint->attachment) }}" target="_blank"
-                            class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                            Lihat Lampiran
-                        </a>
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="mt-10">
-            <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white">Tanggapan Instansi</h3>
-
-            @forelse ($complaint->responses as $response)
-                <div class="mt-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                    <div class="px-6 py-4">
-                        <div class="flex justify-between items-baseline">
-                            <h4 class="text-lg font-bold text-gray-900 dark:text-white">
-                                Ditanggapi oleh: {{ $response->user->name }} (Petugas)
-                            </h4>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">
-                                {{ $response->created_at->diffForHumans() }}
+            {{-- Card Utama (Info Pengaduan) --}}
+            <div class="lg:col-span-2">
+                <div
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-2xl font-bold">{{ $complaint->title }}</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Kategori: {{ $complaint->category->name }}
+                                </p>
+                            </div>
+                            {{-- Status Badge (Konsisten) --}}
+                            <span @class([
+                                'text-xs font-medium px-2.5 py-0.5 rounded-full',
+                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' =>
+                                    $complaint->status == 'pending',
+                                'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' =>
+                                    $complaint->status == 'processed',
+                                'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' =>
+                                    $complaint->status == 'finished',
+                                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' =>
+                                    $complaint->status == 'rejected',
+                            ])>
+                                {{ $complaint->status }}
                             </span>
                         </div>
-                        <div class="mt-3 text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none">
-                            <p>{{ $response->content }}</p>
+
+                        <div class="border-t dark:border-gray-700 pt-4 mt-4">
+                            <dt class="font-medium text-gray-500 dark:text-gray-400 mb-2">Isi Pengaduan Anda</dt>
+                            <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
+                                <p>{!! nl2br(e($complaint->content)) !!}</p>
+                            </div>
+                        </div>
+
+                        @if ($complaint->attachment)
+                            <div class="border-t dark:border-gray-700 pt-4 mt-4">
+                                <dt class="font-medium text-gray-500 dark:text-gray-400 mb-2">Lampiran Anda</dt>
+                                <a href="{{ asset('storage/' . $complaint->attachment) }}" target="_blank"
+                                    class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                                    Lihat Lampiran
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            {{-- Sidebar (Riwayat Tanggapan) --}}
+            <div class="space-y-6">
+                <div
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
+                    <div class="p-6">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            Riwayat Tanggapan Petugas
+                        </h3>
+
+                        <div class="mt-4 space-y-4">
+                            @forelse ($complaint->responses as $response)
+                                <div class="p-4 border dark:border-gray-700 rounded-lg">
+                                    <div class="flex justify-between items-baseline">
+                                        <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                            {{ $response->user->name }} (Petugas)
+                                        </p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                                            {{ $response->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="mt-2 text-sm text-gray-600 dark:text-gray-300 prose dark:prose-invert max-w-none">
+                                        <p>{!! nl2br(e($response->content)) !!}</p>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Belum ada tanggapan dari petugas.
+                                </p>
+                            @endforelse
                         </div>
                     </div>
                 </div>
-            @empty
-                <div class="mt-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                    <div class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                        <p>Belum ada tanggapan dari instansi.</p>
-                    </div>
-                </div>
-            @endforelse
-        </div>
+            </div>
 
-        <div class="mt-8 text-center">
-            <a href="{{ route('status.index') }}" class="text-indigo-600 hover:text-indigo-800 text-sm">
-                &laquo; Cek token lain
-            </a>
         </div>
     </div>
-</x-guest-layout>
+</x-public-layout>

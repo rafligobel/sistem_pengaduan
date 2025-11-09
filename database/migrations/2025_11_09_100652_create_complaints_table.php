@@ -9,26 +9,29 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users'); // Dibuat nullable
-            $table->foreignId('category_id')->constrained('categories');
 
-            // === Kolom untuk Biodata (dari Step 1) ===
+            // Step 1: Biodata
             $table->string('nama_pelapor');
             $table->string('email_pelapor');
             $table->string('telepon_pelapor');
-            // Tambahkan biodata lain jika perlu (mis: NIK, Alamat)
 
-            // === Kolom untuk Pengaduan (dari Step 2) ===
+            // Step 2: Pengaduan
             $table->string('title');
-            $table->text('content');
-            $table->string('attachment')->nullable();
-            $table->enum('status', ['pending', 'processed', 'finished', 'rejected'])->default('pending');
-            // === Kolom untuk Pengecekan Status (Poin 3) ===
-            $table->string('token')->unique(); // Sangat penting
+            $table->text('content'); // 'content' sudah benar
+
+            // Relasi ke Kategori (Disempurnakan)
+            $table->foreignId('category_id')->constrained('categories');
+
+            $table->string('attachment')->nullable(); // Boleh kosong
+
+            $table->string('token')->unique(); // 'token' harus unik dan di-index
+
+            // 'status' dengan nilai default (Disempurnakan)
+            $table->string('status')->default('pending'); // pending, processed, finished, rejected
 
             $table->timestamps();
         });

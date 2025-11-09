@@ -13,12 +13,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Panggil seeder role dan permission
-        $this->call(RolesAndPermissionsSeeder::class); // <-- TAMBAHKAN INI
+        // Panggil Seeder Roles dan User Admin/Petugas
+        $this->call(RolesAndPermissionsSeeder::class);
 
-        // Anda bisa hapus atau biarkan seeder user default ini
+        // (Opsional) Seed data lain jika perlu,
+        // Misalnya, membuat kategori dummy
+        \App\Models\Category::factory()->create(['name' => 'Infrastruktur']);
+        \App\Models\Category::factory()->create(['name' => 'Pelayanan Publik']);
+        \App\Models\Category::factory()->create(['name' => 'Lingkungan']);
+
+        // (Opsional) Buat 10 user 'test'
         // User::factory(10)->create();
 
+        // (Opsional) Buat data 'test' untuk factory user
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',

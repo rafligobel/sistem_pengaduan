@@ -2,31 +2,49 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role; // <-- PERBAIKAN DI SINI
-use App\Models\User;                 // <-- PERBAIKAN DI SINI
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
-        // Buat role Admin
-        $adminRole = Role::create(['name' => 'admin']);
-        // Buat role lain
-        Role::create(['name' => 'petugas']);
-        Role::create(['name' => 'kepala_instansi']);
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Buat user admin default
+        // 1. Buat Roles sesuai kebutuhan di web.php
+        $roleAdmin = Role::create(['name' => 'admin']);
+        $rolePetugas = Role::create(['name' => 'petugas']);
+        $roleKepala = Role::create(['name' => 'kepala_instansi']);
+
+        // (Opsional) Buat Permissions jika Anda ingin lebih detail
+        // Contoh: Permission::create(['name' => 'tanggapi pengaduan']);
+        // $rolePetugas->givePermissionTo('tanggapi pengaduan');
+        // $roleAdmin->givePermissionTo('tanggapi pengaduan');
+        // $roleAdmin->givePermissionTo('manage users');
+
+        // 2. Buat User Admin Default
         $adminUser = User::create([
-            'name' => 'Admin Sistem',
+            'name' => 'Admin',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password')
+            'password' => Hash::make('password'), // Ganti 'password' dengan password aman
         ]);
-        // Berikan role 'admin' ke user tersebut
-        $adminUser->assignRole($adminRole);
+
+        // 3. Tetapkan role 'admin' ke user tersebut
+        $adminUser->assignRole($roleAdmin);
+
+        // (Opsional) Buat User Petugas Default
+        $petugasUser = User::create([
+            'name' => 'Petugas',
+            'email' => 'petugas@example.com',
+            'password' => Hash::make('password'),
+        ]);
+        $petugasUser->assignRole($rolePetugas);
     }
 }

@@ -7,25 +7,38 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreBiodataRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Tentukan apakah user boleh membuat request ini.
+     * Karena ini form publik, kita set true.
      */
     public function authorize(): bool
     {
-        return true; // Izinkan semua (publik)
+        return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Ambil aturan validasi yang berlaku untuk request ini.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'nik' => 'required|string|digits:16', // Asumsi NIK 16 digit
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'nama_pelapor' => 'required|string|max:255',
+            'email_pelapor' => 'required|string|email|max:255',
+            // Penyempurnaan: Validasi nomor telepon yang lebih baik
+            'telepon_pelapor' => 'required|string|regex:/^[0-9]+$/|min:10|max:15',
+        ];
+    }
+
+    /**
+     * Pesan kustom untuk validasi (Opsional namun disarankan)
+     */
+    public function messages(): array
+    {
+        return [
+            'telepon_pelapor.regex' => 'Nomor telepon hanya boleh berisi angka.',
+            'telepon_pelapor.min' => 'Nomor telepon minimal 10 digit.',
+            'telepon_pelapor.max' => 'Nomor telepon maksimal 15 digit.',
         ];
     }
 }

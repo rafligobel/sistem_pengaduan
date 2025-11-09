@@ -1,15 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Detail Pengaduan: {{ $complaint->title }}
+        <h2 class="font-bold text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight">
+            Detail Pengaduan
         </h2>
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+            {{ $complaint->title }}
+        </span>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
+            {{-- Card Utama (Info Pengaduan) --}}
             <div class="lg:col-span-2">
-                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                <div
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <div class="flex justify-between items-start mb-4">
                             <div>
@@ -60,7 +65,8 @@
                         <div class="border-t dark:border-gray-700 pt-4">
                             <dt class="font-medium text-gray-500 dark:text-gray-400 mb-2">Isi Pengaduan</dt>
                             <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
-                                <p>{{ $complaint->content }}</p>
+                                {{-- Menggunakan nl2br() agar baris baru dari textarea tetap tampil --}}
+                                <p>{!! nl2br(e($complaint->content)) !!}</p>
                             </div>
                         </div>
 
@@ -77,8 +83,11 @@
                 </div>
             </div>
 
+            {{-- Sidebar (Form Tanggapan & Riwayat) --}}
             <div class="space-y-6">
-                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                {{-- Card Form Tanggapan --}}
+                <div
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
                     <form method="POST" action="{{ route('admin.complaints.respond', $complaint) }}">
                         @csrf
                         <div class="p-6">
@@ -86,7 +95,7 @@
                                 Berikan Tanggapan
                             </h3>
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                Tanggapan Anda akan terlihat oleh pelapor di halaman Cek Status.
+                                Tanggapan Anda akan terlihat oleh pelapor.
                             </p>
 
                             @if (session('success'))
@@ -124,7 +133,9 @@
                     </form>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                {{-- Card Riwayat Tanggapan --}}
+                <div
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                             Riwayat Tanggapan
@@ -143,7 +154,8 @@
                                     </div>
                                     <div
                                         class="mt-2 text-sm text-gray-600 dark:text-gray-300 prose dark:prose-invert max-w-none">
-                                        <p>{{ $response->content }}</p>
+                                        {{-- Menggunakan nl2br() agar baris baru tetap tampil --}}
+                                        <p>{!! nl2br(e($response->content)) !!}</p>
                                     </div>
                                 </div>
                             @empty

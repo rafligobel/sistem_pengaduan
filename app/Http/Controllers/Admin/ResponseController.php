@@ -4,29 +4,30 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreResponseRequest; // 1. Import Request baru
 
 class ResponseController extends Controller
 {
     /**
      * Simpan tanggapan baru ke database.
      */
-    public function store(Request $request, Complaint $complaint)
+    // 2. Ganti 'Request $request' menjadi 'StoreResponseRequest $request'
+    public function store(StoreResponseRequest $request, Complaint $complaint)
     {
-        $request->validate([
-            'content' => 'required|string', // UBAH INI
-            'status' => 'required|in:pending,processed,finished,rejected', // Sesuaikan dengan Poin 5
-        ]);
+        // 3. Tidak perlu $request->validate() lagi!
+
+        // Data sudah 100% tervalidasi di sini
+        $validatedData = $request->validated();
 
         // Buat tanggapan baru
         $complaint->responses()->create([
             'user_id' => Auth::id(),
-            'content' => $request->content, // UBAH INI
+            'content' => $validatedData['content'], // 4. Ambil dari data valid
         ]);
 
         // Update status pengaduan
-        $complaint->update(['status' => $request->status]);
+        $complaint->update(['status' => $validatedData['status']]);
 
         // Kembali ke halaman detail dengan pesan sukses
         return redirect()->route('admin.complaints.show', $complaint)

@@ -1,74 +1,36 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+{{-- Menggunakan layout publik baru kita --}}
+<x-public-layout>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sistem Pengaduan Masyarakat</title>
+    {{-- Hero Section (Bagian Utama Landing Page) --}}
+    <div class="bg-white dark:bg-gray-800 shadow-lg sm:rounded-lg max-w-7xl mx-auto sm:px-6 lg:px-8 my-12">
+        <div class="p-12 sm:p-20 text-center">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">
+                Sistem Pengaduan Masyarakat
+            </h1>
+            <p class="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Laporkan masalah, keluhan, atau aspirasi Anda dengan mudah, aman, dan transparan. Kami siap menanggapi.
+            </p>
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body class="font-sans antialiased">
-    <div class="relative min-h-screen bg-gray-100 dark:bg-gray-900">
-        <div class="p-6 text-right">
-            @auth
-                <a href="{{ route('admin.complaints.index') }}"
-                    class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard
-                    Admin</a>
-            @else
-                <a href="{{ route('login') }}"
-                    class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Login</a>
-
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}"
-                        class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
-                @endif
-            @endauth
-        </div>
-
-        <div class="max-w-7xl mx-auto p-6 lg:p-8">
-            <div class="flex justify-center">
-                <x-application-logo class="w-20 h-20" />
-            </div>
-
-            <div class="mt-8 text-center">
-                <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
-                    Sistem Informasi Pengaduan
-                </h1>
-                <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                    Sampaikan laporan Anda langsung kepada kami.
-                </p>
-            </div>
-
-            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                <a href="{{ route('complaint.public.step1.create') }}"
-                    class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250">
-                    <div>
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Lakukan Pengaduan</h2>
-                        <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            Klik di sini untuk memulai proses pelaporan baru. Kami akan memandu Anda langkah demi
-                            langkah.
-                        </p>
-                    </div>
+            {{-- Tombol Call to Action (CTA) --}}
+            <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a href="{{ route('complaint.public.step1.create') }}">
+                    <x-primary-button class="w-full sm:w-auto !py-3 !px-8 !text-base">
+                        <svg class="w-5 h-5 me-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12.572l-4.5-4.5" />
+                        </svg>
+                        Buat Laporan Sekarang
+                    </x-primary-button>
                 </a>
-
-                <a href="{{ route('status.index') }}"
-                    class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250">
-                    <div>
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Cek Status Pengaduan</h2>
-                        <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            Sudah membuat laporan? Masukkan token unik Anda untuk melihat status dan tanggapan dari
-                            kami.
-                        </p>
-                    </div>
+                <a href="{{ route('status.index') }}">
+                    <x-secondary-button class="w-full sm:w-auto !py-3 !px-8 !text-base">
+                        Cek Status Laporan Anda
+                    </x-secondary-button>
                 </a>
             </div>
         </div>
     </div>
-</body>
 
-</html>
+</x-public-layout>
