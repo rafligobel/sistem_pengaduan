@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PublicComplaintController;
 use App\Http\Controllers\PublicStatusController;
+use App\Http\Controllers\Admin\ComplaintController;
+use App\Http\Controllers\Admin\ResponseController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -44,10 +46,9 @@ Route::prefix('lapor')->name('complaint.public.')->group(function () {
 
 Route::middleware(['auth', 'role:admin|petugas|kepala_instansi'])->prefix('admin')->name('admin.')->group(function () {
     // Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    // Route::get('/complaints', [AdminComplaintController::class, 'index'])->name('complaints.index');
-    // Route::get('/complaints/{complaint}', [AdminComplaintController::class, 'show'])->name('complaints.show');
-    // Route::post('/complaints/{complaint}/respond', [AdminResponseController::class, 'store'])->name('complaints.respond');
-
+    Route::get('/complaints', [ComplaintController::class, 'index'])->name('complaints.index');
+    Route::get('/complaints/{complaint}', [ComplaintController::class, 'show'])->name('complaints.show');
+    Route::post('/complaints/{complaint}/respond', [ResponseController::class, 'store'])->name('complaints.respond');
     // Manajemen User & Role (hanya untuk admin)
     // Route::resource('/users', UserController::class)->middleware('role:admin');
 });

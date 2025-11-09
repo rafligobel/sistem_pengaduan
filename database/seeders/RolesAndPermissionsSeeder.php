@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Role; // <-- INI YANG HILANG
+use App\Models\User;                 // <-- INI JUGA PENTING
 
 class RolesAndPermissionsSeeder extends Seeder
 {
