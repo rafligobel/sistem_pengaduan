@@ -36,6 +36,19 @@ Route::prefix('lapor')->name('complaint.public.')->group(function () {
 });
 
 
+
+Route::middleware(['auth', 'role:admin|petugas|kepala_instansi'])->prefix('admin')->name('admin.')->group(function () {
+    // Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/complaints', [AdminComplaintController::class, 'index'])->name('complaints.index');
+    // Route::get('/complaints/{complaint}', [AdminComplaintController::class, 'show'])->name('complaints.show');
+    // Route::post('/complaints/{complaint}/respond', [AdminResponseController::class, 'store'])->name('complaints.respond');
+
+    // Manajemen User & Role (hanya untuk admin)
+    // Route::resource('/users', UserController::class)->middleware('role:admin');
+});
+
+
+
 Route::get('/cek-status', [PublicStatusController::class, 'index'])->name('status.index');
 Route::post('/cek-status', [PublicStatusController::class, 'check'])->name('status.check');
 Route::get('/status/{token}', [PublicStatusController::class, 'show'])->name('status.show');
