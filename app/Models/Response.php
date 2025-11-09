@@ -11,8 +11,8 @@ class Response extends Model
 
     protected $fillable = [
         'complaint_id',
-        'user_id', // Admin/Petugas yang menjawab
-        'body',    // Isi tanggapan
+        'user_id',
+        'content', // Sesuaikan dengan migrasi
     ];
 
     /**

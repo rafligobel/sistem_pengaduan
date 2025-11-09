@@ -7,6 +7,7 @@ use App\Http\Controllers\PublicComplaintController;
 use App\Http\Controllers\PublicStatusController;
 use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\ResponseController;
+use App\Http\Controllers\Admin\UserController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -50,7 +51,7 @@ Route::middleware(['auth', 'role:admin|petugas|kepala_instansi'])->prefix('admin
     Route::get('/complaints/{complaint}', [ComplaintController::class, 'show'])->name('complaints.show');
     Route::post('/complaints/{complaint}/respond', [ResponseController::class, 'store'])->name('complaints.respond');
     // Manajemen User & Role (hanya untuk admin)
-    // Route::resource('/users', UserController::class)->middleware('role:admin');
+    Route::resource('/users', UserController::class)->middleware('role:admin');
 });
 
 

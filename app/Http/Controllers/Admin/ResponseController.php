@@ -15,14 +15,14 @@ class ResponseController extends Controller
     public function store(Request $request, Complaint $complaint)
     {
         $request->validate([
-            'body' => 'required|string',
-            'status' => 'required|in:pending,processed,finished',
+            'content' => 'required|string', // UBAH INI
+            'status' => 'required|in:pending,processed,finished,rejected', // Sesuaikan dengan Poin 5
         ]);
 
         // Buat tanggapan baru
         $complaint->responses()->create([
-            'user_id' => Auth::id(), // ID admin/petugas yang sedang login
-            'body' => $request->body,
+            'user_id' => Auth::id(),
+            'content' => $request->content, // UBAH INI
         ]);
 
         // Update status pengaduan

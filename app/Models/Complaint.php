@@ -14,18 +14,18 @@ class Complaint extends Model
      */
     protected $fillable = [
         // Kolom dari Step 1 (Biodata)
-        'name',     // Sesuaikan nama kolom
-        'nik',      // Sesuaikan nama kolom
-        'email',
-        'phone',
+        'nama_pelapor',
+        'email_pelapor',
+        'telepon_pelapor',
         // Kolom dari Step 2 (Pengaduan)
         'title',
-        'description',
+        'content', // Sesuaikan dengan migrasi
         'category_id',
         'attachment',
         'token',
-        'status', // Tambahkan ini jika perlu (misal: 'pending', 'processed', 'finished')
-    ];
+        'status',
+        // 'user_id' juga bisa ditambahkan jika Anda ingin mengaitkannya
+    ];  
 
     /**
      * Relasi ke Category

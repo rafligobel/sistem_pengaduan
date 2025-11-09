@@ -26,8 +26,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             $table->string('attachment')->nullable();
-            $table->enum('status', ['pending', 'processing', 'completed', 'rejected'])->default('pending');
-
+            $table->enum('status', ['pending', 'processed', 'finished', 'rejected'])->default('pending');
             // === Kolom untuk Pengecekan Status (Poin 3) ===
             $table->string('token')->unique(); // Sangat penting
 
