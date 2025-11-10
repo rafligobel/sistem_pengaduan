@@ -1,3 +1,17 @@
+/* app.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .tombol-utama {
+    @apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md;
+  }
+  .tombol-utama:hover {
+    @apply bg-blue-700;
+  }
+
+  .tombol-bahaya {
+    @apply py-2 px-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700;
+  }
+}

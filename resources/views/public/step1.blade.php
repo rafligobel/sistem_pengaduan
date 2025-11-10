@@ -32,7 +32,7 @@
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                Lanjut ke Langkah 2
+                Selanjutnya
             </x-primary-button>
         </div>
     </form>

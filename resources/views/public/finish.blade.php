@@ -15,7 +15,7 @@
 
     <div class="text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
-            Silakan simpan token berikut untuk mengecek status pengaduan Anda:
+            Silakan simpan token berikut untuk pengecekan status pengaduan Anda:
         </p>
 
         {{-- Styling untuk Token agar menonjol --}}
