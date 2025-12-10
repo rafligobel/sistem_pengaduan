@@ -37,10 +37,19 @@
                 </a>
             @endif
 
-            {{-- Tombol ini sudah otomatis premium --}}
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
             </x-primary-button>
+        </div>
+
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                Belum punya akun?
+                <a href="{{ route('register') }}"
+                    class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+                    Daftar Sekarang
+                </a>
+            </p>
         </div>
     </form>
 </x-guest-layout>

@@ -1,39 +1,57 @@
-<x-guest-layout>
-    <div class="mb-4 text-center">
-        <h2 class="text-2xl font-bold">Langkah 1: Biodata Pelapor</h2>
-        <p class="text-sm text-gray-600">Silakan isi data diri Anda dengan benar.</p>
-    </div>
+<x-public-layout>
+    <section class="popular" id="pengaduan">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="h2 section-title">Formulir Pengaduan</h2>
+                <p class="section-text">
+                    Langkah 1 dari 2: Isi detail laporan Anda.
+                </p>
+            </div>
 
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+            <div class="card shadow-lg" style="border-radius: 15px; overflow: hidden; max-width: 800px; margin: 0 auto;">
+                <div class="card-body p-5">
+                    <form action="{{ route('complaint.public.step1.store') }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
 
-    <form method="POST" action="{{ route('complaint.public.step1.post') }}">
-        @csrf
+                        <div class="form-group mb-4">
+                            <label class="font-weight-bold text-dark mb-2">Judul Laporan</label>
+                            <input type="text" name="title" class="form-control p-3"
+                                placeholder="Contoh: Jalan Rusak di..." required value="{{ old('title') }}">
+                            @error('title')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
+                        </div>
 
-        <div>
-            <x-input-label for="nama_pelapor" value="Nama Lengkap" />
-            <x-text-input id="nama_pelapor" class="block mt-1 w-full" type="text" name="nama_pelapor" :value="old('nama_pelapor', $biodata['nama_pelapor'] ?? '')"
-                required autofocus />
-            <x-input-error :messages="$errors->get('nama_pelapor')" class="mt-2" />
+                        <div class="form-group mb-4">
+                            <label class="font-weight-bold text-dark mb-2">Kategori</label>
+                            <select name="category_id" class="form-control p-3" style="height: 50px;" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                @foreach ($categories as $cat)
+                                    <option value="{{ $cat->id }}"
+                                        {{ old('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="font-weight-bold text-dark mb-2">Isi Laporan Lengkap</label>
+                            <textarea name="content" class="form-control p-3" rows="6"
+                                placeholder="Jelaskan kronologi kejadian secara detail..." required>{{ old('content') }}</textarea>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="font-weight-bold text-dark mb-2">Bukti Foto (Opsional)</label>
+                            <input type="file" name="image" class="form-control-file border p-2 w-100"
+                                style="border-radius: 5px;">
+                            <small class="text-muted">Format: JPG, PNG. Maks: 2MB.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg mt-4">Lanjut ke Review</button>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="mt-4">
-            <x-input-label for="email_pelapor" value="Email" />
-            <x-text-input id="email_pelapor" class="block mt-1 w-full" type="email" name="email_pelapor"
-                :value="old('email_pelapor', $biodata['email_pelapor'] ?? '')" required />
-            <x-input-error :messages="$errors->get('email_pelapor')" class="mt-2" />
-        </div>
-
-        <div class="mt-4">
-            <x-input-label for="telepon_pelapor" value="Nomor Telepon (WA)" />
-            <x-text-input id="telepon_pelapor" class="block mt-1 w-full" type="text" name="telepon_pelapor"
-                :value="old('telepon_pelapor', $biodata['telepon_pelapor'] ?? '')" required />
-            <x-input-error :messages="$errors->get('telepon_pelapor')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                Selanjutnya
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </section>
+</x-public-layout>

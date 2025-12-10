@@ -14,23 +14,28 @@ return new class extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
 
-            // Step 1: Biodata
-            $table->string('nama_pelapor');
-            $table->string('email_pelapor');
-            $table->string('telepon_pelapor');
+            // --- TAMBAHAN PENTING (RELASI USER) ---
+            // Ini wajib ada agar relasi $user->complaints bisa berjalan
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            // -------------------------------------
+
+            // Data pelapor manual (opsional jika sudah ada user_id, tapi bisa disimpan untuk backup)
+            // Saya buat nullable agar tidak error jika data diambil dari user login
+            $table->string('nama_pelapor')->nullable();
+            $table->string('email_pelapor')->nullable();
+            $table->string('telepon_pelapor')->nullable();
 
             // Step 2: Pengaduan
             $table->string('title');
-            $table->text('content'); // 'content' sudah benar
+            $table->text('content');
 
-            // Relasi ke Kategori (Disempurnakan)
+            // Relasi ke Kategori
             $table->foreignId('category_id')->constrained('categories');
 
-            $table->string('attachment')->nullable(); // Boleh kosong
+            $table->string('attachment')->nullable();
 
-            $table->string('token')->unique(); // 'token' harus unik dan di-index
+            $table->string('token')->unique();
 
-            // 'status' dengan nilai default (Disempurnakan)
             $table->string('status')->default('pending'); // pending, processed, finished, rejected
 
             $table->timestamps();

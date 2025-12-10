@@ -2,67 +2,122 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\StoreBiodataRequest;
-use App\Http\Requests\StoreComplaintDataRequest;
 use App\Models\Complaint;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PublicComplaintController extends Controller
 {
-    // Tampilkan Form Step 1 (Biodata)
-    public function createStep1(Request $request)
+    /**
+     * TAHAP 1: Form Input Data
+     */
+    public function createStep1()
     {
-        $biodata = $request->session()->get('biodata', []);
-        return view('public.step1', compact('biodata'));
+        // Mengambil semua kategori untuk dropdown
+        $categories = Category::all();
+        return view('public.step1', compact('categories'));
     }
 
-    // Simpan Step 1 ke Session
-    public function postStep1(StoreBiodataRequest $request)
+    /**
+     * PROSES TAHAP 1: Validasi & Simpan ke Sesi Sementara
+     */
+    public function storeStep1(Request $request)
     {
-        $request->session()->put('biodata', $request->validated());
+        // 1. Validasi Input
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // 2. Simpan Gambar Sementara (jika ada)
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('temp-complaints', 'public');
+            session(['complaint_image' => $path]);
+        }
+
+        // 3. Simpan Data Teks ke Sesi
+        session([
+            'complaint_data' => [
+                'title' => $validated['title'],
+                'category_id' => $validated['category_id'],
+                'content' => $validated['content'],
+            ]
+        ]);
+
+        // 4. Lanjut ke Tahap 2
         return redirect()->route('complaint.public.step2.create');
     }
 
-    // Tampilkan Form Step 2 (Pengaduan)
-    public function createStep2(Request $request)
+    /**
+     * TAHAP 2: Review & Konfirmasi
+     */
+    public function createStep2()
     {
-        if (!$request->session()->has('biodata')) {
+        // Ambil data dari sesi
+        $data = session('complaint_data');
+        $image = session('complaint_image');
+
+        if (!$data) {
             return redirect()->route('complaint.public.step1.create');
         }
-        $categories = Category::all();
-        return view('public.step2', compact('categories'));
+
+        // Ambil nama kategori untuk ditampilkan
+        $category = Category::find($data['category_id']);
+
+        return view('public.step2', compact('data', 'category', 'image'));
     }
 
-    // Simpan Semua (Step 2) ke Database
-    public function store(StoreComplaintDataRequest $request)
+    /**
+     * PROSES FINAL: Simpan ke Database
+     */
+    public function store()
     {
-        $biodata = $request->session()->get('biodata');
-        $complaintData = $request->validated();
+        $data = session('complaint_data');
+        $tempImage = session('complaint_image');
 
-        // Handle file upload
-        if ($request->hasFile('attachment')) {
-            $complaintData['attachment'] = $request->file('attachment')->store('attachments', 'public');
+        if (!$data) {
+            return redirect()->route('complaint.public.step1.create');
         }
 
-        // Gabungkan data
-        $fullData = array_merge($biodata, $complaintData);
+        // Generate ID Tiket Unik (Contoh: TIKET-20241010-XYZ)
+        $ticketId = 'TIKET-' . date('Ymd') . '-' . strtoupper(Str::random(4));
 
-        // Buat Token Unik
-        $fullData['token'] = Str::upper(Str::random(10));
+        // Pindahkan gambar dari temp ke folder asli (jika ada)
+        $finalImagePath = null;
+        if ($tempImage) {
+            $finalImagePath = 'complaints/' . basename($tempImage);
+            Storage::disk('public')->move($tempImage, $finalImagePath);
+        }
 
-        $complaint = Complaint::create($fullData);
+        // Simpan ke Database
+        $complaint = Complaint::create([
+            'user_id' => Auth::id(),
+            'ticket_id' => $ticketId,
+            'category_id' => $data['category_id'],
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'image' => $finalImagePath,
+            'status' => 'pending', // Status awal
+        ]);
 
-        // Hapus session
-        $request->session()->forget('biodata');
+        // Hapus sesi
+        session()->forget(['complaint_data', 'complaint_image']);
 
-        return redirect()->route('complaint.public.finish', ['token' => $complaint->token]);
+        // Redirect ke halaman Sukses
+        return redirect()->route('complaint.public.finish', $complaint->ticket_id);
     }
 
-    // Tampilkan Halaman Selesai (Step 3)
+    /**
+     * TAHAP 3: Selesai / Tampilkan Tiket
+     */
     public function finish($token)
     {
-        return view('public.finish', compact('token'));
+        $complaint = Complaint::where('ticket_id', $token)->firstOrFail();
+        return view('public.finish', compact('complaint'));
     }
 }

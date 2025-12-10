@@ -1,42 +1,29 @@
-<x-guest-layout>
-    <div class="mb-4 text-center">
-        {{-- Menambahkan ikon sukses untuk visual yang lebih baik --}}
-        <svg class="mx-auto h-12 w-12 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+<x-public-layout>
+    <section class="popular" style="min-height: 80vh; display: flex; align-items: center;">
+        <div class="container text-center">
 
-        <h2 class="mt-4 text-2xl font-bold text-gray-900 dark:text-gray-100">Pengaduan Berhasil Terkirim</h2>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Terima kasih, pengaduan Anda telah kami catat.
-        </p>
-    </div>
+            <div class="card shadow-lg border-0" style="max-width: 600px; margin: 0 auto; border-radius: 20px;">
+                <div class="card-body p-5">
+                    <div style="font-size: 4rem; color: #28a745;" class="mb-3">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    </div>
 
-    <div class="text-center">
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-            Silakan simpan token berikut untuk pengecekan status pengaduan Anda:
-        </p>
+                    <h2 class="h2 text-dark">Laporan Terkirim!</h2>
+                    <p class="text-muted mb-4">Terima kasih telah melapor. Identitas Anda aman.</p>
 
-        {{-- Styling untuk Token agar menonjol --}}
-        <div class="my-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-            <code class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 tracking-widest">
-                {{ $token }}
-            </code>
+                    <div class="alert alert-primary py-4" role="alert" style="border-radius: 10px;">
+                        <p class="mb-2 font-weight-bold">Nomor Tiket Anda:</p>
+                        <h1 class="display-4 font-weight-bold text-primary m-0">{{ $complaint->ticket_id }}</h1>
+                        <small>Simpan nomor ini untuk mengecek status laporan.</small>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{{ route('status.index') }}" class="btn btn-outline-primary mr-2">Cek Status</a>
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary">Ke Dashboard Saya</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <p class="text-xs text-gray-500 dark:text-gray-500">
-            PENTING: Jangan berikan token ini kepada siapa pun.
-        </p>
-    </div>
-
-    <div class="flex items-center justify-between mt-6">
-        <a class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150"
-            href="{{ route('landing') }}">
-            &laquo; Ke Beranda
-        </a>
-        <x-primary-button onclick="location.href='{{ route('status.index') }}'">
-            Cek Status Sekarang
-        </x-primary-button>
-    </div>
-</x-guest-layout>
+    </section>
+</x-public-layout>
