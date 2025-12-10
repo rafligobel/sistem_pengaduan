@@ -18,33 +18,37 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Buat Roles sesuai kebutuhan di web.php
+        // 1. Buat Roles
         $roleAdmin = Role::create(['name' => 'admin']);
         $rolePetugas = Role::create(['name' => 'petugas']);
         $roleKepala = Role::create(['name' => 'kepala_instansi']);
 
-        // (Opsional) Buat Permissions jika Anda ingin lebih detail
-        // Contoh: Permission::create(['name' => 'tanggapi pengaduan']);
-        // $rolePetugas->givePermissionTo('tanggapi pengaduan');
-        // $roleAdmin->givePermissionTo('tanggapi pengaduan');
-        // $roleAdmin->givePermissionTo('manage users');
+        // --- TAMBAHAN PENTING ---
+        $roleMasyarakat = Role::create(['name' => 'masyarakat']);
+        // ------------------------
 
         // 2. Buat User Admin Default
         $adminUser = User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
-            'password' => Hash::make('password'), // Ganti 'password' dengan password aman
+            'password' => Hash::make('password'),
         ]);
-
-        // 3. Tetapkan role 'admin' ke user tersebut
         $adminUser->assignRole($roleAdmin);
 
-        // (Opsional) Buat User Petugas Default
+        // 3. Buat User Petugas Default
         $petugasUser = User::create([
             'name' => 'Petugas',
             'email' => 'petugas@example.com',
             'password' => Hash::make('password'),
         ]);
         $petugasUser->assignRole($rolePetugas);
+
+        // 4. Buat User Masyarakat Default (Opsional, untuk tes)
+        $wargaUser = User::create([
+            'name' => 'Masyarakat Contoh',
+            'email' => 'warga@example.com',
+            'password' => Hash::make('password'),
+        ]);
+        $wargaUser->assignRole($roleMasyarakat);
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\ResponseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,10 +26,9 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 // 2. DASHBOARD USER
 // Halaman dashboard untuk masyarakat yang sudah login
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 // 3. FITUR PENGADUAN (HANYA USER LOGIN)
 // Middleware 'auth' memastikan hanya pengguna terautentikasi yang bisa akses
 Route::middleware('auth')->prefix('lapor')->name('complaint.public.')->group(function () {

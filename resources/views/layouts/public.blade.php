@@ -5,12 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whistle Blowing System - Inspektorat Kota Gorontalo</title>
+    <title>Whistle Blowing System - Inspektorat</title>
 
     <link rel="shortcut icon" href="{{ asset('images/logo-kota1.png') }}" type="image/x-icon">
+
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap-grid.min.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,46 +18,36 @@
         rel="stylesheet">
 
     <style>
-        /* Custom style untuk form agar serasi dengan tema */
-        .form-section {
-            padding: 100px 0;
-            background-color: #f8f9fa;
+        header.header {
+            z-index: 9999;
         }
 
-        .form-card {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-control {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        select {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
 
-        .btn-submit {
-            background: var(--majorelle-blue);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
+        .btn-primary {
+            background-color: #0d2481 !important;
+            color: white !important;
         }
 
-        .btn-submit:hover {
-            background: var(--ocean-blue);
+        .btn-secondary {
+            background-color: #f0f0f0 !important;
+            color: #333 !important;
         }
 
-        .step-indicator {
-            margin-bottom: 30px;
-            color: var(--majorelle-blue);
-            font-weight: 700;
+        .btn-danger-custom {
+            background-color: #dc3545 !important;
+            color: white !important;
         }
     </style>
 </head>
@@ -69,7 +58,7 @@
         <div class="overlay" data-overlay></div>
         <div class="header-top">
             <div class="container">
-                <a href="#" class="text">
+                <a href="{{ route('landing') }}" class="text">
                     <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo Kota" style="height: 50px;">
                 </a>
                 <div class="header-btn-group">
@@ -79,24 +68,41 @@
                 </div>
             </div>
         </div>
+
         <div class="header-bottom">
             <div class="container">
                 <nav class="navbar" data-navbar>
                     <div class="navbar-top">
-                        <a href="#" class="logo">
+                        <a href="{{ route('landing') }}" class="logo">
                             <img src="{{ asset('images/logo-blue.svg') }}" alt="Inspektorat logo">
                         </a>
                         <button class="nav-close-btn" aria-label="Close Menu" data-nav-close-btn>
                             <ion-icon name="close-outline"></ion-icon>
                         </button>
                     </div>
+
                     <ul class="navbar-list">
-                        <li><a href="{{ url('/') }}" class="navbar-link">Home</a></li>
-                        <li><a href="{{ route('complaint.check') }}" class="navbar-link">Cek Status</a></li>
+                        <li><a href="{{ route('landing') }}" class="navbar-link">Home</a></li>
+                        <li><a href="{{ route('landing') }}#about" class="navbar-link">Tentang Kami</a></li>
+                        <li><a href="{{ route('landing') }}#contact" class="navbar-link">Hubungi Kami</a></li>
+
                         @auth
-                            <li><a href="{{ url('/dashboard') }}" class="btn btn-primary">Dashboard</a></li>
+                            <li>
+                                <a href="{{ route('dashboard') }}" class="btn btn-primary"
+                                    style="padding: 8px 20px; border-radius: 20px; margin-right: 5px;">Dashboard</a>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger-custom"
+                                        style="padding: 8px 20px; border-radius: 20px; cursor: pointer;">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
                         @else
-                            <li><a href="{{ route('login') }}" class="btn btn-secondary">Login</a></li>
+                            <li><a href="{{ route('login') }}" class="btn btn-secondary"
+                                    style="padding: 10px 20px; border-radius: 20px;">Login</a></li>
                         @endauth
                     </ul>
                 </nav>
@@ -106,7 +112,7 @@
 
     <main>
         <article>
-            @yield('content')
+            {{ $slot }}
         </article>
     </main>
 
@@ -114,17 +120,16 @@
         <div class="footer-top">
             <div class="container">
                 <div class="footer-brand">
-                    <a href="#" class="logo"><img src="{{ asset('images/test.png') }}"
-                            alt="Inspektorat logo"></a>
-                    <p class="footer-text">Website Resmi dari Inspektorat Kota Gorontalo.</p>
+                    <a href="#" class="logo">
+                        <img src="{{ asset('images/test.png') }}" alt="Inspektorat logo">
+                    </a>
+                    <p class="footer-text">Whistle Blowing System Inspektorat Kota Gorontalo.</p>
                 </div>
                 <div class="footer-contact">
                     <h4 class="contact-title">Contact Us</h4>
                     <ul>
-                        <li class="contact-item"><ion-icon name="call-outline"></ion-icon><a href="tel:+6282349656594"
-                                class="contact-link">+62823-49-6565-94</a></li>
-                        <li class="contact-item"><ion-icon name="location-outline"></ion-icon>
-                            <address>Jl. Achmad Nadjamuddin No 11 Wumialo Kota Gorontalo</address>
+                        <li class="contact-item"><ion-icon name="call-outline"></ion-icon> +62823-49-6565-94</li>
+                        <li class="contact-item"><ion-icon name="mail-outline"></ion-icon> inspektoratgtlo@gmail.com
                         </li>
                     </ul>
                 </div>
@@ -132,15 +137,15 @@
         </div>
         <div class="footer-bottom">
             <div class="copyright-container">
-                <p class="copyright">© {{ date('Y') }} Inspektorat Kota Gorontalo. All rights reserved</p>
+                <p class="copyright">&copy; {{ date('Y') }} Inspektorat Kota Gorontalo.</p>
             </div>
         </div>
     </footer>
 
-    <a href="#top" class="go-top" data-go-top><ion-icon name="chevron-up-outline"></ion-icon></a>
     <script src="{{ asset('js/script1.js') }}"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
 </body>
 
 </html>

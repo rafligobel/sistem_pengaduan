@@ -1,117 +1,73 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Pengaduan Saya') }}
-        </h2>
-    </x-slot>
+<x-public-layout>
+    <section class="popular" style="padding-top: 150px; min-height: 80vh;">
+        <div class="container">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <div class="mb-6 flex justify-end">
-                <a href="{{ route('complaint.public.step1.create') }}"
-                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                    + Buat Laporan Baru
-                </a>
+            <div class="text-center mb-5" style="margin-bottom: 40px;">
+                <h2 class="h2 section-title" style="color: #0d2481;">Dashboard Pengaduan</h2>
+                <p class="section-text">
+                    Selamat datang, <strong>{{ Auth::user()->name }}</strong>!
+                </p>
             </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            <div class="card"
+                style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
 
-                    @if (Auth::user()->complaints->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full leading-normal">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            ID Tiket
-                                        </th>
-                                        <th
-                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Judul Laporan
-                                        </th>
-                                        <th
-                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Tanggal
-                                        </th>
-                                        <th
-                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Status
-                                        </th>
-                                        <th
-                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Aksi
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (Auth::user()->complaints as $complaint)
-                                        <tr>
-                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                                <p class="text-gray-900 whitespace-no-wrap font-bold">
-                                                    {{ $complaint->ticket_id }}</p>
-                                            </td>
-                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    {{ Str::limit($complaint->title, 40) }}</p>
-                                            </td>
-                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    {{ $complaint->created_at->format('d M Y') }}</p>
-                                            </td>
-                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                                @if ($complaint->status == 'pending')
-                                                    <span
-                                                        class="relative inline-block px-3 py-1 font-semibold text-yellow-900 leading-tight">
-                                                        <span aria-hidden
-                                                            class="absolute inset-0 bg-yellow-200 opacity-50 rounded-full"></span>
-                                                        <span class="relative">Pending</span>
-                                                    </span>
-                                                @elseif($complaint->status == 'proses')
-                                                    <span
-                                                        class="relative inline-block px-3 py-1 font-semibold text-blue-900 leading-tight">
-                                                        <span aria-hidden
-                                                            class="absolute inset-0 bg-blue-200 opacity-50 rounded-full"></span>
-                                                        <span class="relative">Diproses</span>
-                                                    </span>
-                                                @elseif($complaint->status == 'selesai')
-                                                    <span
-                                                        class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                                        <span aria-hidden
-                                                            class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                                        <span class="relative">Selesai</span>
-                                                    </span>
-                                                @else
-                                                    <span
-                                                        class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-                                                        <span aria-hidden
-                                                            class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                                                        <span class="relative">Ditolak</span>
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                                <a href="{{ route('complaint.public.finish', $complaint->ticket_id) }}"
-                                                    class="text-blue-600 hover:text-blue-900">Detail</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-10">
-                            <p class="text-gray-500 mb-4">Anda belum memiliki riwayat pengaduan.</p>
-                            <a href="{{ route('complaint.public.step1.create') }}"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Buat Pengaduan Sekarang
-                            </a>
-                        </div>
-                    @endif
-
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h3 class="h3" style="color: #0d2481;">Daftar Laporan Saya</h3>
+                    <a href="{{ route('complaint.public.step1.create') }}" class="btn btn-primary">
+                        + Buat Laporan Baru
+                    </a>
                 </div>
+
+                @if (Auth::user()->complaints && Auth::user()->complaints->count() > 0)
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #f8f9fa; border-bottom: 2px solid #eee;">
+                                    <th style="padding: 15px; text-align: left; color: #555;">ID Tiket</th>
+                                    <th style="padding: 15px; text-align: left; color: #555;">Judul</th>
+                                    <th style="padding: 15px; text-align: left; color: #555;">Tanggal</th>
+                                    <th style="padding: 15px; text-align: left; color: #555;">Status</th>
+                                    <th style="padding: 15px; text-align: left; color: #555;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Auth::user()->complaints as $complaint)
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 15px; font-weight: bold; color: #0d2481;">
+                                            {{ $complaint->ticket_id }}</td>
+                                        <td style="padding: 15px;">{{ Str::limit($complaint->title, 30) }}</td>
+                                        <td style="padding: 15px;">{{ $complaint->created_at->format('d M Y') }}</td>
+                                        <td style="padding: 15px;">
+                                            @if ($complaint->status == 'pending')
+                                                <span
+                                                    style="background: #ffc107; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold;">Menunggu</span>
+                                            @elseif($complaint->status == 'proses')
+                                                <span
+                                                    style="background: #17a2b8; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold;">Proses</span>
+                                            @elseif($complaint->status == 'selesai')
+                                                <span
+                                                    style="background: #28a745; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold;">Selesai</span>
+                                            @else
+                                                <span
+                                                    style="background: #dc3545; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold;">Ditolak</span>
+                                            @endif
+                                        </td>
+                                        <td style="padding: 15px;">
+                                            <a href="{{ route('complaint.public.finish', $complaint->ticket_id) }}"
+                                                style="color: #0d2481; text-decoration: underline; font-weight: 600;">Lihat</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div style="text-align: center; padding: 40px; background: #f9f9f9; border-radius: 10px;">
+                        <p style="color: #888;">Anda belum memiliki riwayat pengaduan.</p>
+                    </div>
+                @endif
             </div>
         </div>
-    </div>
-</x-app-layout>
+    </section>
+</x-public-layout>

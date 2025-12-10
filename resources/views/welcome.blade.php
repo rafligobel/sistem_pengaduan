@@ -68,8 +68,12 @@
                                 </li>
                             @else
                                 <li>
-                                    <a href="{{ route('login') }}" class="btn btn-secondary">Login</a>
+                                    <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
                                 </li>
+                                <li><a href="{{ route('register') }}"
+                                        class="btn btn-secondary font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+                                        Daftar Sekarang
+                                    </a></li>
                             @endauth
                         @endif
                     </ul>
