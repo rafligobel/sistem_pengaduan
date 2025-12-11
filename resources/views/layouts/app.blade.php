@@ -15,12 +15,15 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    {{-- MODIFIKASI: Mengganti bg-gray-100 menjadi bg-slate-50 (lebih bersih/kebiruan) --}}
+    <div class="min-h-screen bg-slate-50 dark:bg-slate-900">
         {{-- Kita muat navigasi yang sudah disempurnakan --}}
         @include('layouts.navigation')
 
         @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
+            {{-- MODIFIKASI: Header transparan dengan backdrop blur --}}
+            <header
+                class="bg-white/80 backdrop-blur-md dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-16 z-10">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>

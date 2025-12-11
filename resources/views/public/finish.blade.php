@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-app-layout>
     <section class="popular" style="min-height: 80vh; display: flex; align-items: center;">
         <div class="container text-center">
 
@@ -26,4 +26,4 @@
 
         </div>
     </section>
-</x-public-layout>
+</x-app-layout>

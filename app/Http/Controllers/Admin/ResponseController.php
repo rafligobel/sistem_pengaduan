@@ -4,33 +4,34 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
+use App\Models\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreResponseRequest; // 1. Import Request baru
 
 class ResponseController extends Controller
 {
     /**
-     * Simpan tanggapan baru ke database.
+     * Simpan Tanggapan Baru
      */
-    // 2. Ganti 'Request $request' menjadi 'StoreResponseRequest $request'
-    public function store(StoreResponseRequest $request, Complaint $complaint)
+    public function store(Request $request, Complaint $complaint)
     {
-        // 3. Tidak perlu $request->validate() lagi!
-
-        // Data sudah 100% tervalidasi di sini
-        $validatedData = $request->validated();
-
-        // Buat tanggapan baru
-        $complaint->responses()->create([
-            'user_id' => Auth::id(),
-            'content' => $validatedData['content'], // 4. Ambil dari data valid
+        $request->validate([
+            'content' => 'required|string',
+            'status' => 'required|in:pending,proses,selesai,ditolak' // Opsional: sekalian update status
         ]);
 
-        // Update status pengaduan
-        $complaint->update(['status' => $validatedData['status']]);
+        // 1. Buat Tanggapan
+        Response::create([
+            'complaint_id' => $complaint->id,
+            'user_id' => Auth::id(), // ID Petugas yang login
+            'content' => $request->content,
+        ]);
 
-        // Kembali ke halaman detail dengan pesan sukses
-        return redirect()->route('admin.complaints.show', $complaint)
-            ->with('success', 'Tanggapan berhasil dikirim!');
+        // 2. Update Status Pengaduan (Otomatis saat menanggapi)
+        $complaint->update([
+            'status' => $request->status
+        ]);
+
+        return back()->with('success', 'Tanggapan berhasil dikirim dan status diperbarui.');
     }
 }

@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-app-layout>
     <section class="popular">
         <div class="container">
             <div class="text-center mb-5">
@@ -50,4 +50,4 @@
             </div>
         </div>
     </section>
-</x-public-layout>
+</x-app-layout>

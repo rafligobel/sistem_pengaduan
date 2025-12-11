@@ -8,39 +8,63 @@ use App\Models\Complaint;
 use App\Models\User;
 use App\Models\Category;
 
+
 class DashboardController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
 
-        // 1. DASHBOARD ADMIN
+        // -----------------------------------------------------------
+        // 1. DASHBOARD ADMIN (Pusat Kontrol)
+        // -----------------------------------------------------------
         if ($user->hasRole('admin')) {
-            // Siapkan data statistik untuk admin
+            // Data Statistik Lengkap
             $stats = [
-                'complaints_total' => Complaint::count(),
+                'complaints_total'   => Complaint::count(),
                 'complaints_pending' => Complaint::where('status', 'pending')->count(),
-                'complaints_process' => Complaint::where('status', 'proses')->count(),
-                'users_count' => User::role('masyarakat')->count(),
-                'categories_count' => Category::count(),
+                'users_count'        => User::role('masyarakat')->count(),
+                'categories_count'   => Category::count(),
             ];
-            return view('admin.dashboard', compact('stats'));
+
+            // Mengambil 5 pengaduan terbaru untuk tabel aktivitas
+            // Pastikan model Complaint memiliki relasi 'user' dan 'category'
+            $latestComplaints = Complaint::with(['user', 'category'])
+                ->latest()
+                ->take(5)
+                ->get();
+
+            // Return ke view khusus Admin
+            return view('admin.dashboard', compact('stats', 'latestComplaints'));
         }
 
-        // 2. DASHBOARD INSPEKTUR / PETUGAS
+        // -----------------------------------------------------------
+        // 2. DASHBOARD INSPEKTUR / PETUGAS (Fokus Kerja)
+        // -----------------------------------------------------------
         elseif ($user->hasRole('petugas')) {
-            // Petugas hanya fokus ke pengaduan
+            // Statistik Status Laporan
             $stats = [
-                'pending' => Complaint::where('status', 'pending')->count(),
-                'process' => Complaint::where('status', 'proses')->count(),
+                'pending'  => Complaint::where('status', 'pending')->count(),
+                'process'  => Complaint::where('status', 'proses')->count(),
                 'finished' => Complaint::where('status', 'selesai')->count(),
             ];
-            return view('petugas.dashboard', compact('stats'));
+
+            // Petugas butuh melihat laporan 'pending' atau 'proses' untuk ditindaklanjuti
+            $needResponse = Complaint::whereIn('status', ['pending', 'proses'])
+                ->with('user') // Eager load user pelapor
+                ->orderBy('created_at', 'asc') // Prioritaskan yang paling lama menunggu
+                ->take(5)
+                ->get();
+
+            // Return ke view khusus Petugas
+            return view('petugas.dashboard', compact('stats', 'needResponse'));
         }
 
-        // 3. DASHBOARD PENGGUNA (MASYARAKAT)
+        // -----------------------------------------------------------
+        // 3. DASHBOARD PENGGUNA / MASYARAKAT
+        // -----------------------------------------------------------
         else {
-            // View ini adalah file dashboard.blade.php yang sudah kita perbaiki sebelumnya
+            // Masyarakat langsung melihat dashboard default
             return view('dashboard');
         }
     }

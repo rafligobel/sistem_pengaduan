@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-app-layout>
     <section class="popular" id="pengaduan" style="padding-top: 150px;">
         <div class="container">
             <div class="text-center mb-5" style="margin-bottom: 3rem; text-align: center;">
@@ -45,4 +45,4 @@
             </div>
         </div>
     </section>
-</x-public-layout>
+</x-app-layout>

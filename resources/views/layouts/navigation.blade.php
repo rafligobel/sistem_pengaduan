@@ -1,16 +1,21 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+{{-- MODIFIKASI: Navigasi Sticky dengan efek Glassmorphism (Slate Theme) --}}
+<nav x-data="{ open: false }"
+    class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
+                {{-- Logo Aplikasi --}}
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <x-application-logo class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
                     </a>
                 </div>
 
+                {{-- MENU DESKTOP --}}
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
+                    {{-- 1. DASHBOARD (Semua Role) --}}
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{-- Ikon Dashboard --}}
                         <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -19,17 +24,30 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    {{-- LINK PENGADUAN --}}
-                    <x-nav-link :href="route('admin.complaints.index')" :active="request()->routeIs('admin.complaints.*')">
-                        <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-9.75c-.621 0-1.125-.504-1.125-1.125V6.375c0-.621.504-1.125 1.125-1.125H9.75" />
-                        </svg>
-                        {{ __('Pengaduan') }}
-                    </x-nav-link>
+                    {{-- 2. MENU KHUSUS MASYARAKAT --}}
+                    @role('masyarakat')
+                        <x-nav-link :href="route('complaint.public.step1.create')" :active="request()->routeIs('complaint.public.*')">
+                            <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            {{ __('Buat Pengaduan') }}
+                        </x-nav-link>
+                    @endrole
 
-                    {{-- PENYEMPURNAAN: LINK KATEGORI (Hanya Admin) --}}
+                    {{-- 3. MENU KHUSUS ADMIN & PETUGAS (Inspektur) --}}
+                    @hasanyrole('admin|petugas')
+                        <x-nav-link :href="route('admin.complaints.index')" :active="request()->routeIs('admin.complaints.*')">
+                            <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                            </svg>
+                            {{ __('Pengaduan Masuk') }}
+                        </x-nav-link>
+                    @endhasanyrole
+
+                    {{-- 4. MENU KHUSUS ADMIN SAJA --}}
                     @role('admin')
                         <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
                             <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -40,10 +58,7 @@
                             </svg>
                             {{ __('Kategori') }}
                         </x-nav-link>
-                    @endrole
 
-                    {{-- LINK MANAJEMEN USER (Hanya Admin) --}}
-                    @role('admin')
                         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                             <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor">
@@ -56,12 +71,18 @@
                 </div>
             </div>
 
+            {{-- Settings Dropdown --}}
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-slate-500 dark:text-slate-400 bg-white/50 dark:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-300 focus:outline-none transition ease-in-out duration-150">
+                            <div class="flex flex-col items-end">
+                                <span>{{ Auth::user()->name }}</span>
+                                <span class="text-xs text-slate-400 font-normal">
+                                    {{ Auth::user()->roles->pluck('name')->first() ?? 'User' }}
+                                </span>
+                            </div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
@@ -81,8 +102,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
@@ -90,9 +110,10 @@
                 </x-dropdown>
             </div>
 
+            {{-- Hamburger (Mobile) --}}
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                    class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 focus:outline-none focus:bg-slate-100 dark:focus:bg-slate-900 focus:text-slate-500 dark:focus:text-slate-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -105,33 +126,40 @@
         </div>
     </div>
 
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+    {{-- MENU MOBILE --}}
+    <div :class="{ 'block': open, 'hidden': !open }"
+        class="hidden sm:hidden bg-white dark:bg-slate-800 border-b border-slate-200">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.complaints.index')" :active="request()->routeIs('admin.complaints.*')">
-                {{ __('Pengaduan') }}
-            </x-responsive-nav-link>
 
-            {{-- PENYEMPURNAAN: LINK KATEGORI (RESPONSIVE) --}}
+            @role('masyarakat')
+                <x-responsive-nav-link :href="route('complaint.public.step1.create')" :active="request()->routeIs('complaint.public.*')">
+                    {{ __('Buat Pengaduan') }}
+                </x-responsive-nav-link>
+            @endrole
+
+            @hasanyrole('admin|petugas')
+                <x-responsive-nav-link :href="route('admin.complaints.index')" :active="request()->routeIs('admin.complaints.*')">
+                    {{ __('Pengaduan Masuk') }}
+                </x-responsive-nav-link>
+            @endhasanyrole
+
             @role('admin')
                 <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
                     {{ __('Kategori') }}
                 </x-responsive-nav-link>
-            @endrole
-
-            @role('admin')
                 <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                     {{ __('Manajemen User') }}
                 </x-responsive-nav-link>
             @endrole
         </div>
 
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+        <div class="pt-4 pb-1 border-t border-slate-200 dark:border-slate-600">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-slate-800 dark:text-slate-200">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-slate-500">{{ Auth::user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">
@@ -142,8 +170,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                        onclick="event.preventDefault(); this.closest('form').submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>
