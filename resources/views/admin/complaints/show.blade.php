@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight">
+        <h2 class="font-bold text-2xl text-black-900 dark:text-gray-100 leading-tight tracking-tight">
             Detail Pengaduan
         </h2>
         <span class="text-sm text-gray-500 dark:text-gray-400">

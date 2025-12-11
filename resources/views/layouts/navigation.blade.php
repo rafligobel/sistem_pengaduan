@@ -1,6 +1,6 @@
-{{-- MODIFIKASI: Navigasi Sticky dengan efek Glassmorphism (Slate Theme) --}}
+{{-- MODIFIKASI: Navigasi Sticky dengan efek Glassmorphism (Slate Theme Unified) --}}
 <nav x-data="{ open: false }"
-    class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+    class="sticky top-0 z-50 bg-white/80 backdrop-blur-md dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700 shadow-sm transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -128,7 +128,7 @@
 
     {{-- MENU MOBILE --}}
     <div :class="{ 'block': open, 'hidden': !open }"
-        class="hidden sm:hidden bg-white dark:bg-slate-800 border-b border-slate-200">
+        class="hidden sm:hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}

@@ -1,30 +1,36 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight">
-            Edit Kategori: {{ $category->name }}
+        <h2 class="font-bold text-2xl text-slate-800 dark:text-slate-200 leading-tight tracking-tight">
+            {{ __('Edit Kategori') }}: <span class="text-indigo-600 dark:text-indigo-400">{{ $category->name }}</span>
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
-                <div class="p-4 sm:p-8">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            {{-- Card Style Konsisten --}}
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm sm:rounded-lg">
+                <div class="p-6 sm:p-8">
                     <form method="POST" action="{{ route('admin.categories.update', $category) }}" class="space-y-6">
                         @csrf
-                        @method('PUT') {{-- Method PUT untuk update --}}
+                        @method('PUT')
 
                         <div>
-                            <x-input-label for="name" value="Nama Kategori" />
-                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
+                            <x-input-label for="name" :value="__('Nama Kategori')" class="text-slate-700 dark:text-slate-300" />
+                            <x-text-input id="name" name="name" type="text"
+                                class="mt-1 block w-full border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 :value="old('name', $category->name)" required autofocus />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Perbarui') }}</x-primary-button>
+                        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
                             <a href="{{ route('admin.categories.index') }}">
-                                <x-secondary-button type="button">{{ __('Batal') }}</x-secondary-button>
+                                <x-secondary-button type="button" class="border-slate-300 text-slate-700 hover:bg-slate-50">
+                                    {{ __('Batal') }}
+                                </x-secondary-button>
                             </a>
+                            <x-primary-button class="bg-slate-800 hover:bg-slate-700 focus:bg-slate-700 active:bg-slate-900">
+                                {{ __('Perbarui Data') }}
+                            </x-primary-button>
                         </div>
                     </form>
                 </div>

@@ -21,9 +21,9 @@
         @include('layouts.navigation')
 
         @if (isset($header))
-            {{-- MODIFIKASI: Header transparan dengan backdrop blur --}}
+            {{-- MODIFIKASI: Header transparan dengan backdrop blur & Z-index diatur dibawah Navigasi --}}
             <header
-                class="bg-white/80 backdrop-blur-md dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-16 z-10">
+                class="bg-white/80 backdrop-blur-md dark:bg-slate-800/90 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-16 z-40 transition-colors duration-200">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
