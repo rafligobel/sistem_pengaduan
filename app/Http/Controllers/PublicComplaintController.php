@@ -16,7 +16,6 @@ class PublicComplaintController extends Controller
      */
     public function createStep1()
     {
-        // Mengambil semua kategori untuk dropdown
         $categories = Category::all();
         return view('public.step1', compact('categories'));
     }
@@ -26,7 +25,6 @@ class PublicComplaintController extends Controller
      */
     public function storeStep1(Request $request)
     {
-        // 1. Validasi Input
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -34,13 +32,11 @@ class PublicComplaintController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // 2. Simpan Gambar Sementara (jika ada)
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('temp-complaints', 'public');
             session(['complaint_image' => $path]);
         }
 
-        // 3. Simpan Data Teks ke Sesi
         session([
             'complaint_data' => [
                 'title' => $validated['title'],
@@ -49,7 +45,6 @@ class PublicComplaintController extends Controller
             ]
         ]);
 
-        // 4. Lanjut ke Tahap 2
         return redirect()->route('complaint.public.step2.create');
     }
 
@@ -58,7 +53,6 @@ class PublicComplaintController extends Controller
      */
     public function createStep2()
     {
-        // Ambil data dari sesi
         $data = session('complaint_data');
         $image = session('complaint_image');
 
@@ -66,7 +60,6 @@ class PublicComplaintController extends Controller
             return redirect()->route('complaint.public.step1.create');
         }
 
-        // Ambil nama kategori untuk ditampilkan
         $category = Category::find($data['category_id']);
 
         return view('public.step2', compact('data', 'category', 'image'));
@@ -84,10 +77,8 @@ class PublicComplaintController extends Controller
             return redirect()->route('complaint.public.step1.create');
         }
 
-        // Generate ID Tiket Unik (Contoh: TIKET-20241010-XYZ)
-        $ticketId = 'TIKET-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+        $ticketCode = 'TIKET-' . date('Ymd') . '-' . strtoupper(Str::random(4));
 
-        // Pindahkan gambar dari temp ke folder asli (jika ada)
         $finalImagePath = null;
         if ($tempImage) {
             $finalImagePath = 'complaints/' . basename($tempImage);
@@ -97,19 +88,23 @@ class PublicComplaintController extends Controller
         // Simpan ke Database
         $complaint = Complaint::create([
             'user_id' => Auth::id(),
-            'ticket_id' => $ticketId,
+            'token' => $ticketCode,
             'category_id' => $data['category_id'],
             'title' => $data['title'],
             'content' => $data['content'],
-            'image' => $finalImagePath,
-            'status' => 'pending', // Status awal
+            
+            // PERBAIKAN DISINI: Gunakan 'attachment' sesuai nama kolom di database
+            'attachment' => $finalImagePath, 
+            
+            'status' => 'pending',
+            'nama_pelapor' => null,
+            'email_pelapor' => null,
+            'telepon_pelapor' => null,
         ]);
 
-        // Hapus sesi
         session()->forget(['complaint_data', 'complaint_image']);
 
-        // Redirect ke halaman Sukses
-        return redirect()->route('complaint.public.finish', $complaint->ticket_id);
+        return redirect()->route('complaint.public.finish', $complaint->token);
     }
 
     /**
@@ -117,7 +112,7 @@ class PublicComplaintController extends Controller
      */
     public function finish($token)
     {
-        $complaint = Complaint::where('ticket_id', $token)->firstOrFail();
+        $complaint = Complaint::where('token', $token)->firstOrFail();
         return view('public.finish', compact('complaint'));
     }
 }

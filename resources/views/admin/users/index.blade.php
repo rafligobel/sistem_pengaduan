@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-bold text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight">
+            <h2 class="font-bold text-2xl text-black-900 dark:text-black-100 leading-tight tracking-tight">
                 Manajemen User
             </h2>
             {{-- Tombol Tambah User Baru --}}
@@ -22,7 +22,7 @@
             {{-- Card premium yang konsisten --}}
             <div
                 class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden shadow-lg sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="p-6 text-black-900 dark:text-black-100">
 
                     {{-- Pesan Sukses/Error --}}
                     @if (session('success'))
@@ -37,9 +37,9 @@
                     @endif
 
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <table class="w-full text-sm text-left text-black-500 dark:text-black-400">
                             <thead
-                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                class="text-xs text-black-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-black-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">Nama</th>
                                     <th scope="col" class="px-6 py-3">Email</th>
@@ -52,7 +52,7 @@
                                     <tr
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                         <th scope="row"
-                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="px-6 py-4 font-medium text-black-900 whitespace-nowrap dark:text-white">
                                             {{ $user->name }}
                                         </th>
                                         <td class="px-6 py-4">

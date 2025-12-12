@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-bold text-2xl text-slate-800 dark:text-slate-200 leading-tight tracking-tight">
-            {{ __('Edit Kategori') }}: <span class="text-indigo-600 dark:text-indigo-400">{{ $category->name }}</span>
+            {{ __('Edit Kategori') }}: <span class="text-blue-600 dark:text-blue-400">{{ $category->name }}</span>
         </h2>
     </x-slot>
 
@@ -28,7 +28,7 @@
                                     {{ __('Batal') }}
                                 </x-secondary-button>
                             </a>
-                            <x-primary-button class="bg-slate-800 hover:bg-slate-700 focus:bg-slate-700 active:bg-slate-900">
+                            <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
                                 {{ __('Perbarui Data') }}
                             </x-primary-button>
                         </div>

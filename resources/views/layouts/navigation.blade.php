@@ -7,12 +7,20 @@
                 {{-- Logo Aplikasi --}}
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                        <x-application-logo class="block h-9 w-auto fill-current text-black dark:text-black" />
                     </a>
                 </div>
 
                 {{-- MENU DESKTOP --}}
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
+                    {{-- 0. HOME (Public) --}}
+                    <x-nav-link :href="route('landing')" :active="request()->routeIs('landing')">
+                        <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                        </svg>
+                        {{ __('Home') }}
+                    </x-nav-link>
 
                     {{-- 1. DASHBOARD (Semua Role) --}}
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -73,18 +81,19 @@
 
             {{-- Settings Dropdown --}}
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
+                {{-- Dropdown dengan background putih di semua mode (contentClasses) --}}
+                <x-dropdown align="right" width="48" contentClasses="py-1 bg-white">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-slate-500 dark:text-slate-400 bg-white/50 light:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-300 focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4  rounded-md text-black bg-white hover:text-slate-700 focus:outline-none transition ease-in-out duration-150">
                             <div class="flex flex-col items-end">
-                                <span>{{ Auth::user()->name }}</span>
-                                <span class="text-xs text-slate-400 font-normal">
+                                <span class="font-bold">{{ Auth::user()->name }}</span>
+                                <span class="text-xs text-slate-500 font-normal">
                                     {{ Auth::user()->roles->pluck('name')->first() ?? 'User' }}
                                 </span>
                             </div>
                             <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                <svg class="fill-current h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -95,13 +104,13 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                        <x-dropdown-link :href="route('profile.edit')" class="text-slate-700 hover:bg-slate-50 hover:text-slate-900">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <x-dropdown-link :href="route('logout')"
+                            <x-dropdown-link :href="route('logout')" class="text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                                 onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
@@ -130,6 +139,10 @@
     <div :class="{ 'block': open, 'hidden': !open }"
         class="hidden sm:hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700">
         <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('landing')" :active="request()->routeIs('landing')">
+                {{ __('Home') }}
+            </x-responsive-nav-link>
+
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
@@ -158,8 +171,8 @@
 
         <div class="pt-4 pb-1 border-t border-slate-200 dark:border-slate-600">
             <div class="px-4">
-                <div class="font-medium text-base text-slate-800 dark:text-slate-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-slate-500">{{ Auth::user()->email }}</div>
+                <div class="font-bold text-base text-black dark:text-black">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-slate-600 dark:text-slate-400">{{ Auth::user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">

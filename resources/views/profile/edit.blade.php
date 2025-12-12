@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         {{-- Konsistensi Header --}}
-        <h2 class="font-bold text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight">
+        <h2 class="font-bold text-2xl text-black-900 dark:text-black-100 leading-tight tracking-tight">
             {{ __('Profile') }}
         </h2>
     </x-slot>

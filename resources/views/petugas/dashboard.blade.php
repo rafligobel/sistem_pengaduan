@@ -73,18 +73,17 @@
             </div>
 
             {{-- Action Banner --}}
-            <div
-                class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl shadow-lg p-6 sm:p-10 text-white relative overflow-hidden">
+            <div class="bg-white border border-slate-200 rounded-xl shadow-lg p-6 sm:p-10 text-slate-900 relative overflow-hidden">
                 <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div>
-                        <h3 class="text-2xl font-bold mb-2">Tindak Lanjuti Laporan</h3>
-                        <p class="text-slate-300 max-w-xl">
+                        <h3 class="text-2xl font-bold mb-2 text-slate-900">Tindak Lanjuti Laporan</h3>
+                        <p class="text-slate-600 max-w-xl leading-relaxed">
                             Ada laporan masyarakat yang menunggu verifikasi atau tindak lanjut. Segera proses untuk
                             menjaga kepuasan pelayanan publik.
                         </p>
                     </div>
                     <a href="{{ route('admin.complaints.index') }}"
-                        class="px-6 py-3 bg-white text-slate-900 font-bold rounded-lg hover:bg-slate-100 transition shadow-md flex items-center">
+                        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 flex items-center whitespace-nowrap">
                         Buka Daftar Pengaduan
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -93,12 +92,9 @@
                     </a>
                 </div>
 
-                {{-- Decorative blobs --}}
-                <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-blue-500 opacity-10 rounded-full blur-3xl">
-                </div>
+                {{-- Decorative background elements --}}
+                <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-slate-50 opacity-50 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-blue-50 opacity-50 rounded-full blur-3xl"></div>
             </div>
 
         </div>

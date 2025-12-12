@@ -31,7 +31,7 @@
                 <div
                     class="p-6 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-white">Daftar Laporan Saya</h3>
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-black">Daftar Laporan Saya</h3>
                         <p class="text-sm text-slate-500 dark:text-slate-400">Kelola dan pantau status tiket Anda.</p>
                     </div>
 
@@ -67,9 +67,10 @@
                                         <tr
                                             class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-150">
                                             <td class="px-6 py-4 font-mono font-bold text-blue-600">
-                                                #{{ $complaint->ticket_id }}
+                                                {{-- PERBAIKAN: ticket_id diganti menjadi token --}}
+                                                #{{ $complaint->token }}
                                             </td>
-                                            <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">
+                                            <td class="px-6 py-4 font-medium text-slate-900 dark:text-black">
                                                 {{ Str::limit($complaint->title, 40) }}
                                             </td>
                                             <td class="px-6 py-4 text-slate-500">
@@ -99,7 +100,8 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 text-center">
-                                                <a href="{{ route('complaint.public.finish', $complaint->ticket_id) }}"
+                                                {{-- PERBAIKAN: ticket_id diganti menjadi token --}}
+                                                <a href="{{ route('complaint.public.finish', $complaint->token) }}"
                                                     class="text-blue-600 hover:text-blue-800 font-semibold text-xs uppercase tracking-wide border border-blue-200 hover:border-blue-400 px-3 py-1 rounded-md transition">
                                                     Detail
                                                 </a>

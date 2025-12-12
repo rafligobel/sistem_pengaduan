@@ -32,7 +32,7 @@
                                 </x-secondary-button>
                             </a>
                             <x-primary-button
-                                class="bg-slate-800 hover:bg-slate-700 focus:bg-slate-700 active:bg-slate-900">
+                                class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
                                 {{ __('Simpan Kategori') }}
                             </x-primary-button>
                         </div>

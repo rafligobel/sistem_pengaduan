@@ -120,7 +120,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 {{-- Banner Utama (Warna Biru Tua Kontras untuk Header) --}}
-                <div class="lg:col-span-2 bg-slate-900 rounded-xl p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-8 text-slate-900 shadow-xl relative overflow-hidden">
                     <div class="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10">
                         <svg class="w-72 h-72" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -129,14 +129,14 @@
                         </svg>
                     </div>
                     <div class="relative z-10">
-                        <h3 class="text-2xl font-bold mb-3">Pusat Pengaduan Masyarakat</h3>
-                        <p class="text-slate-200 mb-8 text-base leading-relaxed max-w-lg">
+                        <h3 class="text-2xl font-bold mb-3 text-slate-900">Pusat Pengaduan Masyarakat</h3>
+                        <p class="text-slate-600 mb-8 text-base leading-relaxed max-w-lg">
                             Kelola laporan masuk dengan cepat dan efisien. Pastikan setiap aduan mendapatkan respon yang
                             tepat waktu.
                         </p>
                         <a href="{{ route('admin.complaints.index') }}"
-                            class="inline-flex items-center px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 text-base font-bold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor"
+                            class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                            <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M14 5l7 7m0 0l-7 7m7-7H3"></path>

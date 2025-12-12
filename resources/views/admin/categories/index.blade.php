@@ -5,7 +5,7 @@
                 {{ __('Manajemen Kategori') }}
             </h2>
             <a href="{{ route('admin.categories.create') }}">
-                <x-primary-button class="bg-slate-800 hover:bg-slate-700 focus:bg-slate-700 active:bg-slate-900">
+                <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
                     <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -55,7 +55,7 @@
                                         <td class="px-6 py-4 text-center space-x-2">
                                             {{-- Tombol Edit --}}
                                             <a href="{{ route('admin.categories.edit', $category) }}"
-                                                class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 hover:underline">
+                                                class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 hover:underline">
                                                 Edit
                                             </a>
                                             {{-- Tombol Hapus --}}

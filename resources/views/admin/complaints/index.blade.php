@@ -15,51 +15,55 @@
             @endif
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+                <div class="p-6 text-slate-900">
 
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full table-auto">
-                            <thead class="bg-gray-100">
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full text-sm text-left rtl:text-right text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50">
                                 <tr>
-                                    <th class="px-4 py-2 text-left">No</th>
-                                    <th class="px-4 py-2 text-left">Pelapor</th>
-                                    <th class="px-4 py-2 text-left">Judul</th>
-                                    <th class="px-4 py-2 text-left">Kategori</th>
-                                    <th class="px-4 py-2 text-left">Tanggal</th>
-                                    <th class="px-4 py-2 text-left">Status</th>
-                                    <th class="px-4 py-2 text-center">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 rounded-s-lg">No</th>
+                                    <th scope="col" class="px-6 py-3">Pelapor</th>
+                                    <th scope="col" class="px-6 py-3">Judul</th>
+                                    <th scope="col" class="px-6 py-3">Kategori</th>
+                                    <th scope="col" class="px-6 py-3">Tanggal</th>
+                                    <th scope="col" class="px-6 py-3">Status</th>
+                                    <th scope="col" class="px-6 py-3 rounded-e-lg text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($complaints as $key => $item)
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="px-4 py-2">{{ $complaints->firstItem() + $key }}</td>
-                                        <td class="px-4 py-2">{{ $item->user->name ?? 'Anonim' }}</td>
-                                        <td class="px-4 py-2">{{ Str::limit($item->title, 30) }}</td>
-                                        <td class="px-4 py-2">
-                                            <span class="bg-gray-200 text-gray-700 py-1 px-3 rounded-full text-xs">
+                                    <tr class="bg-white border-b border-slate-100 hover:bg-slate-50 transition duration-150">
+                                        <td class="px-6 py-4 font-medium text-slate-900">{{ $complaints->firstItem() + $key }}</td>
+                                        <td class="px-6 py-4">{{ $item->user->name ?? 'Anonim' }}</td>
+                                        <td class="px-6 py-4 font-medium text-slate-800">{{ Str::limit($item->title, 30) }}</td>
+                                        <td class="px-6 py-4">
+                                            <span class="bg-slate-100 text-slate-700 py-1 px-3 rounded-full text-xs font-bold">
                                                 {{ $item->category->name }}
                                             </span>
                                         </td>
-                                        <td class="px-4 py-2">{{ $item->created_at->format('d M Y') }}</td>
-                                        <td class="px-4 py-2">
+                                        <td class="px-6 py-4">{{ $item->created_at->format('d M Y') }}</td>
+                                        <td class="px-6 py-4">
                                             @if ($item->status == 'pending')
-                                                <span
-                                                    class="text-yellow-600 font-bold bg-yellow-100 px-2 py-1 rounded">Pending</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                                    Pending
+                                                </span>
                                             @elseif($item->status == 'proses')
-                                                <span
-                                                    class="text-blue-600 font-bold bg-blue-100 px-2 py-1 rounded">Proses</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                    Proses
+                                                </span>
                                             @elseif($item->status == 'selesai')
-                                                <span
-                                                    class="text-green-600 font-bold bg-green-100 px-2 py-1 rounded">Selesai</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                                                    Selesai
+                                                </span>
                                             @else
-                                                <span
-                                                    class="text-red-600 font-bold bg-red-100 px-2 py-1 rounded">Ditolak</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                    Ditolak
+                                                </span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-2 text-center">
+                                        <td class="px-6 py-4 text-center">
                                             <a href="{{ route('admin.complaints.show', $item->id) }}"
-                                                class="text-blue-600 hover:text-blue-900 font-bold">Detail</a>
+                                                class="font-medium text-blue-600 hover:text-blue-800 hover:underline">Detail</a>
                                         </td>
                                     </tr>
                                 @endforeach
