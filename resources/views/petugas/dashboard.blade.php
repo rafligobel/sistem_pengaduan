@@ -24,7 +24,7 @@
                     <div>
                         <div class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">
                             Perlu Verifikasi</div>
-                        <div class="text-3xl font-bold text-slate-800 dark:text-white mt-1">{{ $stats['pending'] }}
+                        <div class="text-3xl font-bold text-slate-800 dark:text-black mt-1">{{ $stats['pending'] }}
                         </div>
                     </div>
                     <div class="p-3 rounded-full bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
@@ -41,7 +41,7 @@
                     <div>
                         <div class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">
                             Sedang Diproses</div>
-                        <div class="text-3xl font-bold text-slate-800 dark:text-white mt-1">{{ $stats['process'] }}
+                        <div class="text-3xl font-bold text-slate-800 dark:text-black mt-1">{{ $stats['process'] }}
                         </div>
                     </div>
                     <div class="p-3 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
@@ -59,7 +59,7 @@
                     <div>
                         <div class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">
                             Selesai</div>
-                        <div class="text-3xl font-bold text-slate-800 dark:text-white mt-1">{{ $stats['finished'] }}
+                        <div class="text-3xl font-bold text-slate-800 dark:text-black mt-1">{{ $stats['finished'] }}
                         </div>
                     </div>
                     <div

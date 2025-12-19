@@ -7,7 +7,7 @@
                 <div>
                     <h2 class="text-3xl font-bold text-slate-900">Status Pengaduan</h2>
                     <p class="text-slate-500 mt-1">
-                        Tiket ID: <span class="font-mono font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded">{{ $complaint->ticket_id }}</span>
+                        Tiket ID: <span class="font-mono font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded">{{ $complaint->token }}</span>
                     </p>
                 </div>
                 <a href="{{ route('status.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
@@ -34,11 +34,11 @@
                                 {!! nl2br(e($complaint->content)) !!}
                             </div>
 
-                            @if ($complaint->image)
+                            @if ($complaint->attachment)
                                 <div class="mt-6 border-t border-slate-100 pt-6">
                                     <h4 class="text-sm font-bold text-slate-900 mb-3">Bukti Lampiran</h4>
                                     <div class="rounded-lg overflow-hidden border border-slate-200 inline-block">
-                                        <img src="{{ asset('storage/' . $complaint->image) }}" alt="Bukti" class="max-w-full h-auto max-h-96 object-contain bg-slate-50">
+                                        <img src="{{ asset('storage/' . $complaint->attachment) }}" alt="Bukti" class="max-w-full h-auto max-h-96 object-contain bg-slate-50">
                                     </div>
                                 </div>
                             @endif
@@ -54,7 +54,7 @@
                         
                         @if ($complaint->status == 'pending')
                             <div class="w-full py-4 text-center bg-amber-50 rounded-lg border border-amber-100">
-                                <span class="block text-2xl font-black text-amber-600">PENDING</span>
+                                <span class="block text-2xl font-black text-amber-600">MENUNGGU</span>
                                 <span class="text-xs font-medium text-amber-700">Menunggu Verifikasi</span>
                             </div>
                         @elseif($complaint->status == 'proses')

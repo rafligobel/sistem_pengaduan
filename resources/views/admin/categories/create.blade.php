@@ -15,7 +15,7 @@
                         @csrf
 
                         <div>
-                            <x-input-label for="name" :value="__('Nama Kategori')" class="text-slate-700 dark:text-slate-300" />
+                            <x-input-label for="name" :value="__('Nama Kategori')" class="text-slate-700 light:text-slate-300" />
                             <x-text-input id="name" name="name" type="text"
                                 class="mt-1 block w-full border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 :value="old('name')" required autofocus

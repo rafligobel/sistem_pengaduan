@@ -45,11 +45,11 @@
                                         <td class="px-6 py-4">
                                             @if ($item->status == 'pending')
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                                                    Pending
+                                                    Menunggu
                                                 </span>
                                             @elseif($item->status == 'proses')
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                    Proses
+                                                    Diproses
                                                 </span>
                                             @elseif($item->status == 'selesai')
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
@@ -63,7 +63,19 @@
                                         </td>
                                         <td class="px-6 py-4 text-center">
                                             <a href="{{ route('admin.complaints.show', $item->id) }}"
-                                                class="font-medium text-blue-600 hover:text-blue-800 hover:underline">Detail</a>
+                                                class="inline-flex items-center px-3 py-1 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                Detail
+                                            </a>
+                                            
+                                            @can('delete_complaints')
+                                            <form action="{{ route('admin.complaints.destroy', $item->id) }}" method="POST" class="inline-block ml-2" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

@@ -19,7 +19,7 @@
                         <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                         </svg>
-                        {{ __('Home') }}
+                        {{ __('Beranda') }}
                     </x-nav-link>
 
                     {{-- 1. DASHBOARD (Semua Role) --}}
@@ -73,7 +73,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.935c.355-.129.668-.316.926-.533a9.353 9.353 0 00-4.49-8.455c-.39-.223-.593-.665-.593-1.116v-2.807a3.374 3.374 0 00-3.374-3.374h-2.25c-1.86 0-3.374 1.514-3.374 3.374v2.807c0 .451-.203.893-.593 1.116a9.353 9.353 0 00-4.49 8.455c.258.217.571.404.926.533a9.337 9.337 0 004.121.935 9.38 9.38 0 002.625-.372z" />
                             </svg>
-                            {{ __('Manajemen User') }}
+                            {{ __('Manajemen Pengguna') }}
                         </x-nav-link>
                     @endrole
                 </div>
@@ -105,14 +105,14 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')" class="text-slate-700 hover:bg-slate-50 hover:text-slate-900">
-                            {{ __('Profile') }}
+                            {{ __('Profil') }}
                         </x-dropdown-link>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')" class="text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                                 onclick="event.preventDefault(); this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Keluar') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -140,7 +140,7 @@
         class="hidden sm:hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('landing')" :active="request()->routeIs('landing')">
-                {{ __('Home') }}
+                {{ __('Beranda') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -164,7 +164,7 @@
                     {{ __('Kategori') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                    {{ __('Manajemen User') }}
+                    {{ __('Manajemen Pengguna') }}
                 </x-responsive-nav-link>
             @endrole
         </div>
@@ -177,14 +177,14 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('Profil') }}
                 </x-responsive-nav-link>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault(); this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('Keluar') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

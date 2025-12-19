@@ -70,7 +70,7 @@
                                         @forelse(Auth::user()->complaints as $item)
                                             <tr>
                                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-blue-600 sm:pl-6 family-mono">
-                                                    {{ $item->ticket_id }}
+                                                    {{ $item->token }}
                                                 </td>
                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
                                                     {{ Str::limit($item->title, 40) }}
@@ -78,11 +78,11 @@
                                                 <td class="whitespace-nowrap px-3 py-4 text-sm">
                                                     @if ($item->status == 'pending')
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                                                            Pending
+                                                            Menunggu
                                                         </span>
                                                     @elseif($item->status == 'proses')
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                            Proses
+                                                            Diproses
                                                         </span>
                                                     @elseif($item->status == 'selesai')
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
@@ -95,7 +95,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                    <a href="{{ route('complaint.public.finish', $item->ticket_id) }}" class="text-blue-600 hover:text-blue-900">Detail</a>
+                                                    <a href="{{ route('complaint.public.finish', $item->token) }}" class="text-blue-600 hover:text-blue-900">Detail</a>
                                                 </td>
                                             </tr>
                                         @empty

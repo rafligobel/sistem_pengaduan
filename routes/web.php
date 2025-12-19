@@ -60,22 +60,44 @@ Route::middleware('auth')->group(function () {
 
 // 6. HALAMAN ADMIN & PETUGAS
 // Menggunakan middleware 'role' dari Spatie Permission untuk membatasi akses
-Route::middleware(['auth', 'role:admin|petugas|kepala_instansi'])->prefix('admin')->name('admin.')->group(function () {
+// 6. AREA ADMIN & PETUGAS (Protected)
+Route::middleware(['auth', 'role:admin|petugas|walikota'])->prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard Admin (Untuk sementara diarahkan ke view dashboard, bisa diganti controller)
-    Route::get('/dashboard', function () {
-        return view('dashboard'); // Sesuaikan jika Anda punya view khusus admin
-    })->name('dashboard');
+    // A. Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Manajemen Pengaduan (CRUD Laporan Masuk)
+    // B. Manajemen Pengaduan
     Route::get('/complaints', [ComplaintController::class, 'index'])->name('complaints.index');
     Route::get('/complaints/{complaint}', [ComplaintController::class, 'show'])->name('complaints.show');
-    Route::post('/complaints/{complaint}/respond', [ResponseController::class, 'store'])->name('complaints.respond');
 
-    // Manajemen Master Data (Hanya Admin)
-    Route::middleware('role:admin')->group(function () {
+    // C. Action Pengaduan (Verify & Resolve)
+    // Gunakan middleware yang mengizinkan verify ATAU resolve
+    // Karena route update/respond disini dipakai bergantian
+    Route::middleware('permission:verify_complaints|resolve_complaints')->group(function () {
+        Route::put('/complaints/{complaint}', [ComplaintController::class, 'update'])->name('complaints.update');
+        Route::post('/complaints/{complaint}/respond', [ResponseController::class, 'store'])->name('complaints.respond');
+    });
+
+    // D. Hapus Pengaduan
+    Route::delete('/complaints/{complaint}', [ComplaintController::class, 'destroy'])
+        ->middleware('permission:delete_complaints')
+        ->name('complaints.destroy');
+
+    // E. Manajemen Master Data (User, Category)
+    Route::middleware('permission:manage_master')->group(function () {
         Route::resource('/users', UserController::class);
         Route::resource('/categories', CategoryController::class)->except(['show']);
+    });
+
+    // F. Manajemen Dokumentasi (Gallery)
+    Route::resource('/galleries', \App\Http\Controllers\Admin\GalleryController::class)
+        ->middleware('permission:manage_documentation');
+
+    // G. Manajemen Sistem (Simulasi saja - Testing/Backup/Restore)
+    Route::prefix('system')->name('system.')->middleware('permission:manage_system')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SystemController::class, 'index'])->name('index');
+        Route::post('/optimize', [\App\Http\Controllers\Admin\SystemController::class, 'optimize'])->name('optimize');
+        Route::post('/backup', [\App\Http\Controllers\Admin\SystemController::class, 'backup'])->name('backup');
     });
 });
 

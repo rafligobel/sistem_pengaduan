@@ -11,7 +11,7 @@
                         stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
-                    Tambah User
+                    Tambah Pengguna
                 </x-primary-button>
             </a>
         </div>
@@ -21,8 +21,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Card premium yang konsisten --}}
             <div
-                class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden shadow-lg sm:rounded-lg">
-                <div class="p-6 text-black-900 dark:text-black-100">
+                class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-slate-900 dark:text-slate-100">
 
                     {{-- Pesan Sukses/Error --}}
                     @if (session('success'))
@@ -36,23 +36,28 @@
                         </div>
                     @endif
 
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table class="w-full text-sm text-left text-black-500 dark:text-black-400">
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full text-sm text-left rtl:text-right text-slate-500 dark:text-slate-400">
                             <thead
-                                class="text-xs text-black-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-black-400">
+                                class="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-700 dark:text-slate-400">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">Nama</th>
+                                    <th scope="col" class="px-6 py-3 rounded-s-lg">No</th>
+                                    <th scope="col" class="px-6 py-3 rounded-s-lg">Nama</th>
                                     <th scope="col" class="px-6 py-3">Email</th>
                                     <th scope="col" class="px-6 py-3">Role</th>
-                                    <th scope="col" class="px-6 py-3">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 rounded-e-lg text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($users as $user)
                                     <tr
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        class="bg-white border-b border-slate-100 dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out">
+                                        <td
+                                            class="px-6 py-4 font-medium text-slate-900 dark:text-black whitespace-nowrap">
+                                            {{ $loop->iteration }}
+                                        </td>
                                         <th scope="row"
-                                            class="px-6 py-4 font-medium text-black-900 whitespace-nowrap dark:text-white">
+                                            class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap dark:text-black">
                                             {{ $user->name }}
                                         </th>
                                         <td class="px-6 py-4">
@@ -62,30 +67,42 @@
                                             {{-- Menampilkan role sebagai badge --}}
                                             @foreach ($user->getRoleNames() as $role)
                                                 <span
-                                                    class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">
+                                                    class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
                                                     {{ $role }}
                                                 </span>
                                             @endforeach
                                         </td>
-                                        <td class="px-6 py-4 flex gap-2">
-                                            {{-- Tombol Aksi Edit (Konsisten) --}}
+                                        <td class="px-6 py-4 text-center flex justify-center gap-2">
+                                            {{-- Tombol Aksi Edit --}}
                                             <a href="{{ route('admin.users.edit', $user) }}"
-                                                class="inline-flex items-center px-3 py-1 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                                class="inline-flex items-center px-3 py-1 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                                 Edit
                                             </a>
-                                            {{-- Tombol Aksi Hapus (Konsisten) --}}
+                                            {{-- Tombol Aksi Hapus --}}
                                             <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <x-danger-button type="submit">Hapus</x-danger-button>
+                                                <button type="submit"
+                                                    class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                    Hapus
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <td colspan="4" class="px-6 py-4 text-center">
-                                            Tidak ada data user.
+                                    <tr class="bg-white border-b dark:bg-slate-800 dark:border-slate-700">
+                                        <td colspan="4" class="px-6 py-8 text-center text-slate-500">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <svg class="w-10 h-10 mb-2 text-slate-300" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                                                    </path>
+                                                </svg>
+                                                <span>Tidak ada data user.</span>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforelse

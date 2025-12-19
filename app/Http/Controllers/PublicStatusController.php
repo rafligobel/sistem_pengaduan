@@ -20,15 +20,15 @@ class PublicStatusController extends Controller
             'ticket_id' => 'required|string'
         ]);
 
-        // Hapus spasi jika user tidak sengaja copy-paste dengan spasi
-        $ticket = trim($request->ticket_id);
+        // Buat semua huruf kapital karena token formatnya TIKET-...
+        $ticket = strtoupper(trim($request->ticket_id));
 
-        // Cari berdasarkan ticket_id
-        $complaint = Complaint::where('ticket_id', $ticket)->first();
+        // Cari berdasarkan token
+        $complaint = Complaint::where('token', $ticket)->first();
 
         if ($complaint) {
             // Jika ketemu, tampilkan
-            return redirect()->route('status.show', $complaint->ticket_id);
+            return redirect()->route('status.show', $complaint->token);
         } else {
             // Jika tidak ketemu, kembali dengan pesan error (Flash Session)
             return redirect()->route('status.index')
@@ -40,7 +40,7 @@ class PublicStatusController extends Controller
     public function show($token)
     {
         $complaint = Complaint::with(['category', 'responses', 'user'])
-            ->where('ticket_id', $token)
+            ->where('token', $token)
             ->firstOrFail();
 
         return view('public.status.show', compact('complaint'));

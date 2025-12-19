@@ -46,16 +46,16 @@
                                     <tr
                                         class="bg-white border-b border-slate-100 dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out">
                                         <td
-                                            class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap">
+                                            class="px-6 py-4 font-medium text-slate-900 dark:text-black whitespace-nowrap">
                                             {{ $loop->iteration }}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $category->name }}
                                         </td>
-                                        <td class="px-6 py-4 text-center space-x-2">
+                                        <td class="px-6 py-4 text-center flex justify-center gap-2">
                                             {{-- Tombol Edit --}}
                                             <a href="{{ route('admin.categories.edit', $category) }}"
-                                                class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 hover:underline">
+                                                class="inline-flex items-center px-3 py-1 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                                 Edit
                                             </a>
                                             {{-- Tombol Hapus --}}
@@ -66,7 +66,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="font-medium text-red-600 dark:text-red-400 hover:text-red-800 hover:underline ml-2">
+                                                    class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                                     Hapus
                                                 </button>
                                             </form>

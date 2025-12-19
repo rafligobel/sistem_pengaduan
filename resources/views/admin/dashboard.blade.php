@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
             <h2 class="font-extrabold text-2xl text-slate-900 leading-tight">
-                {{ __('Dashboard Overview') }}
+                Ringkasan Dashboard
             </h2>
             <p
                 class="text-sm text-slate-700 font-medium mt-1 md:mt-0 bg-white px-3 py-1 rounded-full shadow-sm border border-slate-200">
-                📅 Update: {{ now()->format('d M Y') }}
+                📅 Pembaruan: {{ now()->format('d M Y') }}
             </p>
         </div>
     </x-slot>
@@ -110,7 +110,7 @@
                     </div>
                     <div class="mt-4 flex items-center text-sm font-bold text-amber-800">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-600 mr-2 animate-pulse"></span>
-                        Status: Pending
+                        Status: Menunggu
                     </div>
                 </div>
 
@@ -201,8 +201,104 @@
                                     d="M9 5l7 7-7 7"></path>
                             </svg>
                         </a>
+
+                        {{-- NEW: Dokumentasi --}}
+                        <a href="{{ route('admin.galleries.index') }}"
+                            class="group flex items-center justify-between p-4 rounded-xl bg-slate-50 hover:bg-teal-50 transition-colors border border-slate-200 hover:border-teal-200">
+                            <div class="flex items-center">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-slate-600 shadow-sm border border-slate-100 group-hover:text-teal-600 group-hover:border-teal-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <span
+                                    class="ml-4 text-base font-bold text-slate-700 group-hover:text-teal-800">Dokumentasi</span>
+                            </div>
+                            <svg class="w-5 h-5 text-slate-400 group-hover:text-teal-600" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+
+                        {{-- NEW: System Config --}}
+                        <a href="{{ route('admin.system.index') }}"
+                            class="group flex items-center justify-between p-4 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-200 hover:border-slate-300">
+                            <div class="flex items-center">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-slate-600 shadow-sm border border-slate-100 group-hover:text-slate-800 group-hover:border-slate-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </div>
+                                <span
+                                    class="ml-4 text-base font-bold text-slate-700 group-hover:text-slate-900">Sistem & Konfigurasi</span>
+                            </div>
+                            <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-800" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
+
+                {{-- Tabel Aktivitas Terbaru --}}
+                <div class="lg:col-span-3 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h4 class="font-bold text-slate-800">Laporan Terbaru</h4>
+                        <a href="{{ route('admin.complaints.index') }}" class="text-sm text-blue-600 hover:underline">Lihat Semua</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Pelapor</th>
+                                    <th scope="col" class="px-6 py-3">Judul</th>
+                                    <th scope="col" class="px-6 py-3">Tanggal</th>
+                                    <th scope="col" class="px-6 py-3">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($latestComplaints as $complaint)
+                                    <tr class="bg-white border-b hover:bg-slate-50">
+                                        <td class="px-6 py-4 font-medium text-slate-900">
+                                            {{ $complaint->user->name ?? 'Anonim' }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ Str::limit($complaint->title, 40) }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ $complaint->created_at->diffForHumans() }}
+                                        </td>
+                                         <td class="px-6 py-4">
+                                             @if ($complaint->status == 'pending')
+                                                <span class="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded">Menunggu</span>
+                                            @elseif($complaint->status == 'proses')
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Diproses</span>
+                                            @elseif($complaint->status == 'selesai')
+                                                <span class="bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded">Selesai</span>
+                                            @else
+                                                <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Ditolak</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <a href="{{ route('admin.complaints.show', $complaint->id) }}" class="font-medium text-blue-600 hover:underline">Detail</a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-4 text-center text-slate-400 italic">Belum ada laporan masuk.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
 
         </div>
