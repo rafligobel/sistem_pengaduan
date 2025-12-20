@@ -1,151 +1,87 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whistle Blowing System - Inspektorat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="shortcut icon" href="{{ asset('images/logo-kota1.png') }}" type="image/x-icon">
+    <title>{{ config('app.name', 'WBS Inspektorat') }}</title>
 
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <style>
-        header.header {
-            z-index: 9999;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: #0d2481 !important;
-            color: white !important;
-        }
-
-        .btn-secondary {
-            background-color: #f0f0f0 !important;
-            color: #333 !important;
-        }
-
-        .btn-danger-custom {
-            background-color: #dc3545 !important;
-            color: white !important;
-        }
-    </style>
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
-<body id="top">
-
-    <header class="header" data-header>
-        <div class="overlay" data-overlay></div>
-        <div class="header-top">
-            <div class="container">
-                <a href="{{ route('landing') }}" class="text">
-                    <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo Kota" style="height: 50px;">
-                </a>
-                <div class="header-btn-group">
-                    <button class="nav-open-btn" aria-label="Open Menu" data-nav-open-btn>
-                        <ion-icon name="menu-outline"></ion-icon>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="header-bottom">
-            <div class="container">
-                <nav class="navbar" data-navbar>
-                    <div class="navbar-top">
-                        <a href="{{ route('landing') }}" class="logo">
-                            <img src="{{ asset('images/logo-blue.svg') }}" alt="Inspektorat logo">
-                        </a>
-                        <button class="nav-close-btn" aria-label="Close Menu" data-nav-close-btn>
-                            <ion-icon name="close-outline"></ion-icon>
-                        </button>
+<body class="font-sans antialiased text-slate-900 bg-slate-50">
+    <div class="min-h-screen flex flex-col">
+        <!-- Navigation -->
+        <nav class="bg-white/80 backdrop-blur-md border-b border-slate-200 fixed w-full z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+                        <!-- Logo -->
+                        <div class="shrink-0 flex items-center min-w-0">
+                            <a href="{{ url('/') }}" class="flex items-center gap-2 sm:gap-3 group min-w-0">
+                                <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo" class="h-8 w-auto transition-transform group-hover:scale-105 shrink-0">
+                                <div class="min-w-0">
+                                    <h1 class="text-xs sm:text-base font-bold text-slate-800 leading-none truncate">Whistle Blowing System</h1>
+                                    <p class="hidden sm:block text-[10px] text-slate-500 font-medium truncate">Inspektorat Kota Gorontalo</p>
+                                </div>
+                            </a>
+                        </div>
                     </div>
 
-                    <ul class="navbar-list">
-                        <li><a href="{{ route('landing') }}" class="navbar-link">Home</a></li>
-                        <li><a href="{{ route('landing') }}#about" class="navbar-link">Tentang Kami</a></li>
-                        <li><a href="{{ route('landing') }}#contact" class="navbar-link">Hubungi Kami</a></li>
-
-                        @auth
-                            <li>
-                                <a href="{{ route('dashboard') }}" class="btn btn-primary"
-                                    style="padding: 8px 20px; border-radius: 20px; margin-right: 5px;">Dashboard</a>
-                            </li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger-custom"
-                                        style="padding: 8px 20px; border-radius: 20px; cursor: pointer;">
-                                        Logout
-                                    </button>
-                                </form>
-                            </li>
-                        @else
-                            <li><a href="{{ route('login') }}" class="btn btn-secondary"
-                                    style="padding: 10px 20px; border-radius: 20px;">Login</a></li>
-                        @endauth
-                    </ul>
-                </nav>
+                    <!-- Right Side Actions -->
+                    <div class="flex items-center gap-3 shrink-0">
+                        <a href="{{ url('/') }}" class="text-xs font-medium text-slate-500 hover:text-blue-600 transition-colors hidden sm:block">
+                            Beranda
+                        </a>
+                        
+                        @if (Route::has('login'))
+                            @auth
+                                <a href="{{ url('/dashboard') }}" class="inline-flex items-center justify-center px-3 py-1.5 sm:px-4 sm:py-2 border border-transparent text-[10px] sm:text-xs font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-md shadow-blue-200">
+                                    Dashboard
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-3 py-1.5 sm:px-4 sm:py-2 border border-slate-200 text-[10px] sm:text-xs font-bold rounded-lg text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                                    Masuk
+                                </a>
+                            @endauth
+                        @endif
+                    </div>
+                </div>
             </div>
-        </div>
-    </header>
+        </nav>
 
-    <main>
-        <article>
+        <!-- Page Content -->
+        <main class="flex-grow flex flex-col pt-20 sm:pt-24 pb-24 sm:pb-28">
             {{ $slot }}
-        </article>
-    </main>
+        </main>
 
-    <footer class="footer">
-        <div class="footer-top">
-            <div class="container">
-                <div class="footer-brand">
-                    <a href="#" class="logo">
-                        <img src="{{ asset('images/test.png') }}" alt="Inspektorat logo">
-                    </a>
-                    <p class="footer-text">Whistle Blowing System Inspektorat Kota Gorontalo.</p>
-                </div>
-                <div class="footer-contact">
-                    <h4 class="contact-title">Contact Us</h4>
-                    <ul>
-                        <li class="contact-item"><ion-icon name="call-outline"></ion-icon> +62823-49-6565-94</li>
-                        <li class="contact-item"><ion-icon name="mail-outline"></ion-icon> inspektoratgtlo@gmail.com
-                        </li>
-                    </ul>
+        <!-- Footer -->
+        <footer class="bg-white border-t border-slate-200 w-full z-40 fixed bottom-0">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
+                    <div class="text-center md:text-left">
+                        <p class="text-xs text-slate-500">
+                            &copy; {{ date('Y') }} <span class="font-bold text-slate-700">Inspektorat Kota Gorontalo</span>. All rights reserved.
+                        </p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-xs text-slate-400 hover:text-blue-600 transition-colors">
+                            <span class="sr-only">Privacy Policy</span>
+                            Kebijakan Privasi
+                        </a>
+                        <a href="#" class="text-xs text-slate-400 hover:text-blue-600 transition-colors">
+                            <span class="sr-only">Terms of Service</span>
+                            Syarat & Ketentuan
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="copyright-container">
-                <p class="copyright">&copy; {{ date('Y') }} Inspektorat Kota Gorontalo.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="{{ asset('js/script1.js') }}"></script>
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
+        </footer>
+    </div>
 </body>
-
 </html>

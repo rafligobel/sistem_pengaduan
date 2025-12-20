@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         {{-- Konsistensi Header --}}
-        <h2 class="font-bold text-2xl text-black-900 dark:text-black-100 leading-tight tracking-tight">
+        <h2 class="font-bold text-2xl text-slate-900 leading-tight tracking-tight">
             {{ __('Profile') }}
         </h2>
     </x-slot>
@@ -10,7 +10,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             {{-- Card 1: Update Profile Information --}}
             <div
-                class="p-4 sm:p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
+                class="p-4 sm:p-8 bg-white border border-gray-200 shadow-lg sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-profile-information-form')
                 </div>
@@ -18,7 +18,7 @@
 
             {{-- Card 2: Update Password --}}
             <div
-                class="p-4 sm:p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
+                class="p-4 sm:p-8 bg-white border border-slate-200 shadow-sm sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-password-form')
                 </div>
@@ -26,7 +26,7 @@
 
             {{-- Card 3: Delete User --}}
             <div
-                class="p-4 sm:p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
+                class="p-4 sm:p-8 bg-white border border-slate-200 shadow-sm sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.delete-user-form')
                 </div>

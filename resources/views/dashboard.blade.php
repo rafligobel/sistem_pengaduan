@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-slate-800 dark:text-slate-200 leading-tight">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <h2 class="font-semibold text-xl text-slate-800 leading-tight">
                 {{ __('Dashboard Pengaduan') }}
             </h2>
             <div class="text-sm text-slate-500">
@@ -15,24 +15,26 @@
         $complaints = Auth::user()->complaints()->latest()->get();
     @endphp
 
-    <div class="py-12" x-data="{ activeModal: null }">
+    <div class="py-5" x-data="{ activeModal: null }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             {{-- Greeting Section --}}
-            <div class="mb-6 px-2">
-                <p class="text-slate-600 dark:text-slate-400">
-                    Selamat datang, <span class="font-bold text-blue-600">{{ Auth::user()->name }}</span>! Berikut adalah
-                    riwayat pengaduan yang telah Anda kirimkan.
+            <div class="mb-5 px-2">
+                <h2 class="text-lg text-slate-800 flex items-center flex-wrap gap-1">
+                    Selamat datang, <span class="font-bold text-blue-600">{{ Auth::user()->name }}</span>!
+                </h2>
+                <p class="text-slate-600 mt-1">
+                    Berikut adalah riwayat pengaduan yang telah Anda kirimkan.
                 </p>
             </div>
 
             {{-- Main Card --}}
-            <div class="bg-white dark:bg-slate-800 overflow-hidden shadow-sm sm:rounded-lg border border-slate-200 dark:border-slate-700">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-slate-300">
 
-                <div class="p-6 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="p-6 bg-slate-50 border-b border-slate-300 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-black">Daftar Laporan Saya</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">Kelola dan pantau status tiket Anda.</p>
+                        <h3 class="text-lg font-bold text-slate-800">Daftar Laporan Saya</h3>
+                        <p class="text-sm text-slate-500">Kelola dan pantau status tiket Anda.</p>
                     </div>
 
                     <a href="{{ route('complaint.public.step1.create') }}">
@@ -48,9 +50,9 @@
 
                 <div class="p-6">
                     @if ($complaints->count() > 0)
-                        <div class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
-                            <table class="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                                <thead class="bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 uppercase text-xs font-semibold">
+                        <div class="overflow-x-auto rounded-lg border border-slate-300">
+                            <table class="w-full text-left text-sm text-slate-600">
+                                <thead class="bg-slate-50 text-slate-800 uppercase text-xs font-semibold">
                                     <tr>
                                         <th class="px-6 py-4">ID Tiket</th>
                                         <th class="px-6 py-4">Judul Laporan</th>
@@ -59,13 +61,13 @@
                                         <th class="px-6 py-4 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-800">
+                                <tbody class="divide-y divide-slate-300 bg-white">
                                     @foreach ($complaints as $complaint)
-                                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-150">
+                                        <tr class="hover:bg-slate-50 transition duration-150">
                                             <td class="px-6 py-4 font-mono font-bold text-blue-600">
                                                 #{{ $complaint->token }}
                                             </td>
-                                            <td class="px-6 py-4 font-medium text-slate-900 dark:text-black">
+                                            <td class="px-6 py-4 font-medium text-slate-900">
                                                 {{ Str::limit($complaint->title, 40) }}
                                             </td>
                                             <td class="px-6 py-4 text-slate-500">
@@ -107,13 +109,13 @@
                         </div>
                     @else
                         <div class="text-center py-12 px-4">
-                            <div class="bg-slate-50 dark:bg-slate-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-200 dark:border-slate-600">
+                            <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-200">
                                 <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-medium text-slate-900 dark:text-white">Belum ada laporan</h3>
-                            <p class="text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto mb-6">Anda belum pernah mengirimkan pengaduan.</p>
+                            <h3 class="text-lg font-medium text-slate-900">Belum ada laporan</h3>
+                            <p class="text-slate-500 mt-1 max-w-sm mx-auto mb-6">Anda belum pernah mengirimkan pengaduan.</p>
                             <a href="{{ route('complaint.public.step1.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 transition">
                                 Mulai Buat Laporan
                             </a>

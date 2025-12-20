@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-black-900 dark:text-black-100 leading-tight tracking-tight">
+        <h2 class="font-bold text-2xl text-slate-900 leading-tight tracking-tight">
             Edit User: {{ $user->name }}
         </h2>
     </x-slot>
@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Card premium yang konsisten --}}
-            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg sm:rounded-lg">
+            <div class="bg-white border border-slate-300 shadow-lg sm:rounded-lg">
                 <div class="p-4 sm:p-8">
                     {{-- Form mengarah ke route 'update' --}}
                     <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-6">
@@ -38,7 +38,7 @@
                             <x-input-label for="password" value="Password Baru (Opsional)" />
                             <x-text-input id="password" name="password" type="password" class="mt-1 block w-full"
                                 autocomplete="new-password" />
-                            <p class="mt-1 text-sm text-black-600 dark:text-black-400">
+                            <p class="mt-1 text-sm text-slate-600">
                                 Kosongkan jika Anda tidak ingin mengubah password.
                             </p>
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -61,9 +61,9 @@
                                         <input id="role_{{ $role->id }}" name="roles[]" type="checkbox"
                                             value="{{ $role->name }}" {{-- Cek role yang sudah dimiliki user --}}
                                             @checked(old('roles', $user->roles->pluck('name'))->contains($role->name))
-                                            class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800">
+                                            class="rounded border-slate-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
                                         <span
-                                            class="ms-2 text-sm text-black-600 dark:text-black-400">{{ $role->name }}</span>
+                                            class="ms-2 text-sm text-slate-600">{{ $role->name }}</span>
                                     </label>
                                 @endforeach
                             </div>

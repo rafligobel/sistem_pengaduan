@@ -16,7 +16,7 @@
 
 <body class="font-sans text-black-900 antialiased">
     <div
-        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 relative overflow-hidden">
+        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-50 relative overflow-hidden">
 
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
             <div
@@ -34,16 +34,16 @@
             <a href="/" class="transition transform hover:scale-105">
                 <x-application-logo class="w-24 h-24 fill-current text-blue-600 drop-shadow-md" />
             </a>
-            <h1 class="mt-4 text-2xl font-bold text-black-800 dark:text-white tracking-tight">Whistle Blowing System</h1>
-            <p class="text-sm text-black-500 font-medium">Inspektorat Kota Gorontalo</p>
+            <h1 class="mt-4 text-2xl font-bold text-slate-800 tracking-tight">Whistle Blowing System</h1>
+            <p class="text-sm text-slate-500 font-medium">Inspektorat Kota Gorontalo</p>
         </div>
 
         <div
-            class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden sm:rounded-2xl z-10 transition-all duration-300 hover:shadow-blue-500/10">
+            class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white/80 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden sm:rounded-2xl z-10 transition-all duration-300 hover:shadow-blue-500/10">
             {{ $slot }}
         </div>
 
-        <div class="mt-8 text-center text-xs text-black-400 z-10">
+        <div class="mt-8 text-center text-xs text-slate-400 z-10">
             &copy; {{ date('Y') }} Inspektorat Kota Gorontalo. All rights reserved.
         </div>
     </div>

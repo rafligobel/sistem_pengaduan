@@ -12,6 +12,6 @@ class PublicLayout extends Component
      */
     public function render(): View
     {
-        return view('components.public-layout'); // Pastikan ini mengarah ke file Blade
+        return view('layouts.public');
     }
 }

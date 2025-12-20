@@ -1,74 +1,79 @@
-<x-app-layout>
-    <div class="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-20">
-        <div class="max-w-md w-full text-center">
+<x-public-layout>
+    <div class="flex-grow flex flex-col items-center justify-center w-full px-4 py-8 sm:px-6 lg:px-8 bg-slate-50/50">
+        <div class="max-w-md mx-auto w-full">
             
-            {{-- Success Icon Animation --}}
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6 animate-bounce">
-                <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-
-            <h2 class="text-2xl font-bold text-slate-900 mb-2">
-                Laporan Berhasil Dikirim!
-            </h2>
-            <p class="text-sm text-slate-500 mb-8 max-w-xs mx-auto">
-                Terima kasih telah melapor. Laporan Anda akan segera kami tindak lanjuti.
-            </p>
-
-            {{-- Ticket Box --}}
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8 relative overflow-hidden group">
-                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">ID Laporan Anda</p>
-                
-                <div class="flex items-center justify-center gap-3 bg-slate-50 rounded-lg py-3 px-4 border border-slate-100 relative">
-                    <h1 id="ticketToken" class="text-2xl font-mono font-bold text-slate-800 tracking-tight select-all">
-                        {{ $complaint->token }}
-                    </h1>
-                    
-                    {{-- Copy Button --}}
-                    <button onclick="copyToken()" class="text-slate-400 hover:text-blue-600 transition-colors p-1" title="Salin ID Taket">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                        </svg>
-                    </button>
-                    
-                    {{-- Tooltip Copied --}}
-                    <span id="copyFeedback" class="absolute -top-8 right-0 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 transition-opacity duration-300">
-                        Disalin!
-                    </span>
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-10 text-center relative">
+                {{-- Decorative Background Elements --}}
+                <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500"></div>
                 </div>
-                
-                <p class="mt-3 text-xs text-slate-400">
-                    Simpan ID ini untuk memantau perkembangan laporan.
-                </p>
-            </div>
 
-            {{-- Actions --}}
-            <div class="space-y-3 sm:space-y-0 sm:flex sm:gap-3 justify-center">
-                <a href="{{ route('status.index') }}" 
-                   class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2.5 border border-slate-300 shadow-sm text-sm font-bold rounded-lg text-slate-700 bg-white hover:bg-slate-50 transition-all">
-                    Cek Status
-                </a>
-                <a href="{{ route('dashboard') }}" 
-                   class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2.5 border border-transparent text-sm font-bold rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-700 transition-all">
-                    Ke Dashboard
-                </a>
+                {{-- Success Icon --}}
+                <div class="relative mb-6 inline-block">
+                    <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-75"></div>
+                    <div class="relative flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-green-50 text-green-500 mx-auto border-[4px] border-white shadow-sm ring-1 ring-green-100">
+                        <svg class="w-7 h-7 sm:w-9 sm:h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                </div>
+
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2">
+                    Laporan Terkirim!
+                </h2>
+                <p class="text-sm text-slate-500 mb-6 leading-relaxed">
+                    Kami telah menerima laporan Anda. Simpan ID Tiket ini untuk memantau status secara berkala.
+                </p>
+
+                {{-- Ticket ID Box --}}
+                <!-- <div class="bg-slate-50 rounded-xl border border-slate-200 p-4 sm:p-5 mb-6 relative group shadow-inner hover:shadow-md transition-shadow">
+                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-[0.2em] mb-2">ID Tiket Laporan</p>
+                    
+                    <div class="flex items-center justify-center gap-3 shrink-0 cursor-pointer select-all" onclick="copyTicket()" title="Klik untuk menyalin">
+                        <span id="ticket-id" class="text-lg sm:text-3xl font-mono font-black text-slate-800 tracking-widest break-all">
+                            {{ $complaint->token }}
+                        </span>
+                        
+                        <button class="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2v2"></path></svg>
+                        </button>
+                    </div>
+
+                    {{-- Tooltip feedback --}}
+                    <div id="copy-feedback" class="absolute -bottom-9 left-1/2 transform -translate-x-1/2 opacity-0 transition-opacity duration-300 pointer-events-none">
+                         <span class="bg-slate-800 text-white text-[10px] font-bold py-1 px-2.5 rounded-full shadow-lg flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Disalin!
+                        </span>
+                    </div>
+                </div> -->
+
+                <div class="flex flex-col gap-2.5 justify-center w-full">
+                    <!-- <a href="{{ route('status.index') }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-slate-300 shadow-sm text-sm font-bold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 hover:border-blue-200 transition-all">
+                        <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        Lacak Status
+                    </a> -->
+                    <a href="{{ url('/') }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-bold rounded-xl shadow-lg shadow-blue-500/30 text-white bg-blue-600 hover:bg-blue-700 transition-all transform active:scale-95">
+                        Kembali ke Beranda
+                    </a>
+                </div>
             </div>
+            
+            <p class="text-center text-xs text-slate-400 mt-6 md:mt-8">
+                Terima kasih telah berpartisipasi dalam membangun tata kelola yang lebih baik.
+            </p>
 
         </div>
     </div>
 
     <script>
-        function copyToken() {
-            const tokenText = document.getElementById('ticketToken').innerText.trim();
-            navigator.clipboard.writeText(tokenText).then(() => {
-                const feedback = document.getElementById('copyFeedback');
-                feedback.classList.remove('opacity-0');
+        function copyTicket() {
+            const ticketId = document.getElementById('ticket-id').innerText.trim();
+            navigator.clipboard.writeText(ticketId).then(() => {
+                const feedback = document.getElementById('copy-feedback');
+                feedback.classList.remove('opacity-0', 'translate-y-2');
                 setTimeout(() => {
-                    feedback.classList.add('opacity-0');
+                    feedback.classList.add('opacity-0', 'translate-y-2');
                 }, 2000);
             });
         }
     </script>
-</x-app-layout>
+</x-public-layout>

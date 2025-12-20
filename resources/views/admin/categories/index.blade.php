@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-bold text-2xl text-slate-800 dark:text-slate-200 leading-tight tracking-tight">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <h2 class="font-bold text-2xl text-slate-900 leading-tight tracking-tight">
                 {{ __('Manajemen Kategori') }}
             </h2>
             <a href="{{ route('admin.categories.create') }}">
-                <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
-                    <svg class="w-5 h-5 me-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 px-3 py-1.5 text-xs">
+                    <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
@@ -20,15 +20,15 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Perbaikan: Mengganti typo bg-white-800 menjadi bg-white dan border-slate --}}
             <div
-                class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-slate-900 dark:text-slate-100">
+                class="bg-white border border-slate-300 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-slate-900">
 
                     {{-- Tabel Responsif --}}
                     <div class="relative overflow-x-auto">
-                        <table class="w-full text-sm text-left rtl:text-right text-slate-500 dark:text-slate-400">
+                        <table class="w-full text-sm text-left rtl:text-right text-slate-500">
                             {{-- Header Tabel dengan warna Slate lembut --}}
                             <thead
-                                class="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-700 dark:text-slate-400">
+                                class="text-xs text-slate-700 uppercase bg-slate-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 rounded-s-lg">
                                         No
@@ -44,9 +44,9 @@
                             <tbody>
                                 @forelse ($categories as $category)
                                     <tr
-                                        class="bg-white border-b border-slate-100 dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out">
+                                        class="bg-white border-b border-slate-300 hover:bg-slate-50 transition duration-150 ease-in-out">
                                         <td
-                                            class="px-6 py-4 font-medium text-slate-900 dark:text-black whitespace-nowrap">
+                                            class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
                                             {{ $loop->iteration }}
                                         </td>
                                         <td class="px-6 py-4">
@@ -55,7 +55,7 @@
                                         <td class="px-6 py-4 text-center flex justify-center gap-2">
                                             {{-- Tombol Edit --}}
                                             <a href="{{ route('admin.categories.edit', $category) }}"
-                                                class="inline-flex items-center px-3 py-1 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-md font-bold text-xs transition-colors">
                                                 Edit
                                             </a>
                                             {{-- Tombol Hapus --}}
@@ -66,14 +66,14 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                    class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-md font-bold text-xs transition-colors">
                                                     Hapus
                                                 </button>
                                             </form>
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr class="bg-white border-b dark:bg-slate-800 dark:border-slate-700">
+                                    <tr class="bg-white border-b border-slate-300">
                                         <td colspan="3" class="px-6 py-8 text-center text-slate-500">
                                             <div class="flex flex-col items-center justify-center">
                                                 <svg class="w-10 h-10 mb-2 text-slate-300" fill="none"

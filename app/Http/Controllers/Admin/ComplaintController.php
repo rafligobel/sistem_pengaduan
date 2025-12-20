@@ -36,46 +36,23 @@ class ComplaintController extends Controller
 
     /**
      * Update status pengaduan (Misal: dari Pending -> Proses -> Selesai)
-     * Method ini dipanggil saat Admin menekan tombol ganti status
      */
-    public function update(Request $request, Complaint $complaint)
+    public function update(\App\Http\Requests\UpdateComplaintStatusRequest $request, Complaint $complaint)
     {
+        $status = $request->validated()['status'];
         $user = Auth::user();
-        $status = $request->status;
 
-        // Validasi umum
-        $request->validate([
-            'status' => 'required|in:pending,proses,selesai,ditolak',
-        ]);
-
-        // 1. Role Petugas (Verify)
+        // Role Specific Logic: Petugas
         if ($user->hasRole('petugas')) {
-            // Petugas hanya boleh ubah dari 'pending' ke 'proses' (valid) atau 'ditolak' (invalid)
-            // Petugas TIDAK boleh mengubah status jika sudah 'proses' atau 'selesai'
             if ($complaint->status !== 'pending') {
                 return back()->with('error', 'Petugas hanya dapat memverifikasi laporan yang masih Pending.');
             }
-
             if (!in_array($status, ['proses', 'ditolak'])) {
                  return back()->with('error', 'Petugas hanya dapat mengubah status menjadi Proses atau Ditolak.');
             }
         }
 
-        // 2. Role Admin (Resolve)
-        if ($user->hasRole('admin')) {
-             // Admin bebas, tapi idealnya melanjutkan dari Proses -> Selesai
-             // Tidak ada batasan ketat untuk Admin level tertinggi, 
-             // tapi biar rapi kita bisa imbau lewat flash message jika loncat (opsional).
-        }
-        
-        // 3. Preventif jika ada role lain coba-coba
-        if (!$user->can('verify_complaints') && !$user->can('resolve_complaints')) {
-            abort(403, 'Anda tidak memiliki hak akses untuk mengubah status laporan ini.');
-        }
-
-        $complaint->update([
-            'status' => $status,
-        ]);
+        $complaint->update(['status' => $status]);
 
         return back()->with('success', 'Status pengaduan berhasil diperbarui!');
     }
@@ -85,12 +62,7 @@ class ComplaintController extends Controller
      */
     public function destroy(Complaint $complaint)
     {
-        // Hapus file gambar jika ada
-        if ($complaint->attachment && file_exists(storage_path('app/public/' . $complaint->attachment))) {
-            unlink(storage_path('app/public/' . $complaint->attachment));
-        }
-
-        $complaint->delete();
+        $complaint->delete(); // File deletion handled by Model Observer
 
         return redirect()->route('admin.complaints.index')
             ->with('success', 'Pengaduan berhasil dihapus.');

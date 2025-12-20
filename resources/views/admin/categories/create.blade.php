@@ -1,21 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-slate-800 dark:text-slate-200 leading-tight tracking-tight">
+        <h2 class="font-bold text-2xl text-slate-800 leading-tight tracking-tight">
             {{ __('Tambah Kategori Baru') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            {{-- Card dengan border slate-200 dan shadow halus --}}
+            {{-- Card dengan border slate-300 dan shadow halus --}}
             <div
-                class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm sm:rounded-lg">
+                class="bg-white border border-slate-300 shadow-sm sm:rounded-lg">
                 <div class="p-6 sm:p-8">
                     <form method="POST" action="{{ route('admin.categories.store') }}" class="space-y-6">
                         @csrf
 
                         <div>
-                            <x-input-label for="name" :value="__('Nama Kategori')" class="text-slate-700 light:text-slate-300" />
+                            <x-input-label for="name" :value="__('Nama Kategori')" class="text-slate-700" />
                             <x-text-input id="name" name="name" type="text"
                                 class="mt-1 block w-full border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 :value="old('name')" required autofocus
@@ -24,7 +24,7 @@
                         </div>
 
                         <div
-                            class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                            class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                             <a href="{{ route('admin.categories.index') }}">
                                 <x-secondary-button type="button"
                                     class="border-slate-300 text-slate-700 hover:bg-slate-50">

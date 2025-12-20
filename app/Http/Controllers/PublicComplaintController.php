@@ -23,17 +23,13 @@ class PublicComplaintController extends Controller
     /**
      * PROSES TAHAP 1: Validasi & Simpan ke Sesi Sementara
      */
-    public function storeStep1(Request $request)
+    public function storeStep1(\App\Http\Requests\StoreComplaintStep1Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('temp-complaints', 'public');
+            // SECURITY UPDATE: Simpan di disk 'local' (storage/app/temp-complaints) agar tidak bisa diakses publik
+            $path = $request->file('image')->store('temp-complaints', 'local');
             session(['complaint_image' => $path]);
         }
 
@@ -82,7 +78,10 @@ class PublicComplaintController extends Controller
         $finalImagePath = null;
         if ($tempImage) {
             $finalImagePath = 'complaints/' . basename($tempImage);
-            Storage::disk('public')->move($tempImage, $finalImagePath);
+            // SECURITY UPDATE: Pindahkan file dalam disk 'local'
+            if (Storage::disk('local')->exists($tempImage)) {
+                 Storage::disk('local')->move($tempImage, $finalImagePath);
+            }
         }
 
         // Simpan ke Database
@@ -97,9 +96,6 @@ class PublicComplaintController extends Controller
             'attachment' => $finalImagePath, 
             
             'status' => 'pending',
-            'nama_pelapor' => null,
-            'email_pelapor' => null,
-            'telepon_pelapor' => null,
         ]);
 
         session()->forget(['complaint_data', 'complaint_image']);

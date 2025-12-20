@@ -51,6 +51,10 @@ Route::get('/cek-status', [PublicStatusController::class, 'index'])->name('statu
 Route::post('/cek-status', [PublicStatusController::class, 'check'])->name('status.check'); // Form submit pencarian
 Route::get('/status/{token}', [PublicStatusController::class, 'show'])->name('status.show'); // Menampilkan hasil
 
+// Route untuk Lampiran Aman (Secure Attachment)
+// Akses: Admin/Petugas (Session Auth) ATAU Publik (via Token Tiket di URL)
+Route::get('/attachments/{complaint}', [\App\Http\Controllers\AttachmentController::class, 'show'])->name('attachments.show');
+
 // 5. MANAJEMEN PROFIL (Breeze Default)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -89,8 +93,10 @@ Route::middleware(['auth', 'role:admin|petugas|walikota'])->prefix('admin')->nam
         Route::resource('/categories', CategoryController::class)->except(['show']);
     });
 
-    // F. Manajemen Dokumentasi (Gallery)
+    // F. Manajemen Dokumentasi (Gallery) & Berita
     Route::resource('/galleries', \App\Http\Controllers\Admin\GalleryController::class)
+        ->middleware('permission:manage_documentation');
+    Route::resource('/news', \App\Http\Controllers\Admin\NewsController::class)
         ->middleware('permission:manage_documentation');
 
     // G. Manajemen Sistem (Simulasi saja - Testing/Backup/Restore)

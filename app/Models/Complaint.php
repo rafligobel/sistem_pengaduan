@@ -17,9 +17,6 @@ class Complaint extends Model
         'token',
         'attachment', // Pastikan ini ada!
         'status',
-        'nama_pelapor',
-        'email_pelapor',
-        'telepon_pelapor',
     ];  
 
     public function user()
@@ -35,5 +32,19 @@ class Complaint extends Model
     public function responses()
     {
         return $this->hasMany(Response::class);
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($complaint) {
+            if ($complaint->attachment && \Illuminate\Support\Facades\Storage::disk('local')->exists($complaint->attachment)) {
+                \Illuminate\Support\Facades\Storage::disk('local')->delete($complaint->attachment);
+            }
+        });
     }
 }

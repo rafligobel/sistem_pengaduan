@@ -34,7 +34,10 @@ class GalleryController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'required|image|max:2048', // Max 2MB
+            'image' => 'required|image|max:10240', // Max 10MB
+        ], [
+            'image.max' => 'Ukuran gambar tidak boleh lebih dari 10MB.',
+            'image.image' => 'File harus berupa gambar.',
         ]);
 
         $path = $request->file('image')->store('galleries', 'public');

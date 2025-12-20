@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-black-900 dark:text-black-100 leading-tight tracking-tight">
+        <h2 class="font-bold text-2xl text-slate-900 dark:text-slate-100 leading-tight tracking-tight">
             Detail Pengaduan
         </h2>
-        <span class="text-sm text-black-500 dark:text-black-400">
+        <span class="text-sm text-slate-500 dark:text-slate-400">
             {{ $complaint->title }}
         </span>
     </x-slot>
@@ -46,15 +46,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-4 border-t border-slate-100 dark:border-slate-700 pt-4">
                             <div>
                                 <dt class="font-bold text-slate-500 dark:text-slate-400 mb-0.5">Pelapor</dt>
-                                <dd class="text-slate-900 dark:text-slate-200 font-medium">{{ $complaint->nama_pelapor }}</dd>
+                                <dd class="text-slate-900 dark:text-slate-200 font-medium">{{ $complaint->user->name }}</dd>
                             </div>
                             <div>
                                 <dt class="font-bold text-slate-500 dark:text-slate-400 mb-0.5">Email</dt>
-                                <dd class="text-slate-900 dark:text-slate-200 font-medium">{{ $complaint->email_pelapor }}</dd>
-                            </div>
-                            <div>
-                                <dt class="font-bold text-slate-500 dark:text-slate-400 mb-0.5">Telepon</dt>
-                                <dd class="text-slate-900 dark:text-slate-200 font-medium">{{ $complaint->telepon_pelapor }}</dd>
+                                <dd class="text-slate-900 dark:text-slate-200 font-medium">{{ $complaint->user->email }}</dd>
                             </div>
                             <div>
                                 <dt class="font-bold text-slate-500 dark:text-slate-400 mb-0.5">Kategori</dt>
@@ -79,7 +75,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                 </svg>
                                 <span class="text-sm text-slate-700 dark:text-slate-300 font-medium mr-auto">Lampiran Bukti</span>
-                                <a href="{{ asset('storage/' . $complaint->attachment) }}" target="_blank"
+                                <a href="{{ route('attachments.show', $complaint) }}" target="_blank"
                                     class="inline-flex items-center px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md font-semibold text-xs text-slate-700 dark:text-slate-300 uppercase tracking-widest shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
                                     Lihat File
                                 </a>
