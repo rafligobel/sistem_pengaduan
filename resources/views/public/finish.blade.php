@@ -9,10 +9,12 @@
                 </div>
 
                 {{-- Success Icon --}}
-                <div class="relative mb-6 inline-block">
-                    <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-75"></div>
-                    <div class="relative flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-green-50 text-green-500 mx-auto border-[4px] border-white shadow-sm ring-1 ring-green-100">
-                        <svg class="w-7 h-7 sm:w-9 sm:h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                <div class="flex justify-center mb-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-75"></div>
+                        <div class="relative flex items-center justify-center h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-green-50 text-green-500 border-[5px] border-white shadow-sm ring-1 ring-green-100">
+                            <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
                     </div>
                 </div>
 
@@ -20,7 +22,7 @@
                     Laporan Terkirim!
                 </h2>
                 <p class="text-sm text-slate-500 mb-6 leading-relaxed">
-                    Kami telah menerima laporan Anda. Simpan ID Tiket ini untuk memantau status secara berkala.
+                    Kami telah menerima laporan Anda. Cek status laporan anda secara berkala.
                 </p>
 
                 {{-- Ticket ID Box --}}
