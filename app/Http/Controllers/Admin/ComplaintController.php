@@ -58,6 +58,21 @@ class ComplaintController extends Controller
     }
 
     /**
+     * Hapus SEMUA pengaduan (Hanya Admin)
+     */
+    public function destroyAll()
+    {
+        // Menggunakan get() + delete() loop untuk memicu observer jika ada (untuk hapus file)
+        $complaints = Complaint::all();
+        foreach ($complaints as $complaint) {
+             $complaint->delete();
+        }
+
+        return redirect()->route('admin.complaints.index')
+            ->with('success', 'Semua data pengaduan berhasil dihapus.');
+    }
+
+    /**
      * Hapus pengaduan (Hanya Admin)
      */
     public function destroy(Complaint $complaint)

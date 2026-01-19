@@ -52,6 +52,21 @@ class GalleryController extends Controller
     }
 
     /**
+     * Remove all resources from storage.
+     */
+    public function destroyAll()
+    {
+        $galleries = Gallery::all();
+        foreach($galleries as $gallery) {
+            if ($gallery->image_path && Storage::disk('public')->exists($gallery->image_path)) {
+                Storage::disk('public')->delete($gallery->image_path);
+            }
+            $gallery->delete();
+        }
+        return redirect()->route('admin.galleries.index')->with('success', 'Semua dokumentasi berhasil dihapus.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Gallery $gallery)

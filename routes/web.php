@@ -31,7 +31,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 // 3. FITUR PENGADUAN (HANYA USER LOGIN)
 // Middleware 'auth' memastikan hanya pengguna terautentikasi yang bisa akses
-Route::middleware('auth')->prefix('lapor')->name('complaint.public.')->group(function () {
+Route::middleware(['auth', 'role:masyarakat'])->prefix('lapor')->name('complaint.public.')->group(function () {
 
     // Step 1: Input Data Laporan
     Route::get('/step-1', [PublicComplaintController::class, 'createStep1'])->name('step1.create');
@@ -71,6 +71,9 @@ Route::middleware(['auth', 'role:admin|petugas|walikota'])->prefix('admin')->nam
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // B. Manajemen Pengaduan
+    Route::delete('/complaints/destroy-all', [ComplaintController::class, 'destroyAll'])
+        ->middleware('permission:delete_complaints')
+        ->name('complaints.destroyAll');
     Route::get('/complaints', [ComplaintController::class, 'index'])->name('complaints.index');
     Route::get('/complaints/{complaint}', [ComplaintController::class, 'show'])->name('complaints.show');
 
@@ -89,12 +92,20 @@ Route::middleware(['auth', 'role:admin|petugas|walikota'])->prefix('admin')->nam
 
     // E. Manajemen Master Data (User, Category)
     Route::middleware('permission:manage_master')->group(function () {
+        Route::delete('/users/destroy-all', [UserController::class, 'destroyAll'])->name('users.destroyAll');
         Route::resource('/users', UserController::class);
+
+        Route::delete('/categories/destroy-all', [CategoryController::class, 'destroyAll'])->name('categories.destroyAll');
         Route::resource('/categories', CategoryController::class)->except(['show']);
     });
 
     // F. Manajemen Dokumentasi (Gallery) & Berita
+    Route::delete('/galleries/destroy-all', [\App\Http\Controllers\Admin\GalleryController::class, 'destroyAll'])->name('galleries.destroyAll')
+        ->middleware('permission:manage_documentation');
     Route::resource('/galleries', \App\Http\Controllers\Admin\GalleryController::class)
+        ->middleware('permission:manage_documentation');
+
+    Route::delete('/news/destroy-all', [\App\Http\Controllers\Admin\NewsController::class, 'destroyAll'])->name('news.destroyAll')
         ->middleware('permission:manage_documentation');
     Route::resource('/news', \App\Http\Controllers\Admin\NewsController::class)
         ->middleware('permission:manage_documentation');

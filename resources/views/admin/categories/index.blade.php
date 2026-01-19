@@ -4,15 +4,24 @@
             <h2 class="font-bold text-2xl text-slate-900 leading-tight tracking-tight">
                 {{ __('Manajemen Kategori') }}
             </h2>
-            <a href="{{ route('admin.categories.create') }}">
-                <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 px-3 py-1.5 text-xs">
-                    <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    {{ __('Tambah Kategori') }}
-                </x-primary-button>
-            </a>
+            <div class="flex items-center gap-2">
+                <form action="{{ route('admin.categories.destroyAll') }}" method="POST" onsubmit="return confirm('PERHATIAN: Hapus semua kategori yang tidak digunakan?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded shadow-sm text-xs transition duration-150 ease-in-out">
+                        Hapus Semua
+                    </button>
+                </form>
+                <a href="{{ route('admin.categories.create') }}">
+                    <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 px-3 py-1.5 text-xs">
+                        <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        {{ __('Tambah Kategori') }}
+                    </x-primary-button>
+                </a>
+            </div>
         </div>
     </x-slot>
 

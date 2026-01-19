@@ -4,6 +4,17 @@
             <h2 class="font-bold text-2xl text-slate-900 leading-tight">
                 {{ __('Daftar Pengaduan Masuk') }}
             </h2>
+            @can('delete_complaints')
+            <div>
+                 <form action="{{ route('admin.complaints.destroyAll') }}" method="POST" onsubmit="return confirm('PERHATIAN: Apakah Anda yakin ingin MENGHAPUS SEMUA data pengaduan? Tindakan ini tidak dapat dibatalkan!');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-sm text-xs transition duration-150 ease-in-out">
+                        Hapus Semua
+                    </button>
+                </form>
+            </div>
+            @endcan
         </div>
     </x-slot>
 

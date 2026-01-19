@@ -177,10 +177,7 @@
                                 <li>
                                     <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
                                 </li>
-                                <li><a href="{{ route('register') }}"
-                                        class="btn btn-secondary font-medium text-blue-600 hover:text-blue-500 hover:underline">
-                                        Daftar Sekarang
-                                    </a></li>
+                                <li><a href="{{ route('register') }}" class="btn btn-secondary">Daftar Sekarang</a></li>
                             @endauth
                         @endif
                     </ul>
@@ -611,7 +608,7 @@
 
                 <div class="contact-map">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.620779262984!2d123.0607833!3d0.5529833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32792ad7c3905007%3A0x69654050207373!2sInspektorat%20Kota%20Gorontalo!5e0!3m2!1sid!2sid!4v1664807077732!5m2!1sid!2sid"
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d558.6719892285665!2d123.05598984058676!3d0.5572244054739232!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sid!2sid!4v1768815766156!5m2!1sid!2sid"
                         width="350" height="250" style="border:0;" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>

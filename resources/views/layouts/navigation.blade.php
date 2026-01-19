@@ -24,15 +24,21 @@
     class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-300 transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col shadow-xl md:shadow-none">
     
     {{-- LOGO AREA --}}
-    <div class="h-16 flex items-center justify-center border-b border-slate-300 px-6 bg-slate-50/50">
+    {{-- LOGO AREA --}}
+    <div class="h-16 flex items-center justify-between border-b border-slate-300 px-6 bg-slate-50/50">
         <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-            <x-application-logo class="block h-8 w-auto fill-current text-blue-600" />
+            <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo" class="block h-9 w-auto mr-2">
             <span class="font-bold text-xl tracking-tight text-slate-800">SI-ADUAN</span>
         </a>
+        {{-- Mobile Close Button --}}
+        <button @click="sidebarOpen = false" class="md:hidden text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </div>
 
     {{-- MENU LINKS AREA --}}
-    <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+    {{-- Added @click to close sidebar on mobile when any link is clicked --}}
+    <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1" @click="sidebarOpen = false">
         
         {{-- HOME --}}
         <x-responsive-nav-link :href="route('landing')" :active="request()->routeIs('landing')" class="rounded-lg mb-1">

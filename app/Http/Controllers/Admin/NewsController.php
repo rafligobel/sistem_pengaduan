@@ -51,6 +51,18 @@ class NewsController extends Controller
     }
 
     /**
+     * Remove all resources from storage.
+     */
+    public function destroyAll()
+    {
+        $news = News::all();
+        foreach($news as $item) {
+            $item->delete(); // File deletion handled by Model Observer
+        }
+        return redirect()->route('admin.news.index')->with('success', 'Semua berita berhasil dihapus.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(News $news)

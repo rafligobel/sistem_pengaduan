@@ -16,7 +16,7 @@
 
 <body class="font-sans text-black-900 antialiased">
     <div
-        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-50 relative overflow-hidden">
+        class="min-h-screen flex flex-col justify-center items-center py-8 sm:px-6 lg:px-8 bg-slate-50 relative overflow-hidden">
 
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
             <div
@@ -30,20 +30,20 @@
             </div>
         </div>
 
-        <div class="z-10 flex flex-col items-center mb-6">
+        <div class="z-10 flex flex-col items-center mb-5">
             <a href="/" class="transition transform hover:scale-105">
-                <x-application-logo class="w-24 h-24 fill-current text-blue-600 drop-shadow-md" />
+                <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo Kota Gorontalo" class="w-45 h-auto drop-shadow-md object-contain" />
             </a>
-            <h1 class="mt-4 text-2xl font-bold text-slate-800 tracking-tight">Whistle Blowing System</h1>
+            <h1 class="mt-2 text-2xl font-bold text-slate-800 tracking-tight">Whistle Blowing System</h1>
             <p class="text-sm text-slate-500 font-medium">Inspektorat Kota Gorontalo</p>
         </div>
 
         <div
-            class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white/80 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden sm:rounded-2xl z-10 transition-all duration-300 hover:shadow-blue-500/10">
-            {{ $slot }}
+            class="w-full sm:max-w-md bg-white/80 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden sm:rounded-2xl z-10 transition-all duration-300 hover:shadow-blue-500/10 px-6 py-4">
+            {{ $slot }} 
         </div>
 
-        <div class="mt-8 text-center text-xs text-slate-400 z-10">
+        <div class="mt-4 text-center text-xs text-slate-400 z-10">
             &copy; {{ date('Y') }} Inspektorat Kota Gorontalo. All rights reserved.
         </div>
     </div>

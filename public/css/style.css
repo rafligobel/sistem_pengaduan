@@ -34,6 +34,8 @@
   --black: hsl(0, 0%, 0%);
   --onyx: hsl(0, 0%, 25%);
   --jet: hsl(0, 0%, 20%);
+  --powder-blue: hsl(214, 85%, 90%);
+  --sunglow: hsl(48, 100%, 50%);
 
   /**
    * typography
@@ -174,11 +176,15 @@ body {
 }
 
 .btn-secondary {
-  border-color: var(--white);
+  background: var(--powder-blue);
+  border-color: var(--powder-blue);
+  color: var(--bright-navy-blue);
 }
 
 .btn-secondary:is(:hover, :focus) {
-  background: hsla(0, 0%, 100%, 0.1);
+  background: var(--bright-navy-blue);
+  border-color: var(--bright-navy-blue);
+  color: var(--white);
 }
 
 .h1,

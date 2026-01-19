@@ -5,15 +5,26 @@
                 Manajemen User
             </h2>
             {{-- Tombol Tambah User Baru --}}
-            <a href="{{ route('admin.users.create') }}">
-                <x-primary-button class="px-3 py-1.5 text-xs">
-                    <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Tambah Pengguna
-                </x-primary-button>
-            </a>
+            {{-- Tombol Hapus Semua & Tambah User Baru --}}
+            <div class="flex items-center gap-2">
+                <form action="{{ route('admin.users.destroyAll') }}" method="POST" onsubmit="return confirm('PERHATIAN: Apakah Anda yakin ingin MENGHAPUS SEMUA user (kecuali akun Anda)?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded shadow-sm text-xs transition duration-150 ease-in-out">
+                        Hapus Semua
+                    </button>
+                </form>
+
+                <a href="{{ route('admin.users.create') }}">
+                    <x-primary-button class="px-3 py-1.5 text-xs">
+                        <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Tambah Pengguna
+                    </x-primary-button>
+                </a>
+            </div>
         </div>
     </x-slot>
 

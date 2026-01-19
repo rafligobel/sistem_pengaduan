@@ -69,6 +69,32 @@ class CategoryController extends Controller
     }
 
     /**
+     * Hapus SEMUA kategori (Kecuali yang sedang digunakan)
+     */
+    public function destroyAll()
+    {
+         $categories = Category::withCount('complaints')->get();
+         $deleted = 0;
+         $skipped = 0;
+         
+         foreach($categories as $category) {
+             if ($category->complaints_count == 0) {
+                 $category->delete();
+                 $deleted++;
+             } else {
+                 $skipped++;
+             }
+         }
+
+         if ($skipped > 0) {
+             return redirect()->route('admin.categories.index')
+                ->with('warning', "$deleted kategori dihapus. $skipped kategori dilewati karena sedang digunakan oleh pengaduan.");
+         }
+         
+         return redirect()->route('admin.categories.index')->with('success', 'Semua kategori berhasil dihapus.');
+    }
+
+    /**
      * Hapus kategori dari database.
      */
     public function destroy(Category $category)

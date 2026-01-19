@@ -95,6 +95,18 @@ class UserController extends Controller
     }
 
     /**
+     * Hapus SEMUA user (Kecuali Admin Login)
+     */
+    public function destroyAll()
+    {
+        // Hapus semua kecuali diri sendiri
+        User::where('id', '!=', auth()->id())->delete();
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Semua user berhasil dihapus (kecuali akun Anda).');
+    }
+
+    /**
      * Hapus user dari database.
      */
     public function destroy(User $user)
