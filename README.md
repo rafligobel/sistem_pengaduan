@@ -1,59 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Layanan Pengaduan Masyarakat (SiDumas)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 
-## About Laravel
+## 📖 Deskripsi Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Sistem Pengaduan Masyarakat** adalah platform berbasis web yang dirancang untuk memfasilitasi masyarakat dalam menyampaikan aspirasi, pengaduan, atau laporan kejadian kepada instansi terkait secara transparan dan akuntabel.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sistem ini menjembatani komunikasi antara publik dan pemerintah/instansi dengan menyediakan fitur pelacakan status pengaduan (tracking), publikasi berita terkini, serta dokumentasi kegiatan melalui galeri. Dibangun dengan framework Laravel yang handal dan antarmuka modern menggunakan Tailwind CSS.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Fitur Utama
 
-## Learning Laravel
+Aplikasi ini dibagi menjadi dua modul utama: **Public (Masyarakat)** dan **Admin/Petugas**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1. Portal Masyarakat (Public)
+* **Pengajuan Pengaduan:** Formulir pengaduan interaktif dengan dukungan lampiran bukti (foto/dokumen).
+* **Tracking Sistem:** Fitur "Lacak Pengaduan" untuk memantau progres tindak lanjut laporan secara real-time.
+* **Informasi Publik:** Akses ke berita terbaru dan galeri kegiatan instansi.
+* **Cek Status:** Transparansi alur penyelesaian masalah dari 'Pending' hingga 'Selesai'.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Panel Admin & Petugas
+* **Dashboard Statistik:** Ringkasan jumlah pengaduan masuk, diproses, dan selesai.
+* **Manajemen Pengaduan:**
+    * Validasi laporan masuk.
+    * Pemberian tanggapan/respon resmi.
+    * Update status pengaduan.
+* **Manajemen Konten (CMS):**
+    * Kelola Berita/Artikel (`NewsController`).
+    * Kelola Galeri Foto (`GalleryController`).
+* **Manajemen Master Data:**
+    * Kategori Pengaduan (`CategoryController`).
+    * Manajemen Pengguna & Role (`UserController`).
+* **Pengaturan Sistem:** Konfigurasi aplikasi melalui panel admin (`SystemController`).
 
-## Laravel Sponsors
+## 🛠️ Teknologi yang Digunakan
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* **Backend:** Laravel Framework (PHP)
+* **Frontend:** Blade Templating, Tailwind CSS
+* **Database:** MySQL
+* **Authentication:** Laravel Breeze / Jetstream (Inferred based on routes)
+* **Role Management:** Spatie Laravel Permission (Inferred from seeders structure)
 
-### Premium Partners
+## 🔐 Hak Akses (Role & Permissions)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Sistem mendukung *Multi-Role Authorization*:
 
-## Contributing
+1.  **Super Admin:** Akses penuh ke seluruh fitur, termasuk pengaturan sistem dan manajemen user.
+2.  **Petugas:** Fokus pada validasi, verifikasi, dan memberikan tanggapan terhadap pengaduan.
+3.  **Masyarakat:** User umum yang melaporkan dan memantau pengaduan mereka sendiri.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 💻 Instalasi & Penggunaan
 
-## Code of Conduct
+Ikuti langkah berikut untuk menjalankan proyek di local environment:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1.  **Clone Repositori**
+    ```bash
+    git clone [https://github.com/username/sistem-pengaduan.git](https://github.com/username/sistem-pengaduan.git)
+    cd sistem-pengaduan
+    ```
 
-## Security Vulnerabilities
+2.  **Install Dependencies**
+    ```bash
+    composer install
+    npm install
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3.  **Konfigurasi Environment**
+    Salin file konfigurasi dan atur kredensial database.
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
-## License
+4.  **Setup Database**
+    Jalankan migrasi database dan seeder untuk data awal (Roles, Permissions, Admin User).
+    ```bash
+    php artisan migrate --seed
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5.  **Compile Assets**
+    ```bash
+    npm run dev
+    ```
+
+6.  **Jalankan Server**
+    ```bash
+    php artisan serve
+    ```
+    Akses aplikasi di `http://localhost:8000`.
+
+## 📂 Struktur Folder Utama
+
+* `app/Http/Controllers/Admin`: Logika untuk panel admin (Pengaduan, Berita, Galeri).
+* `app/Http/Controllers/Public`: Logika untuk frontend publik.
+* `app/Models`: Model data (Complaint, Response, News, Gallery).
+* `resources/views/admin`: Tampilan panel dashboard.
+* `resources/views/public`: Tampilan landing page dan form pengaduan.
+* `routes/web.php`: Definisi seluruh rute aplikasi.
+
+## 🤝 Kontribusi
+
+Kontribusi sangat dihargai! Jika Anda ingin berkontribusi:
+1.  Fork repositori ini.
+2.  Buat branch fitur baru (`git checkout -b fitur-keren`).
+3.  Commit perubahan Anda (`git commit -m 'Menambahkan fitur keren'`).
+4.  Push ke branch (`git push origin fitur-keren`).
+5.  Buat Pull Request.
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](https://opensource.org/licenses/MIT).
+
+---
+*Dibuat dengan ❤️ oleh Rafli Ananda Rizkillah Gobel*
