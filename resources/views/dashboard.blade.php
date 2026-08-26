@@ -12,7 +12,7 @@
 
     {{-- Fetch data once --}}
     @php
-        $complaints = Auth::user()->complaints()->latest()->get();
+        $complaints = Auth::user()->complaints()->with('category')->latest()->get();
     @endphp
 
     <div class="py-5" x-data="{ activeModal: null }">
@@ -182,6 +182,14 @@
                                         </div>
                                     </div>
 
+                                    {{-- Kategori --}}
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Kategori Permasalahan</p>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                                            {{ $complaint->category->name ?? 'Kategori Tidak Ditemukan' }}
+                                        </span>
+                                    </div>
+
                                     {{-- Status --}}
                                     <div>
                                         <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Status Laporan</p>
@@ -228,11 +236,18 @@
                                     </div>
 
                                     {{-- Image --}}
-                                    @if ($complaint->image)
+                                    @if ($complaint->attachment)
                                         <div>
                                             <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Bukti Lampiran</p>
-                                            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
-                                                <img src="{{ asset('storage/' . $complaint->image) }}" class="w-full h-auto object-contain max-h-64 mx-auto" alt="Bukti">
+                                            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-50 p-2">
+                                                <img src="{{ route('attachments.show', $complaint->id) }}" class="w-full h-auto object-contain max-h-64 mx-auto rounded-md shadow-sm" alt="Bukti">
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Bukti Lampiran</p>
+                                            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
+                                                <span class="text-xs text-slate-400 italic">Tidak ada lampiran disertakan.</span>
                                             </div>
                                         </div>
                                     @endif

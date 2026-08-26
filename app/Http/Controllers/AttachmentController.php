@@ -58,7 +58,7 @@ class AttachmentController extends Controller
         }
 
         // 3. Return File
-        $path = storage_path('app/' . $complaint->attachment);
+        $path = Storage::disk('local')->path($complaint->attachment);
         return response()->file($path);
         
         // Pilihan lain: response()->download($path) jika ingin download

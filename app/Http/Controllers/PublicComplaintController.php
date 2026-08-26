@@ -58,7 +58,15 @@ class PublicComplaintController extends Controller
 
         $category = Category::find($data['category_id']);
 
-        return view('public.step2', compact('data', 'category', 'image'));
+        // Convert the secure temporary local image into a Base64 string for preview
+        $imageBase64 = null;
+        if ($image && \Illuminate\Support\Facades\Storage::disk('local')->exists($image)) {
+            $mime = \Illuminate\Support\Facades\Storage::disk('local')->mimeType($image);
+            $content = \Illuminate\Support\Facades\Storage::disk('local')->get($image);
+            $imageBase64 = 'data:' . $mime . ';base64,' . base64_encode($content);
+        }
+
+        return view('public.step2', compact('data', 'category', 'image', 'imageBase64'));
     }
 
     /**

@@ -25,13 +25,13 @@
     
     {{-- LOGO AREA --}}
     {{-- LOGO AREA --}}
-    <div class="h-16 flex items-center justify-between border-b border-slate-300 px-6 bg-slate-50/50">
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-            <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo" class="block h-9 w-auto mr-2">
-            <span class="font-bold text-xl tracking-tight text-slate-800">SI-ADUAN</span>
+    <div class="h-16 flex items-center justify-between border-b border-slate-300 px-4 sm:px-6 bg-slate-50/50">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 min-w-0">
+            <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo" class="shrink-0 h-8 w-auto object-contain">
+            <span class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-800 truncate">SI-ADUAN</span>
         </a>
         {{-- Mobile Close Button --}}
-        <button @click="sidebarOpen = false" class="md:hidden text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+        <button @click="sidebarOpen = false" class="md:hidden shrink-0 p-1 -mr-2 text-slate-400 hover:text-red-500 transition-colors focus:outline-none">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     </div>

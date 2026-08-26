@@ -41,6 +41,9 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Assign default role 'masyarakat' so users can access complaint features
+        $user->assignRole('masyarakat');
+
         event(new Registered($user));
 
         Auth::login($user);

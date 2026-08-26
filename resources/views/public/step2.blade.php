@@ -49,12 +49,12 @@
                     </div>
 
                     {{-- Gambar --}}
-                    @if (isset($data['image_path']))
+                    @if (isset($imageBase64))
                         <div class="mb-2">
                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Bukti Lampiran</label>
                             <div class="relative rounded-lg overflow-hidden border border-slate-200">
-                                <img src="{{ asset('storage/' . $data['image_path']) }}" alt="Preview" class="w-full h-32 object-cover object-center">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-2">
+                                <img src="{{ $imageBase64 }}" alt="Preview" class="w-full h-32 object-contain object-center bg-slate-50">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-2 pointer-events-none">
                                      <span class="text-white text-[10px] font-medium opacity-90">Lampiran tersedia</span>
                                 </div>
                             </div>
