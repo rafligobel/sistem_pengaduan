@@ -73,9 +73,9 @@
                         {{-- Tombol Aksi --}}
                         <div class="flex items-center gap-4">
                             <x-primary-button>{{ __('Perbarui') }}</x-primary-button>
-                            <a href="{{ route('admin.users.index') }}">
-                                <x-secondary-button type="button">{{ __('Batal') }}</x-secondary-button>
-                            </a>
+                            <x-secondary-button href="{{ route('admin.users.index') }}">
+                                {{ __('Batal') }}
+                            </x-secondary-button>
                         </div>
                     </form>
                 </div>

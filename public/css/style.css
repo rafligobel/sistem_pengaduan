@@ -228,7 +228,7 @@ body {
 
 .section-text {
   color: var(--black-coral);
-  margin-bottom: 50px !important;
+  margin-bottom: 32px;
 }
 
 .card-text {
@@ -1312,8 +1312,8 @@ address {
    */
 
   .hero {
-    min-height: 800px;
-    padding-top: 85px;
+    min-height: 580px;
+    padding-top: 175px;
   }
 
   .hero-text {
@@ -1424,8 +1424,7 @@ address {
     max-width: 800px;
   }
 
-  .section-text,
-  .hero-text {
+  .section-text {
     width: 100%;
     max-width: 100%;
     /* Hilangkan batas maksimal agar teks bisa melebar */

@@ -36,7 +36,7 @@
                                 <tr>
                                     <th scope="col" class="px-4 py-3">No</th>
                                     <th scope="col" class="px-4 py-3">Pelapor</th>
-                                    <th scope="col" class="px-4 py-3">Judul</th>
+                                    <th scope="col" class="px-4 py-3">Ringkasan</th>
                                     <th scope="col" class="px-4 py-3">Kategori</th>
                                     <th scope="col" class="px-4 py-3">Tanggal</th>
                                     <th scope="col" class="px-4 py-3">Status</th>
@@ -48,7 +48,7 @@
                                     <tr class="bg-white border-b border-slate-100 hover:bg-slate-50 transition duration-150">
                                         <td class="px-4 py-3 font-medium text-slate-900">{{ $complaints->firstItem() + $key }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">{{ $item->user->name ?? 'Anonim' }}</td>
-                                        <td class="px-4 py-3 font-medium text-slate-800">{{ Str::limit($item->title, 25) }}</td>
+                                        <td class="px-4 py-3 font-medium text-slate-800">{{ Str::limit($item->what, 30) }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <span class="bg-slate-100 text-slate-700 py-0.5 px-2 rounded-full text-[10px] font-bold">
                                                 {{ $item->category->name }}

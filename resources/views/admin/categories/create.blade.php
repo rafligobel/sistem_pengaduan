@@ -25,12 +25,9 @@
 
                         <div
                             class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                            <a href="{{ route('admin.categories.index') }}">
-                                <x-secondary-button type="button"
-                                    class="border-slate-300 text-slate-700 hover:bg-slate-50">
-                                    {{ __('Batal') }}
-                                </x-secondary-button>
-                            </a>
+                            <x-secondary-button href="{{ route('admin.categories.index') }}">
+                                {{ __('Batal') }}
+                            </x-secondary-button>
                             <x-primary-button
                                 class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
                                 {{ __('Simpan Kategori') }}

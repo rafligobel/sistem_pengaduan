@@ -9,10 +9,10 @@
 
         <div class="relative max-w-5xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl mb-4">
-                Lacak Status Laporan
+                Lacak Status Pengaduan
             </h1>
             <p class="mt-2 max-w-xl mx-auto text-base text-slate-300">
-                Pantau progres tindak lanjut pengaduan Anda secara real-time.
+                Pantau progres tindak lanjut pengaduan Anda secara real-time melalui SI-ADUAN.
             </p>
 
             {{-- Search Form --}}
@@ -63,7 +63,7 @@
                         <thead class="bg-slate-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">ID Tiket</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Judul</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Ringkasan Pengaduan</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" class=" relative px-6 py-3"><span class="sr-only">Detail</span></th>
@@ -76,7 +76,7 @@
                                         {{ $complaint->token }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="text-sm font-medium text-slate-900 line-clamp-1">{{ $complaint->title }}</div>
+                                        <div class="text-sm font-medium text-slate-900 line-clamp-1">{{ Str::limit($complaint->what, 40) }}</div>
                                         <div class="text-xs text-slate-500">{{ $complaint->category->name }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-500">

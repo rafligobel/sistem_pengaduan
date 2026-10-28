@@ -24,10 +24,9 @@
     class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-300 transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col shadow-xl md:shadow-none">
     
     {{-- LOGO AREA --}}
-    {{-- LOGO AREA --}}
     <div class="h-16 flex items-center justify-between border-b border-slate-300 px-4 sm:px-6 bg-slate-50/50">
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 min-w-0">
-            <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo" class="shrink-0 h-8 w-auto object-contain">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 min-w-0">
+            <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo" class="shrink-0 h-9 w-auto object-contain">
             <span class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-800 truncate">SI-ADUAN</span>
         </a>
         {{-- Mobile Close Button --}}

@@ -221,7 +221,7 @@
                             <thead class="text-xs text-slate-700 uppercase bg-slate-50">
                                 <tr>
                                     <th scope="col" class="px-5 py-3">Pelapor</th>
-                                    <th scope="col" class="px-5 py-3">Judul</th>
+                                    <th scope="col" class="px-5 py-3">Ringkasan</th>
                                     <th scope="col" class="px-5 py-3">Tanggal</th>
                                     <th scope="col" class="px-5 py-3">Status</th>
                                     <th scope="col" class="px-5 py-3 text-right">Aksi</th>
@@ -234,7 +234,7 @@
                                             {{ $complaint->user->name ?? 'Anonim' }}
                                         </td>
                                         <td class="px-5 py-3 whitespace-nowrap">
-                                            {{ Str::limit($complaint->title, 35) }}
+                                            {{ Str::limit($complaint->what, 35) }}
                                         </td>
                                         <td class="px-5 py-3 whitespace-nowrap">
                                             {{ $complaint->created_at->diffForHumans() }}

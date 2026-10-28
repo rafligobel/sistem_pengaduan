@@ -55,7 +55,8 @@
                                 <thead class="bg-slate-50 text-slate-800 uppercase text-xs font-semibold">
                                     <tr>
                                         <th class="px-6 py-4">ID Tiket</th>
-                                        <th class="px-6 py-4">Judul Laporan</th>
+                                        <th class="px-6 py-4">Ringkasan Pengaduan</th>
+                                        <th class="px-6 py-4">Kategori</th>
                                         <th class="px-6 py-4">Tanggal</th>
                                         <th class="px-6 py-4">Status</th>
                                         <th class="px-6 py-4 text-center">Aksi</th>
@@ -68,7 +69,12 @@
                                                 #{{ $complaint->token }}
                                             </td>
                                             <td class="px-6 py-4 font-medium text-slate-900">
-                                                {{ Str::limit($complaint->title, 40) }}
+                                                {{ Str::limit($complaint->what, 50) }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                                    {{ $complaint->category->name ?? '-' }}
+                                                </span>
                                             </td>
                                             <td class="px-6 py-4 text-slate-500">
                                                 {{ $complaint->created_at->format('d M Y') }}
@@ -184,8 +190,8 @@
 
                                     {{-- Kategori --}}
                                     <div>
-                                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Kategori Permasalahan</p>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Jenis Tindak Pidana Korupsi</p>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                                             {{ $complaint->category->name ?? 'Kategori Tidak Ditemukan' }}
                                         </span>
                                     </div>
@@ -226,28 +232,78 @@
                                         @endif
                                     </div>
 
-                                    {{-- Content --}}
-                                    <div>
-                                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Isi Laporan</p>
-                                        <h4 class="text-base font-bold text-slate-900 mb-2">{{ $complaint->title }}</h4>
-                                        <div class="bg-slate-50 rounded-lg p-4 text-sm text-slate-600 border border-slate-100 max-h-48 overflow-y-auto leading-relaxed">
-                                            {!! nl2br(e($complaint->content)) !!}
+                                    {{-- 5W+1H Detail --}}
+                                    <div class="max-h-64 overflow-y-auto space-y-2">
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider sticky top-0 bg-white py-1">Unsur 5W + 1H</p>
+                                        
+                                        <div class="bg-slate-50 rounded-md p-2 border border-slate-100">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <span class="inline-flex items-center justify-center w-4 h-4 rounded bg-red-100 text-red-600 text-[9px] font-black">W</span>
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Apa (What)</span>
+                                            </div>
+                                            <p class="text-xs text-slate-700 leading-relaxed">{!! nl2br(e(Str::limit($complaint->what, 200))) !!}</p>
+                                        </div>
+
+                                        <div class="bg-slate-50 rounded-md p-2 border border-slate-100">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <span class="inline-flex items-center justify-center w-4 h-4 rounded bg-orange-100 text-orange-600 text-[9px] font-black">W</span>
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Siapa (Who)</span>
+                                            </div>
+                                            <p class="text-xs text-slate-700 leading-relaxed">{!! nl2br(e(Str::limit($complaint->who, 200))) !!}</p>
+                                        </div>
+
+                                        <div class="bg-slate-50 rounded-md p-2 border border-slate-100">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <span class="inline-flex items-center justify-center w-4 h-4 rounded bg-green-100 text-green-600 text-[9px] font-black">W</span>
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Di mana (Where)</span>
+                                            </div>
+                                            <p class="text-xs text-slate-700 leading-relaxed">{!! nl2br(e(Str::limit($complaint->where_location, 200))) !!}</p>
+                                        </div>
+
+                                        <div class="bg-slate-50 rounded-md p-2 border border-slate-100">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <span class="inline-flex items-center justify-center w-4 h-4 rounded bg-purple-100 text-purple-600 text-[9px] font-black">W</span>
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Kapan (When)</span>
+                                            </div>
+                                            <p class="text-xs text-slate-700 leading-relaxed">{!! nl2br(e(Str::limit($complaint->when_time, 200))) !!}</p>
+                                        </div>
+
+                                        <div class="bg-slate-50 rounded-md p-2 border border-slate-100">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <span class="inline-flex items-center justify-center w-4 h-4 rounded bg-teal-100 text-teal-600 text-[9px] font-black">W</span>
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Mengapa (Why)</span>
+                                            </div>
+                                            <p class="text-xs text-slate-700 leading-relaxed">
+                                                @if($complaint->why)
+                                                    {!! nl2br(e(Str::limit($complaint->why, 200))) !!}
+                                                @else
+                                                    <span class="text-slate-400 italic">Tidak diisi</span>
+                                                @endif
+                                            </p>
+                                        </div>
+
+                                        <div class="bg-slate-50 rounded-md p-2 border border-slate-100">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <span class="inline-flex items-center justify-center w-4 h-4 rounded bg-blue-100 text-blue-600 text-[9px] font-black">H</span>
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Bagaimana (How)</span>
+                                            </div>
+                                            <p class="text-xs text-slate-700 leading-relaxed">{!! nl2br(e(Str::limit($complaint->how, 200))) !!}</p>
                                         </div>
                                     </div>
 
-                                    {{-- Image --}}
+                                    {{-- Lampiran --}}
                                     @if ($complaint->attachment)
                                         <div>
-                                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Bukti Lampiran</p>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Bukti Pendukung</p>
                                             <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-50 p-2">
                                                 <img src="{{ route('attachments.show', $complaint->id) }}" class="w-full h-auto object-contain max-h-64 mx-auto rounded-md shadow-sm" alt="Bukti">
                                             </div>
                                         </div>
                                     @else
                                         <div>
-                                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Bukti Lampiran</p>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Bukti Pendukung</p>
                                             <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                                                <span class="text-xs text-slate-400 italic">Tidak ada lampiran disertakan.</span>
+                                                <span class="text-xs text-slate-400 italic">Tidak ada bukti pendukung disertakan.</span>
                                             </div>
                                         </div>
                                     @endif

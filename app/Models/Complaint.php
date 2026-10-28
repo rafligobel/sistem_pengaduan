@@ -12,10 +12,16 @@ class Complaint extends Model
     protected $fillable = [
         'user_id',
         'category_id',
-        'title',
-        'content',
+        // Unsur 5W+1H
+        'what',
+        'who',
+        'where_location',
+        'when_time',
+        'why',
+        'how',
+        // Meta
         'token',
-        'attachment', // Pastikan ini ada!
+        'attachment',
         'status',
     ];  
 

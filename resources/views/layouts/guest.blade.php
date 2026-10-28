@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'WBS Inspektorat') }}</title>
+    <title>{{ config('app.name', 'SI-ADUAN') }}</title>
 
+    <link rel="shortcut icon" href="{{ asset('images/logo-kota1.png') }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans text-black-900 antialiased">
+<body class="font-sans text-slate-900 antialiased">
     <div
         class="min-h-screen flex flex-col justify-center items-center py-8 sm:px-6 lg:px-8 bg-slate-50 relative overflow-hidden">
 
@@ -32,9 +33,9 @@
 
         <div class="z-10 flex flex-col items-center mb-5">
             <a href="/" class="transition transform hover:scale-105">
-                <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo Kota Gorontalo" class="w-45 h-auto drop-shadow-md object-contain" />
+                <img src="{{ asset('images/logo-kota1.png') }}" alt="Logo Kota Gorontalo" class="h-16 w-auto drop-shadow-md object-contain" />
             </a>
-            <h1 class="mt-2 text-2xl font-bold text-slate-800 tracking-tight">Whistle Blowing System</h1>
+            <h1 class="mt-2 text-2xl font-extrabold text-slate-800 tracking-tight">SI-ADUAN</h1>
             <p class="text-sm text-slate-500 font-medium">Inspektorat Kota Gorontalo</p>
         </div>
 
@@ -44,7 +45,7 @@
         </div>
 
         <div class="mt-4 text-center text-xs text-slate-400 z-10">
-            &copy; {{ date('Y') }} Inspektorat Kota Gorontalo. All rights reserved.
+            &copy; {{ date('Y') }} Inspektorat Kota Gorontalo. Hak cipta dilindungi.
         </div>
     </div>
 </body>

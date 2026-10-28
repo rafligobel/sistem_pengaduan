@@ -12,7 +12,8 @@ use Illuminate\Support\Str;
 class PublicComplaintController extends Controller
 {
     /**
-     * TAHAP 1: Form Input Data
+     * TAHAP 1: Form Input Data Pengaduan (5W+1H)
+     * Sesuai Perwako 2025
      */
     public function createStep1()
     {
@@ -27,17 +28,32 @@ class PublicComplaintController extends Controller
     {
         $validated = $request->validated();
 
-        if ($request->hasFile('image')) {
-            // SECURITY UPDATE: Simpan di disk 'local' (storage/app/temp-complaints) agar tidak bisa diakses publik
-            $path = $request->file('image')->store('temp-complaints', 'local');
-            session(['complaint_image' => $path]);
+        // Handle multiple file uploads (bukti pendukung)
+        $uploadedFiles = [];
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                // SECURITY UPDATE: Simpan di disk 'local' agar tidak bisa diakses publik
+                $path = $file->store('temp-complaints', 'local');
+                $uploadedFiles[] = [
+                    'path' => $path,
+                    'name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'mime' => $file->getMimeType(),
+                ];
+            }
         }
+
+        session(['complaint_attachments' => $uploadedFiles]);
 
         session([
             'complaint_data' => [
-                'title' => $validated['title'],
-                'category_id' => $validated['category_id'],
-                'content' => $validated['content'],
+                'what'           => $validated['what'],
+                'who'            => $validated['who'],
+                'where_location' => $validated['where_location'],
+                'when_time'      => $validated['when_time'],
+                'why'            => $validated['why'] ?? null,
+                'how'            => $validated['how'],
+                'category_id'    => $validated['category_id'],
             ]
         ]);
 
@@ -50,7 +66,7 @@ class PublicComplaintController extends Controller
     public function createStep2()
     {
         $data = session('complaint_data');
-        $image = session('complaint_image');
+        $attachments = session('complaint_attachments', []);
 
         if (!$data) {
             return redirect()->route('complaint.public.step1.create');
@@ -58,15 +74,18 @@ class PublicComplaintController extends Controller
 
         $category = Category::find($data['category_id']);
 
-        // Convert the secure temporary local image into a Base64 string for preview
-        $imageBase64 = null;
-        if ($image && \Illuminate\Support\Facades\Storage::disk('local')->exists($image)) {
-            $mime = \Illuminate\Support\Facades\Storage::disk('local')->mimeType($image);
-            $content = \Illuminate\Support\Facades\Storage::disk('local')->get($image);
-            $imageBase64 = 'data:' . $mime . ';base64,' . base64_encode($content);
+        // Generate previews for image attachments
+        $attachmentPreviews = [];
+        foreach ($attachments as $att) {
+            $preview = null;
+            if (str_starts_with($att['mime'], 'image/') && Storage::disk('local')->exists($att['path'])) {
+                $content = Storage::disk('local')->get($att['path']);
+                $preview = 'data:' . $att['mime'] . ';base64,' . base64_encode($content);
+            }
+            $attachmentPreviews[] = array_merge($att, ['preview' => $preview]);
         }
 
-        return view('public.step2', compact('data', 'category', 'image', 'imageBase64'));
+        return view('public.step2', compact('data', 'category', 'attachmentPreviews'));
     }
 
     /**
@@ -75,7 +94,7 @@ class PublicComplaintController extends Controller
     public function store()
     {
         $data = session('complaint_data');
-        $tempImage = session('complaint_image');
+        $tempAttachments = session('complaint_attachments', []);
 
         if (!$data) {
             return redirect()->route('complaint.public.step1.create');
@@ -83,30 +102,49 @@ class PublicComplaintController extends Controller
 
         $ticketCode = 'TIKET-' . date('Ymd') . '-' . strtoupper(Str::random(4));
 
-        $finalImagePath = null;
-        if ($tempImage) {
-            $finalImagePath = 'complaints/' . basename($tempImage);
-            // SECURITY UPDATE: Pindahkan file dalam disk 'local'
-            if (Storage::disk('local')->exists($tempImage)) {
-                 Storage::disk('local')->move($tempImage, $finalImagePath);
+        // Pindahkan file dari temp ke final directory
+        $finalAttachmentPath = null;
+        if (!empty($tempAttachments)) {
+            $firstFile = $tempAttachments[0];
+            $finalAttachmentPath = 'complaints/' . basename($firstFile['path']);
+            if (Storage::disk('local')->exists($firstFile['path'])) {
+                Storage::disk('local')->move($firstFile['path'], $finalAttachmentPath);
+            }
+
+            // Pindahkan file tambahan (simpan referensi di nama file dengan separator)
+            $additionalPaths = [];
+            for ($i = 1; $i < count($tempAttachments); $i++) {
+                $addPath = 'complaints/' . basename($tempAttachments[$i]['path']);
+                if (Storage::disk('local')->exists($tempAttachments[$i]['path'])) {
+                    Storage::disk('local')->move($tempAttachments[$i]['path'], $addPath);
+                }
+                $additionalPaths[] = $addPath;
+            }
+
+            // Gabungkan semua path dengan separator |
+            if (!empty($additionalPaths)) {
+                $finalAttachmentPath = $finalAttachmentPath . '|' . implode('|', $additionalPaths);
             }
         }
 
         // Simpan ke Database
         $complaint = Complaint::create([
-            'user_id' => Auth::id(),
-            'token' => $ticketCode,
-            'category_id' => $data['category_id'],
-            'title' => $data['title'],
-            'content' => $data['content'],
-            
-            // PERBAIKAN DISINI: Gunakan 'attachment' sesuai nama kolom di database
-            'attachment' => $finalImagePath, 
-            
-            'status' => 'pending',
+            'user_id'        => Auth::id(),
+            'token'          => $ticketCode,
+            'category_id'    => $data['category_id'],
+            // 5W+1H
+            'what'           => $data['what'],
+            'who'            => $data['who'],
+            'where_location' => $data['where_location'],
+            'when_time'      => $data['when_time'],
+            'why'            => $data['why'],
+            'how'            => $data['how'],
+            // Lampiran & Status
+            'attachment'     => $finalAttachmentPath, 
+            'status'         => 'pending',
         ]);
 
-        session()->forget(['complaint_data', 'complaint_image']);
+        session()->forget(['complaint_data', 'complaint_attachments']);
 
         return redirect()->route('complaint.public.finish', $complaint->token);
     }

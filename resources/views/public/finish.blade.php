@@ -19,10 +19,10 @@
                 </div>
 
                 <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2">
-                    Laporan Terkirim!
+                    Pengaduan Berhasil Dikirim!
                 </h2>
                 <p class="text-sm text-slate-500 mb-6 leading-relaxed">
-                    Kami telah menerima laporan Anda. Cek status laporan anda secara berkala.
+                    Pengaduan Anda telah kami terima dan akan segera diproses. Pantau status pengaduan Anda melalui menu Dashboard.
                 </p>
 
                 {{-- Ticket ID Box --}}
@@ -60,7 +60,7 @@
             </div>
             
             <p class="text-center text-xs text-slate-400 mt-6 md:mt-8">
-                Terima kasih telah berpartisipasi dalam membangun tata kelola yang lebih baik.
+                Terima kasih telah berpartisipasi dalam mewujudkan tata kelola pemerintahan yang bersih dan akuntabel.
             </p>
 
         </div>

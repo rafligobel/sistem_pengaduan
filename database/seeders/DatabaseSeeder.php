@@ -16,11 +16,22 @@ class DatabaseSeeder extends Seeder
         // Panggil Seeder Roles dan User Admin/Petugas
         $this->call(RolesAndPermissionsSeeder::class);
 
-        // (Opsional) Seed data lain jika perlu,
-        // Misalnya, membuat kategori dummy
-        \App\Models\Category::factory()->create(['name' => 'Infrastruktur']);
-        \App\Models\Category::factory()->create(['name' => 'Pelayanan Publik']);
-        \App\Models\Category::factory()->create(['name' => 'Lingkungan']);
+        // Kategori Pengaduan Tindak Pidana Korupsi (UU Tipikor + Tidak Diketahui)
+        $kategoriKorupsi = [
+            'Kerugian Keuangan Negara',
+            'Suap-menyuap',
+            'Penggelapan dalam Jabatan',
+            'Pemerasan',
+            'Perbuatan Curang',
+            'Benturan Kepentingan dalam Pengadaan',
+            'Gratifikasi',
+            'Tidak Diketahui',
+        ];
+
+        // Masukkan ke dalam database (jika belum ada)
+        foreach ($kategoriKorupsi as $category) {
+            \App\Models\Category::firstOrCreate(['name' => $category]);
+        }
 
         // (Opsional) Buat 10 user 'test'
         // User::factory(10)->create();

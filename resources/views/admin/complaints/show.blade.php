@@ -4,21 +4,21 @@
             Detail Pengaduan
         </h2>
         <span class="text-sm text-slate-500 dark:text-slate-400">
-            {{ $complaint->title }}
+            {{ $complaint->token }}
         </span>
     </x-slot>
 
     <div class="py-3">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-            {{-- Card Utama (Info Pengaduan) --}}
+            {{-- Card Utama (Info Pengaduan 5W+1H) --}}
             <div class="lg:col-span-2">
                 <div
                     class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm sm:rounded-lg">
                     <div class="p-5 text-slate-900 dark:text-slate-100">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <h3 class="text-xl font-bold text-slate-900 dark:text-black">{{ $complaint->title }}</h3>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-black">Pengaduan #{{ $complaint->token }}</h3>
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="text-xs text-slate-500 dark:text-slate-400">Token:</span>
                                     <code class="font-mono text-xs bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300">{{ $complaint->token }}</code>
@@ -43,6 +43,7 @@
                             @endif
                         </div>
 
+                        {{-- Info Meta --}}
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-4 border-t border-slate-100 dark:border-slate-700 pt-4">
                             <div>
                                 <dt class="font-bold text-slate-500 dark:text-slate-400 mb-0.5">Pelapor</dt>
@@ -53,32 +54,107 @@
                                 <dd class="text-slate-900 dark:text-slate-200 font-medium">{{ $complaint->user->email }}</dd>
                             </div>
                             <div>
-                                <dt class="font-bold text-slate-500 dark:text-slate-400 mb-0.5">Kategori</dt>
-                                <dd class="text-slate-900 dark:text-slate-200 font-medium badge bg-slate-50 inline-block px-2 py-0.5 rounded">{{ $complaint->category->name }}</dd>
-                            </div>
-                            <div>
                                 <dt class="font-bold text-slate-500 dark:text-slate-400 mb-0.5">Tanggal Lapor</dt>
                                 <dd class="text-slate-900 dark:text-slate-200 font-medium">{{ $complaint->created_at->format('d F Y, H:i') }}</dd>
                             </div>
                         </div>
 
+                        {{-- Kategori Tindak Pidana --}}
+                        <div class="border-t border-slate-100 dark:border-slate-700 pt-4 mb-4">
+                            <h4 class="font-bold text-slate-900 dark:text-black mb-2 text-sm">Jenis Tindak Pidana Korupsi</h4>
+                            <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                {{ $complaint->category->name ?? 'Tidak Ditemukan' }}
+                            </span>
+                        </div>
+
+                        {{-- UNSUR 5W+1H --}}
                         <div class="border-t border-slate-100 dark:border-slate-700 pt-4">
-                            <h4 class="font-bold text-slate-900 dark:text-black mb-2 text-base">Isi Pengaduan</h4>
-                            <div class="prose prose-slate dark:prose-invert max-w-none bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
-                                <p class="whitespace-pre-line text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{{ $complaint->content }}</p>
+                            <h4 class="font-bold text-slate-900 dark:text-black mb-3 text-base">Unsur 5W + 1H</h4>
+                            
+                            <div class="space-y-3">
+                                {{-- What --}}
+                                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-red-100 text-red-600 text-[10px] font-black">W</span>
+                                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">Apa yang Terjadi (What)</span>
+                                    </div>
+                                    <p class="whitespace-pre-line text-sm text-slate-700 dark:text-slate-300 leading-relaxed ml-7">{{ $complaint->what }}</p>
+                                </div>
+
+                                {{-- Who --}}
+                                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-orange-100 text-orange-600 text-[10px] font-black">W</span>
+                                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">Siapa yang Terlibat (Who)</span>
+                                    </div>
+                                    <p class="whitespace-pre-line text-sm text-slate-700 dark:text-slate-300 leading-relaxed ml-7">{{ $complaint->who }}</p>
+                                </div>
+
+                                {{-- Where --}}
+                                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-green-100 text-green-600 text-[10px] font-black">W</span>
+                                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">Di mana Terjadi (Where)</span>
+                                    </div>
+                                    <p class="whitespace-pre-line text-sm text-slate-700 dark:text-slate-300 leading-relaxed ml-7">{{ $complaint->where_location }}</p>
+                                </div>
+
+                                {{-- When --}}
+                                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-purple-100 text-purple-600 text-[10px] font-black">W</span>
+                                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">Kapan Terjadi (When)</span>
+                                    </div>
+                                    <p class="whitespace-pre-line text-sm text-slate-700 dark:text-slate-300 leading-relaxed ml-7">{{ $complaint->when_time }}</p>
+                                </div>
+
+                                {{-- Why --}}
+                                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-teal-100 text-teal-600 text-[10px] font-black">W</span>
+                                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">Mengapa Terjadi (Why)</span>
+                                    </div>
+                                    <p class="whitespace-pre-line text-sm text-slate-700 dark:text-slate-300 leading-relaxed ml-7">
+                                        @if($complaint->why)
+                                            {{ $complaint->why }}
+                                        @else
+                                            <span class="text-slate-400 italic">Tidak diisi oleh pelapor</span>
+                                        @endif
+                                    </p>
+                                </div>
+
+                                {{-- How --}}
+                                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-blue-100 text-blue-600 text-[10px] font-black">H</span>
+                                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">Modus Operandi (How)</span>
+                                    </div>
+                                    <p class="whitespace-pre-line text-sm text-slate-700 dark:text-slate-300 leading-relaxed ml-7">{{ $complaint->how }}</p>
+                                </div>
                             </div>
                         </div>
 
+                        {{-- Bukti Pendukung --}}
                         @if ($complaint->attachment)
-                            <div class="mt-4 flex items-center p-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg">
-                                <svg class="w-5 h-5 text-slate-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                </svg>
-                                <span class="text-sm text-slate-700 dark:text-slate-300 font-medium mr-auto">Lampiran Bukti</span>
-                                <a href="{{ route('attachments.show', $complaint) }}" target="_blank"
-                                    class="inline-flex items-center px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md font-semibold text-xs text-slate-700 dark:text-slate-300 uppercase tracking-widest shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
-                                    Lihat File
-                                </a>
+                            <div class="mt-4 border-t border-slate-100 dark:border-slate-700 pt-4">
+                                <h4 class="font-bold text-slate-900 dark:text-black mb-2 text-sm">Bukti Pendukung</h4>
+                                @php
+                                    $attachmentPaths = explode('|', $complaint->attachment);
+                                @endphp
+                                <div class="space-y-2">
+                                    @foreach($attachmentPaths as $index => $attPath)
+                                        <div class="flex items-center p-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg">
+                                            <svg class="w-5 h-5 text-slate-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                            </svg>
+                                            <span class="text-sm text-slate-700 dark:text-slate-300 font-medium mr-auto">Lampiran {{ $index + 1 }}</span>
+                                            <a href="{{ route('attachments.show', $complaint) }}{{ $index > 0 ? '?index=' . $index : '' }}" target="_blank"
+                                                class="inline-flex items-center px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md font-semibold text-xs text-slate-700 dark:text-slate-300 uppercase tracking-widest shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                                                Lihat File
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         @endif
                     </div>
@@ -87,7 +163,6 @@
 
             {{-- Sidebar (Form Tanggapan & Riwayat) --}}
             <div class="space-y-4">
-                {{-- Card Form Tanggapan --}}
                 {{-- Card Form Tanggapan / Verifikasi --}}
                 
                 {{-- 1. FORM UNTUK PETUGAS (VERIFIKASI) --}}
@@ -121,7 +196,6 @@
                 @endcan
 
                 {{-- 2. FORM UNTUK ADMIN (RESOLVE / TANGGAPI) --}}
-                {{-- 2. FORM UNTUK ADMIN (RESOLVE / TANGGAPI) --}}
                 @can('resolve_complaints')
                     @if($complaint->status != 'pending')
                     <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm sm:rounded-lg">
@@ -153,8 +227,6 @@
                                 <div class="mb-3">
                                     <label for="status" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Update Status</label>
                                     <select name="status" id="status" class="block w-full rounded-md border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                                        {{-- Admin bisa memindahkan status kemana saja, tapi defaultnya ke Selesai --}}
-                                        {{-- Opsi pending dihapus agar Admin tidak mengembalikan ke petugas --}}
                                         <option value="proses" @selected($complaint->status == 'proses')>Diproses (Sedang Ditangani)</option>
                                         <option value="selesai" @selected($complaint->status == 'selesai')>Selesai (Tutup Laporan)</option>
                                         <option value="ditolak" @selected($complaint->status == 'ditolak')>Ditolak</option>
