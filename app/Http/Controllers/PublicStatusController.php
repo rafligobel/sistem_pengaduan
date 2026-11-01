@@ -4,42 +4,60 @@ namespace App\Http\Controllers;
 
 use App\Models\Complaint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PublicStatusController extends Controller
 {
-    // Tampilkan Halaman Cari
+    /**
+     * Tampilkan Halaman Cek Status Pengaduan
+     */
     public function index()
     {
-        return view('public.status.index');
+        // Jika pengguna sedang login, tampilkan riwayat pengaduan miliknya
+        $complaints = Auth::check()
+            ? Auth::user()->complaints()->with('category')->latest()->paginate(5)
+            : collect();
+
+        return view('public.status.index', compact('complaints'));
     }
 
-    // Proses Cari Data
+    /**
+     * Proses Pencarian Tiket Pengaduan
+     */
     public function check(Request $request)
     {
+        // Menerima input 'token' (dari form) atau 'ticket_id'
         $request->validate([
-            'ticket_id' => 'required|string'
+            'token'     => 'required_without:ticket_id|nullable|string',
+            'ticket_id' => 'required_without:token|nullable|string',
+        ], [
+            'token.required_without'     => 'Silakan masukkan ID Tiket pengaduan Anda.',
+            'ticket_id.required_without' => 'Silakan masukkan ID Tiket pengaduan Anda.',
         ]);
 
-        // Buat semua huruf kapital karena token formatnya TIKET-...
-        $ticket = strtoupper(trim($request->ticket_id));
+        $rawToken = $request->input('token') ?? $request->input('ticket_id');
+        $ticket = strtoupper(trim($rawToken));
 
         // Cari berdasarkan token
         $complaint = Complaint::where('token', $ticket)->first();
 
         if ($complaint) {
-            // Jika ketemu, tampilkan
+            // Jika ketemu, arahkan ke halaman detail status
             return redirect()->route('status.show', $complaint->token);
         } else {
-            // Jika tidak ketemu, kembali dengan pesan error (Flash Session)
+            // Jika tidak ketemu, kembali dengan pesan error
             return redirect()->route('status.index')
-                ->with('error', 'Tiket dengan ID <strong>' . $ticket . '</strong> tidak ditemukan. Silakan periksa kembali.');
+                ->withInput()
+                ->with('error', 'Tiket dengan ID ' . e($ticket) . ' tidak ditemukan. Silakan periksa kembali nomor tiket Anda.');
         }
     }
 
-    // Tampilkan Hasil
+    /**
+     * Tampilkan Detail Status Tiket Pengaduan
+     */
     public function show($token)
     {
-        $complaint = Complaint::with(['category', 'responses', 'user'])
+        $complaint = Complaint::with(['category', 'responses.user', 'user'])
             ->where('token', $token)
             ->firstOrFail();
 

@@ -1,4 +1,8 @@
 <x-public-layout>
+    @php
+        $complaints = $complaints ?? collect();
+    @endphp
+
     <div class="relative bg-white overflow-hidden">
         {{-- Hero Background --}}
         <div class="absolute inset-0">
@@ -25,8 +29,9 @@
                             <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                         </div>
                         <input id="token" name="token" type="text" required
+                            value="{{ old('token', old('ticket_id')) }}"
                             class="block w-full pl-10 pr-3 py-3 border border-transparent rounded-lg leading-5 bg-white/10 text-white placeholder-slate-400 focus:outline-none focus:bg-white focus:text-slate-900 focus:placeholder-slate-500 focus:ring-2 focus:ring-blue-500 sm:text-sm transition-colors duration-200"
-                            placeholder="Masukkan ID Tiket (Contoh: TIKET-2023...)">
+                            placeholder="Masukkan ID Tiket (Contoh: TIKET-2026...)">
                     </div>
                     <div class="mt-3 sm:mt-0 sm:ml-3">
                         <button type="submit"
@@ -40,7 +45,12 @@
                 </p>
                 @if(session('error'))
                     <div class="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
-                        {{ session('error') }}
+                        {!! session('error') !!}
+                    </div>
+                @endif
+                @if(isset($errors) && $errors->any())
+                    <div class="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+                        {{ $errors->first() }}
                     </div>
                 @endif
             </div>
@@ -77,7 +87,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="text-sm font-medium text-slate-900 line-clamp-1">{{ Str::limit($complaint->what, 40) }}</div>
-                                        <div class="text-xs text-slate-500">{{ $complaint->category->name }}</div>
+                                        <div class="text-xs text-slate-500">{{ $complaint->category->name ?? '-' }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-500">
                                         {{ $complaint->created_at->format('d M Y') }}
