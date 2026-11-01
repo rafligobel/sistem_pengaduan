@@ -24,6 +24,22 @@
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
+                        {{-- NIK --}}
+                        <div>
+                            <x-input-label for="nik" value="Nomor Induk Kependudukan (NIK)" />
+                            <x-text-input id="nik" name="nik" type="text" class="mt-1 block w-full"
+                                :value="old('nik', $user->nik)" maxlength="16" inputmode="numeric" placeholder="16 digit NIK" />
+                            <x-input-error :messages="$errors->get('nik')" class="mt-2" />
+                        </div>
+
+                        {{-- Nomor Telepon --}}
+                        <div>
+                            <x-input-label for="phone" value="Nomor Telepon / WhatsApp" />
+                            <x-text-input id="phone" name="phone" type="tel" class="mt-1 block w-full"
+                                :value="old('phone', $user->phone)" placeholder="Contoh: 081234567890" />
+                            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                        </div>
+
                         {{-- Email --}}
                         <div>
                             <x-input-label for="email" value="Email" />
@@ -37,7 +53,7 @@
                         <div>
                             <x-input-label for="password" value="Password Baru (Opsional)" />
                             <x-text-input id="password" name="password" type="password" class="mt-1 block w-full"
-                                autocomplete="new-password" />
+                                autocomplete="new-password" placeholder="••••••••" />
                             <p class="mt-1 text-sm text-slate-600">
                                 Kosongkan jika Anda tidak ingin mengubah password.
                             </p>
@@ -48,7 +64,7 @@
                         <div>
                             <x-input-label for="password_confirmation" value="Konfirmasi Password Baru" />
                             <x-text-input id="password_confirmation" name="password_confirmation" type="password"
-                                class="mt-1 block w-full" autocomplete="new-password" />
+                                class="mt-1 block w-full" autocomplete="new-password" placeholder="••••••••" />
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                         </div>
 
@@ -62,8 +78,7 @@
                                             value="{{ $role->name }}" {{-- Cek role yang sudah dimiliki user --}}
                                             @checked(old('roles', $user->roles->pluck('name'))->contains($role->name))
                                             class="rounded border-slate-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
-                                        <span
-                                            class="ms-2 text-sm text-slate-600">{{ $role->name }}</span>
+                                        <span class="ms-2 text-sm text-slate-600 font-medium">{{ ucfirst($role->name) }}</span>
                                     </label>
                                 @endforeach
                             </div>
@@ -71,8 +86,8 @@
                         </div>
 
                         {{-- Tombol Aksi --}}
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Perbarui') }}</x-primary-button>
+                        <div class="flex items-center gap-4 pt-4 border-t border-slate-200">
+                            <x-primary-button>{{ __('Simpan Perubahan') }}</x-primary-button>
                             <x-secondary-button href="{{ route('admin.users.index') }}">
                                 {{ __('Batal') }}
                             </x-secondary-button>

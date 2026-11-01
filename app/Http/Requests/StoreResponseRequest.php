@@ -8,11 +8,10 @@ class StoreResponseRequest extends FormRequest
 {
     /**
      * Tentukan apakah user boleh membuat request ini.
-     * Kita set true karena otentikasi sudah dihandle di route middleware.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('respond_complaints') || $this->user()->hasRole('admin');
     }
 
     /**
@@ -23,10 +22,8 @@ class StoreResponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Variabel 'content' sudah benar
             'content' => 'required|string',
-            // Variabel 'status' sudah benar
-            'status' => 'required|string|in:pending,processed,finished,rejected',
+            'status'  => 'nullable|string|in:menunggu,diproses,terverifikasi,ditolak',
         ];
     }
 }

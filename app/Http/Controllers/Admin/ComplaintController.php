@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
+use App\Http\Requests\UpdateComplaintStatusRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,15 +13,28 @@ class ComplaintController extends Controller
     /**
      * Menampilkan daftar semua pengaduan
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data pengaduan, urutkan dari terbaru
-        // Eager load 'user' dan 'category' agar query ringan
-        $complaints = Complaint::with(['user', 'category'])
-            ->latest()
-            ->paginate(10);
+        $statusFilter = $request->query('status');
 
-        return view('admin.complaints.index', compact('complaints'));
+        $query = Complaint::with(['user', 'category'])->latest();
+
+        if ($statusFilter && in_array($statusFilter, ['menunggu', 'diproses', 'terverifikasi', 'ditolak'])) {
+            $query->where('status', $statusFilter);
+        }
+
+        $complaints = $query->paginate(10)->withQueryString();
+
+        // Hitung statistik untuk tab filter
+        $counts = [
+            'semua'         => Complaint::count(),
+            'menunggu'      => Complaint::where('status', 'menunggu')->count(),
+            'diproses'      => Complaint::where('status', 'diproses')->count(),
+            'terverifikasi' => Complaint::where('status', 'terverifikasi')->count(),
+            'ditolak'       => Complaint::where('status', 'ditolak')->count(),
+        ];
+
+        return view('admin.complaints.index', compact('complaints', 'counts', 'statusFilter'));
     }
 
     /**
@@ -35,26 +49,71 @@ class ComplaintController extends Controller
     }
 
     /**
-     * Update status pengaduan (Misal: dari Pending -> Proses -> Selesai)
+     * Update status pengaduan:
+     * - Admin: Menelaah laporan 'menunggu' -> 'diproses' (diteruskan ke tim khusus) atau 'ditolak'
+     * - Tim Khusus: Memverifikasi laporan 'diproses' -> 'terverifikasi' atau 'ditolak'
+     * - Pimpinan: Hanya melihat (dilarang mengubah status)
      */
-    public function update(\App\Http\Requests\UpdateComplaintStatusRequest $request, Complaint $complaint)
+    public function update(UpdateComplaintStatusRequest $request, Complaint $complaint)
     {
-        $status = $request->validated()['status'];
         $user = Auth::user();
+        $validated = $request->validated();
+        $targetStatus = $validated['status'];
+        $note = $validated['note'] ?? null;
 
-        // Role Specific Logic: Petugas
-        if ($user->hasRole('petugas')) {
-            if ($complaint->status !== 'pending') {
-                return back()->with('error', 'Petugas hanya dapat memverifikasi laporan yang masih Pending.');
+        // Pimpinan dilarang mengubah status
+        if ($user->hasRole('pimpinan') && !$user->hasRole('admin')) {
+            abort(403, 'Pimpinan hanya memiliki hak akses untuk memantau laporan.');
+        }
+
+        // Logic Hak Akses: Tim Khusus
+        if ($user->hasRole('tim khusus') && !$user->hasRole('admin')) {
+            if ($complaint->status !== 'diproses') {
+                return back()->with('error', 'Tim Khusus hanya dapat memverifikasi laporan yang telah diteruskan oleh Admin (berstatus Diproses).');
             }
-            if (!in_array($status, ['proses', 'ditolak'])) {
-                 return back()->with('error', 'Petugas hanya dapat mengubah status menjadi Proses atau Ditolak.');
+            if (!in_array($targetStatus, ['terverifikasi', 'ditolak'])) {
+                return back()->with('error', 'Tim Khusus hanya dapat mengubah status menjadi Terverifikasi atau Ditolak.');
             }
         }
 
-        $complaint->update(['status' => $status]);
+        // Logic Hak Akses: Admin
+        if ($user->hasRole('admin')) {
+            // Admin bebas mengubah status atau meneruskan ke Tim Khusus
+            if ($complaint->status === 'menunggu' && !in_array($targetStatus, ['diproses', 'ditolak'])) {
+                return back()->with('error', 'Laporan yang baru masuk dapat diubah menjadi Diproses (diteruskan) atau Ditolak.');
+            }
+        }
 
-        return back()->with('success', 'Status pengaduan berhasil diperbarui!');
+        // Update status pengaduan
+        $complaint->update(['status' => $targetStatus]);
+
+        // Simpan catatan jika ada
+        if (!empty($note)) {
+            $complaint->responses()->create([
+                'user_id' => $user->id,
+                'content' => $note,
+            ]);
+        }
+
+        // Tentukan pesan sukses berdasarkan peran dan tindakan
+        $successMessage = 'Status pengaduan berhasil diperbarui.';
+        if ($user->hasRole('tim khusus') && !$user->hasRole('admin')) {
+            if ($targetStatus === 'terverifikasi') {
+                $successMessage = 'Laporan berhasil diverifikasi oleh Tim Khusus.';
+            } elseif ($targetStatus === 'ditolak') {
+                $successMessage = 'Laporan telah ditolak oleh Tim Khusus.';
+            }
+        } else {
+            if ($targetStatus === 'diproses') {
+                $successMessage = 'Laporan berhasil diproses dan diteruskan ke Tim Khusus.';
+            } elseif ($targetStatus === 'ditolak') {
+                $successMessage = 'Laporan telah ditolak.';
+            } elseif ($targetStatus === 'terverifikasi') {
+                $successMessage = 'Laporan telah diverifikasi.';
+            }
+        }
+
+        return back()->with('success', $successMessage);
     }
 
     /**
@@ -62,10 +121,14 @@ class ComplaintController extends Controller
      */
     public function destroyAll()
     {
-        // Menggunakan get() + delete() loop untuk memicu observer jika ada (untuk hapus file)
+        $user = Auth::user();
+        if (!$user->hasRole('admin') && !$user->can('delete_complaints')) {
+            abort(403, 'Hanya Admin yang dapat menghapus data pengaduan.');
+        }
+
         $complaints = Complaint::all();
         foreach ($complaints as $complaint) {
-             $complaint->delete();
+            $complaint->delete();
         }
 
         return redirect()->route('admin.complaints.index')
@@ -77,7 +140,12 @@ class ComplaintController extends Controller
      */
     public function destroy(Complaint $complaint)
     {
-        $complaint->delete(); // File deletion handled by Model Observer
+        $user = Auth::user();
+        if (!$user->hasRole('admin') && !$user->can('delete_complaints')) {
+            abort(403, 'Hanya Admin yang dapat menghapus data pengaduan.');
+        }
+
+        $complaint->delete();
 
         return redirect()->route('admin.complaints.index')
             ->with('success', 'Pengaduan berhasil dihapus.');

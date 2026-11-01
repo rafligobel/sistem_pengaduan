@@ -10,12 +10,13 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Hitung Statistik
+        // Hitung Statistik 4 Status Resmi
         $total = Complaint::count();
-        $pending = Complaint::where('status', 'pending')->count();
-        $proses = Complaint::where('status', 'proses')->count();
-        $selesai = Complaint::where('status', 'selesai')->count();
+        $menunggu = Complaint::where('status', 'menunggu')->count();
+        $diproses = Complaint::where('status', 'diproses')->count();
+        $terverifikasi = Complaint::where('status', 'terverifikasi')->count();
+        $ditolak = Complaint::where('status', 'ditolak')->count();
 
-        return view('admin.dashboard', compact('total', 'pending', 'proses', 'selesai'));
+        return view('admin.dashboard', compact('total', 'menunggu', 'diproses', 'terverifikasi', 'ditolak'));
     }
 }

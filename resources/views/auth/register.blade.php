@@ -4,14 +4,30 @@
         <p class="text-xs text-slate-500 mt-1">Silakan mendaftar untuk membuat pengaduan</p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}" class="space-y-2">
+    <form method="POST" action="{{ route('register') }}" class="space-y-3">
         @csrf
 
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Nama Lengkap')" class="text-slate-700 font-semibold text-xs" />
-            <x-text-input id="name" class="block mt-1 w-full px-3 py-1.5 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Nama Lengkap Anda" />
+            <x-text-input id="name" class="block mt-1 w-full px-3 py-1.5 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Sesuai KTP" />
             <x-input-error :messages="$errors->get('name')" class="mt-1" />
+        </div>
+
+        <!-- NIK -->
+        <div>
+            <x-input-label for="nik" :value="__('Nomor Induk Kependudukan (NIK)')" class="text-slate-700 font-semibold text-xs" />
+            <x-text-input id="nik" class="block mt-1 w-full px-3 py-1.5 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm" type="text" name="nik" :value="old('nik')" required maxlength="16" inputmode="numeric" placeholder="16 digit NIK KTP" />
+            <p class="text-[11px] text-slate-500 mt-0.5">Wajib 16 digit angka sesuai KTP Anda</p>
+            <x-input-error :messages="$errors->get('nik')" class="mt-1" />
+        </div>
+
+        <!-- Phone -->
+        <div>
+            <x-input-label for="phone" :value="__('Nomor Telepon / WhatsApp')" class="text-slate-700 font-semibold text-xs" />
+            <x-text-input id="phone" class="block mt-1 w-full px-3 py-1.5 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm" type="tel" name="phone" :value="old('phone')" required inputmode="tel" placeholder="Contoh: 081234567890" />
+            <p class="text-[11px] text-slate-500 mt-0.5">Digunakan untuk konfirmasi dan notifikasi tindak lanjut</p>
+            <x-input-error :messages="$errors->get('phone')" class="mt-1" />
         </div>
 
         <!-- Email -->

@@ -26,6 +26,13 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'nik' => [
+                'nullable',
+                'string',
+                'digits:16',
+                Rule::unique(User::class)->ignore($this->user->id),
+            ],
+            'phone' => 'nullable|string|max:20',
             'email' => [
                 'required',
                 'string',

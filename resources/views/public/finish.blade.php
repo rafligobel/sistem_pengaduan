@@ -1,80 +1,132 @@
 <x-public-layout>
-    <div class="flex-grow flex flex-col items-center justify-center w-full px-4 py-8 sm:px-6 lg:px-8 bg-slate-50/50">
-        <div class="max-w-md mx-auto w-full">
+    <div class="flex-grow flex flex-col items-center justify-center w-full px-4 py-8 sm:px-6 lg:px-8 bg-slate-50/60">
+        <div class="max-w-xl mx-auto w-full">
             
-            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-10 text-center relative">
-                {{-- Decorative Background Elements --}}
-                <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500"></div>
-                </div>
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-8 text-center relative overflow-hidden">
+                {{-- Decorative Top Accent --}}
+                <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500"></div>
 
                 {{-- Success Icon --}}
-                <div class="flex justify-center mb-6">
+                <div class="flex justify-center mb-5">
                     <div class="relative">
-                        <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-75"></div>
-                        <div class="relative flex items-center justify-center h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-green-50 text-green-500 border-[5px] border-white shadow-sm ring-1 ring-green-100">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        <div class="flex items-center justify-center h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-emerald-50 text-emerald-600 border-[4px] border-white shadow-md ring-1 ring-emerald-100">
+                            <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                            </svg>
                         </div>
                     </div>
                 </div>
 
-                <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2">
+                {{-- Title & Intro --}}
+                <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2">
                     Pengaduan Berhasil Dikirim!
-                </h2>
-                <p class="text-sm text-slate-500 mb-6 leading-relaxed">
-                    Pengaduan Anda telah kami terima dan akan segera diproses. Pantau status pengaduan Anda melalui menu Dashboard.
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed max-w-md mx-auto">
+                    Laporan Anda telah resmi tercatat di sistem <strong>SI-ADUAN</strong> Inspektorat Daerah Kota Gorontalo dan akan segera diverifikasi oleh tim pemeriksa.
                 </p>
 
-                {{-- Ticket ID Box --}}
-                <!-- <div class="bg-slate-50 rounded-xl border border-slate-200 p-4 sm:p-5 mb-6 relative group shadow-inner hover:shadow-md transition-shadow">
-                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-[0.2em] mb-2">ID Tiket Laporan</p>
-                    
-                    <div class="flex items-center justify-center gap-3 shrink-0 cursor-pointer select-all" onclick="copyTicket()" title="Klik untuk menyalin">
-                        <span id="ticket-id" class="text-lg sm:text-3xl font-mono font-black text-slate-800 tracking-widest break-all">
+                {{-- KOTAK KETERANGAN TIKET --}}
+                <div class="bg-slate-50 rounded-xl border border-slate-200 p-4 sm:p-5 mb-6 text-left shadow-xs">
+                    <div class="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-3.5">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            Nomor Tiket Pengaduan
+                        </span>
+                        <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            {{ ucfirst($complaint->status ?? 'Pending') }} &bull; Menunggu Verifikasi
+                        </span>
+                    </div>
+
+                    {{-- Kode Tiket & Tombol Salin --}}
+                    <div class="flex items-center justify-between gap-3 bg-white p-3 rounded-lg border border-slate-200 mb-4">
+                        <span id="ticket-id" class="text-lg sm:text-2xl font-mono font-extrabold text-blue-700 tracking-wider break-all select-all">
                             {{ $complaint->token }}
                         </span>
-                        
-                        <button class="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2v2"></path></svg>
+                        <button type="button" onclick="copyTicket()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-blue-700 rounded-md border border-slate-300 transition-colors shrink-0" title="Salin Kode Tiket">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2v2"></path>
+                            </svg>
+                            <span id="copy-btn-text">Salin</span>
                         </button>
                     </div>
 
-                    {{-- Tooltip feedback --}}
-                    <div id="copy-feedback" class="absolute -bottom-9 left-1/2 transform -translate-x-1/2 opacity-0 transition-opacity duration-300 pointer-events-none">
-                         <span class="bg-slate-800 text-white text-[10px] font-bold py-1 px-2.5 rounded-full shadow-lg flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Disalin!
-                        </span>
+                    {{-- Rincian Singkat Informasi Tiket --}}
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between py-1 border-b border-slate-200/50">
+                            <span class="text-slate-500">Kategori:</span>
+                            <span class="font-semibold text-slate-800 text-right">{{ $complaint->category->name ?? 'Pengaduan Tipikor' }}</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-200/50">
+                            <span class="text-slate-500">Waktu Dikirim:</span>
+                            <span class="font-semibold text-slate-800 text-right">
+                                {{ $complaint->created_at ? $complaint->created_at->translatedFormat('d F Y, H:i') . ' WITA' : now()->format('d/m/Y H:i') }}
+                            </span>
+                        </div>
+                        <div class="py-1">
+                            <span class="text-slate-500 block mb-0.5">Perihal Laporan (What):</span>
+                            <p class="font-medium text-slate-800 italic bg-white p-2 rounded border border-slate-100">
+                                "{{ Str::limit($complaint->what, 120) }}"
+                            </p>
+                        </div>
                     </div>
-                </div> -->
+                </div>
 
-                <div class="flex flex-col gap-2.5 justify-center w-full">
-                    <!-- <a href="{{ route('status.index') }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-slate-300 shadow-sm text-sm font-bold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 hover:border-blue-200 transition-all">
-                        <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        Lacak Status
-                    </a> -->
-                    <a href="{{ url('/') }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-bold rounded-xl shadow-lg shadow-blue-500/30 text-white bg-blue-600 hover:bg-blue-700 transition-all transform active:scale-95">
-                        Kembali ke Beranda
+                {{-- PETUNJUK KETERANGAN TIKET --}}
+                <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4 mb-6 text-left text-xs text-slate-700">
+                    <h4 class="font-bold text-blue-900 flex items-center gap-1.5 mb-2">
+                        <svg class="w-4 h-4 text-blue-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Keterangan Penting Tiket Pengaduan:</span>
+                    </h4>
+                    <ul class="space-y-1.5 pl-5 list-disc text-slate-600">
+                        <li><strong>Simpan Kode Tiket:</strong> Catat atau simpan kode tiket di atas sebagai bukti resmi bahwa laporan Anda telah terdaftar.</li>
+                        <li><strong>Pelacakan Status:</strong> Anda dapat melacak tahapan telaah dan tindak lanjut laporan melalui menu <em>Cek Status</em> menggunakan kode tiket ini.</li>
+                        <li><strong>Waktu Verifikasi:</strong> Tim verifikator APIP Inspektorat Daerah memproses kelengkapan laporan dalam waktu 1&ndash;3 hari kerja.</li>
+                        <li><strong>Kerahasiaan:</strong> Identitas pelapor dilindungi secara ketat sesuai pedoman Whistleblowing System (WBS).</li>
+                    </ul>
+                </div>
+
+                {{-- TOMBOL TINDAKAN --}}
+                <div class="flex flex-col sm:flex-row gap-2.5 justify-center w-full">
+                    <a href="{{ route('status.show', $complaint->token) }}" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-transparent text-xs sm:text-sm font-bold rounded-xl shadow-md text-white bg-blue-700 hover:bg-blue-800 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <span>Lacak Status Tiket Ini</span>
+                    </a>
+
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-slate-300 text-xs sm:text-sm font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 transition-all">
+                            <span>Buka Dashboard</span>
+                        </a>
+                    @endauth
+
+                    <a href="{{ url('/') }}" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 border border-slate-300 text-xs sm:text-sm font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 transition-all">
+                        <span>Beranda</span>
                     </a>
                 </div>
             </div>
             
-            <p class="text-center text-xs text-slate-400 mt-6 md:mt-8">
-                Terima kasih telah berpartisipasi dalam mewujudkan tata kelola pemerintahan yang bersih dan akuntabel.
+            <p class="text-center text-xs text-slate-400 mt-6">
+                Inspektorat Daerah Kota Gorontalo &bull; Saluran Pengaduan Whistleblowing System (WBS)
             </p>
 
         </div>
     </div>
 
+    {{-- Script Salin Kode Tiket --}}
     <script>
         function copyTicket() {
             const ticketId = document.getElementById('ticket-id').innerText.trim();
+            const btnText = document.getElementById('copy-btn-text');
             navigator.clipboard.writeText(ticketId).then(() => {
-                const feedback = document.getElementById('copy-feedback');
-                feedback.classList.remove('opacity-0', 'translate-y-2');
-                setTimeout(() => {
-                    feedback.classList.add('opacity-0', 'translate-y-2');
-                }, 2000);
+                if (btnText) {
+                    btnText.innerText = 'Tersalin!';
+                    setTimeout(() => {
+                        btnText.innerText = 'Salin';
+                    }, 2000);
+                }
             });
         }
     </script>

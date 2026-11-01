@@ -14,7 +14,9 @@ class UpdateComplaintStatusRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('verify_complaints') || $this->user()->can('resolve_complaints');
+        return $this->user()->can('process_complaints') 
+            || $this->user()->can('verify_complaints')
+            || $this->user()->hasAnyRole(['admin', 'tim khusus']);
     }
 
     /**
@@ -25,7 +27,8 @@ class UpdateComplaintStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => ['required', Rule::in(['pending', 'proses', 'selesai', 'ditolak'])],
+            'status' => ['required', Rule::in(['menunggu', 'diproses', 'terverifikasi', 'ditolak'])],
+            'note'   => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

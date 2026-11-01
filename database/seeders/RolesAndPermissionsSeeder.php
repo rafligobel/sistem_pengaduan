@@ -18,78 +18,92 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Buat / Ambil Roles (firstOrCreate agar tidak error jika sudah ada)
-        $roleAdmin = Role::firstOrCreate(['name' => 'admin']);
-        $rolePetugas = Role::firstOrCreate(['name' => 'petugas']);
-        $roleWalikota = Role::firstOrCreate(['name' => 'walikota']); // Sebelumnya kepala_instansi
-        $roleMasyarakat = Role::firstOrCreate(['name' => 'masyarakat']);
+        // 1. Buat 4 Roles Resmi
+        $roleAdmin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        $rolePengguna = Role::firstOrCreate(['name' => 'pengguna', 'guard_name' => 'web']);
+        $roleTimKhusus = Role::firstOrCreate(['name' => 'tim khusus', 'guard_name' => 'web']);
+        $rolePimpinan = Role::firstOrCreate(['name' => 'pimpinan', 'guard_name' => 'web']);
 
-        // 2. Buat / Ambil Permissions (Hak Akses Granular)
+        // 2. Buat Permissions (Hak Akses Granular)
         $permissions = [
-            'view_complaints',
-            'verify_complaints',
-            'resolve_complaints',
-            'delete_complaints',
-            'manage_master',
-            'manage_documentation',
-            'manage_system',
+            'view_complaints',      // Melihat daftar dan detail laporan
+            'process_complaints',   // Admin: tolak atau proses (teruskan ke tim khusus)
+            'verify_complaints',    // Tim Khusus: tolak atau verifikasi
+            'respond_complaints',   // Admin: menanggapi laporan
+            'delete_complaints',    // Admin: menghapus laporan
+            'manage_master',        // Admin: kelola kategori & user
+            'manage_documentation', // Admin: dokumentasi galeri & berita
+            'manage_system',        // Admin: backup & optimasi sistem
         ];
 
         foreach ($permissions as $perm) {
-            Permission::firstOrCreate(['name' => $perm]);
+            Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
         }
 
-        // 3. Assign Permissions ke Role
-        // ADMIN: Mengatur hampir semua, TAPI untuk workflow laporan dia fokus di finishing (resolve) + Manajerial
+        // 3. Assign Permissions ke 4 Role:
+        // _admin: mengelola sistem secara menyeluruh, menerima laporan, meneruskan laporan, tolak/proses, menanggapi
         $roleAdmin->syncPermissions([
             'view_complaints',
-            'resolve_complaints', // Eksekusi Akhir
+            'process_complaints',
+            'verify_complaints',
+            'respond_complaints',
             'delete_complaints',
             'manage_master',
             'manage_documentation',
             'manage_system',
         ]);
 
-        // PETUGAS: Verifikasi Laporan
-        $rolePetugas->syncPermissions([
+        // _tim khusus: menerima laporan yang diteruskan admin, tolak atau verifikasi jika lolos
+        $roleTimKhusus->syncPermissions([
             'view_complaints',
-            'verify_complaints'
+            'verify_complaints',
         ]);
 
-        // WALIKOTA : Hanya Mengawasi (View Only)
-        $roleWalikota->syncPermissions(['view_complaints']);
+        // _pimpinan: hanya bisa melihat seluruh bentuk laporan pengaduan
+        $rolePimpinan->syncPermissions([
+            'view_complaints',
+        ]);
 
-        // Masyarakat: Tidak butuh permission khusus dari server side ini (logic terpisah), 
-        // tapi jika mau strict bisa tambah 'create_complaint'. Untuk saat ini skip agar simple.
+        // _pengguna (masyarakat/pelapor): membuat & memantau pengaduan
+        $rolePengguna->syncPermissions([]);
 
-        // 2. Buat / Ambil User Admin Default
+        // 4. Default Accounts (Opsional)
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin',
+                'name' => 'Admin Sistem',
                 'password' => Hash::make('password'),
             ]
         );
         $adminUser->syncRoles([$roleAdmin]);
 
-        // 3. Buat / Ambil User Petugas Default
-        $petugasUser = User::firstOrCreate(
-            ['email' => 'petugas@example.com'],
+        $timKhususUser = User::firstOrCreate(
+            ['email' => 'timkhusus@example.com'],
             [
-                'name' => 'Petugas',
+                'name' => 'Tim Khusus Inspektorat',
                 'password' => Hash::make('password'),
             ]
         );
-        $petugasUser->syncRoles([$rolePetugas]);
+        $timKhususUser->syncRoles([$roleTimKhusus]);
 
-        // 4. Buat / Ambil User Masyarakat Default (Opsional, untuk tes)
-        $wargaUser = User::firstOrCreate(
+        $pimpinanUser = User::firstOrCreate(
+            ['email' => 'pimpinan@example.com'],
+            [
+                'name' => 'Pimpinan Inspektorat',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $pimpinanUser->syncRoles([$rolePimpinan]);
+
+        $penggunaUser = User::firstOrCreate(
             ['email' => 'warga@example.com'],
             [
                 'name' => 'Masyarakat Contoh',
                 'password' => Hash::make('password'),
             ]
         );
-        $wargaUser->syncRoles([$roleMasyarakat]);
+        $penggunaUser->syncRoles([$rolePengguna]);
+
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     }
 }

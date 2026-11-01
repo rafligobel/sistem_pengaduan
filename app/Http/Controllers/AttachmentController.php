@@ -25,8 +25,8 @@ class AttachmentController extends Controller
 
         // A. Jika user login
         if ($user) {
-            // Admin, Petugas, Walikota boleh melihat semua
-            if ($user->hasAnyRole(['admin', 'petugas', 'walikota'])) {
+            // Admin, Tim Khusus, Pimpinan (dan legacy role) boleh melihat semua
+            if ($user->hasAnyRole(['admin', 'tim khusus', 'pimpinan', 'petugas', 'walikota'])) {
                 $isAuthorized = true;
             }
             // Pemilik tiket boleh melihat
@@ -35,20 +35,7 @@ class AttachmentController extends Controller
             }
         } 
         
-        // B. Jika Publik (Login atau Tidak), cek Token Tiket via Session (untuk alur Cek Tiket)
-        // Kita asumsikan jika seseorang bisa mengakses halaman detail tiket (yang sudah dilindungi controller), mereka berhak lihat gambar.
-        // Tapi untuk amannya, kita cek referer atau session, ATAU kita biarkan controller ini diakses
-        // oleh siapa saja yang tahu URL-nya NAMUN URL-nya menggunakan ID pengaduan yang tidak bisa ditebak?
-        // TIDAK. URL menggunakan ID bisa ditebak (incremental).
-        
-        // Pendekatan lebih aman: Cek apakah user sedang membuka halaman detail tiket yang valid
-        // Tapi HTTP itu stateless.
-        
-        // SOLUSI: Jika pengguna adalah 'guest' (masyarakat tidak login) yang melihat status tiket via TOKEN,
-        // mereka biasanya sudah melewati proses input TOKEN di halaman 'Cek Status'.
-        // Namun, rute gambar ini terpisah.
-        
-        // Kita bisa tambahkan parameter ?token=TIKET-XXX di URL gambar untuk verifikasi guest.
+        // B. Jika Publik (Login atau Tidak), cek Token Tiket via URL parameter (untuk alur Cek Tiket)
         if (request()->has('token') && request()->token === $complaint->token) {
             $isAuthorized = true;
         }
@@ -60,7 +47,5 @@ class AttachmentController extends Controller
         // 3. Return File
         $path = Storage::disk('local')->path($complaint->attachment);
         return response()->file($path);
-        
-        // Pilihan lain: response()->download($path) jika ingin download
     }
 }

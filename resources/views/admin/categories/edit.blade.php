@@ -27,7 +27,7 @@
                                 {{ __('Batal') }}
                             </x-secondary-button>
                             <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800">
-                                {{ __('Perbarui Data') }}
+                                {{ __('Simpan Perubahan') }}
                             </x-primary-button>
                         </div>
                     </form>

@@ -28,9 +28,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Validasi: Jika user login bukan 'masyarakat', paksa redirect ke dashboard.
-        // Ini mencegah admin/petugas diarahkan ke halaman pengaduan jika mereka login dari sana.
-        if (! $request->user()->hasRole('masyarakat')) {
+        // Validasi: Jika user login bukan 'pengguna', paksa redirect ke dashboard.
+        // Ini mencegah admin/tim khusus/pimpinan diarahkan ke halaman pengaduan masyarakat jika mereka login dari sana.
+        if (! $request->user()->hasAnyRole(['pengguna', 'masyarakat'])) {
             return redirect()->route('dashboard');
         }
 

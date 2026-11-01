@@ -4,7 +4,6 @@
             <h2 class="font-bold text-2xl text-slate-900 leading-tight tracking-tight">
                 Manajemen User
             </h2>
-            {{-- Tombol Tambah User Baru --}}
             {{-- Tombol Hapus Semua & Tambah User Baru --}}
             <div class="flex items-center gap-2">
                 <form action="{{ route('admin.users.destroyAll') }}" method="POST" onsubmit="return confirm('PERHATIAN: Apakah Anda yakin ingin MENGHAPUS SEMUA user (kecuali akun Anda)?');">
@@ -53,8 +52,8 @@
                                 class="text-xs text-slate-700 uppercase bg-slate-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 rounded-s-lg">No</th>
-                                    <th scope="col" class="px-6 py-3 rounded-s-lg">Nama</th>
-                                    <th scope="col" class="px-6 py-3">Email</th>
+                                    <th scope="col" class="px-6 py-3">Nama & NIK</th>
+                                    <th scope="col" class="px-6 py-3">Kontak</th>
                                     <th scope="col" class="px-6 py-3">Role</th>
                                     <th scope="col" class="px-6 py-3 rounded-e-lg text-center">Aksi</th>
                                 </tr>
@@ -65,45 +64,60 @@
                                         class="bg-white border-b border-slate-300 hover:bg-slate-50 transition duration-150 ease-in-out">
                                         <td
                                             class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                            {{ $loop->iteration }}
+                                            {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
                                         </td>
-                                        <th scope="row"
-                                            class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
-                                            {{ $user->name }}
-                                        </th>
                                         <td class="px-6 py-4">
-                                            {{ $user->email }}
+                                            <div class="font-semibold text-slate-900">{{ $user->name }}</div>
+                                            <div class="text-xs text-slate-500 font-mono">
+                                                @if($user->nik)
+                                                    NIK: {{ $user->nik }}
+                                                @else
+                                                    <span class="text-slate-400 italic">NIK belum diisi</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-slate-800">{{ $user->email }}</div>
+                                            <div class="text-xs text-slate-500">
+                                                @if($user->phone)
+                                                    {{ $user->phone }}
+                                                @else
+                                                    <span class="text-slate-400 italic">-</span>
+                                                @endif
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4">
                                             {{-- Menampilkan role sebagai badge --}}
                                             @foreach ($user->getRoleNames() as $role)
                                                 <span
                                                     class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
-                                                    {{ $role }}
+                                                    {{ ucfirst($role) }}
                                                 </span>
                                             @endforeach
                                         </td>
-                                        <td class="px-6 py-4 text-center flex justify-center gap-2">
-                                            {{-- Tombol Aksi Edit --}}
-                                            <a href="{{ route('admin.users.edit', $user) }}"
-                                                class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-md font-bold text-xs transition-colors">
-                                                Edit
-                                            </a>
-                                            {{-- Tombol Aksi Hapus --}}
-                                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-md font-bold text-xs transition-colors">
-                                                    Hapus
-                                                </button>
-                                            </form>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="flex items-center justify-center gap-2">
+                                                {{-- Tombol Aksi Edit --}}
+                                                <a href="{{ route('admin.users.edit', $user) }}"
+                                                    class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-md font-bold text-xs transition-colors">
+                                                    Edit
+                                                </a>
+                                                {{-- Tombol Aksi Hapus --}}
+                                                <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-md font-bold text-xs transition-colors">
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr class="bg-white border-b border-slate-300">
-                                        <td colspan="4" class="px-6 py-8 text-center text-slate-500">
+                                        <td colspan="5" class="px-6 py-8 text-center text-slate-500">
                                             <div class="flex flex-col items-center justify-center">
                                                 <svg class="w-10 h-10 mb-2 text-slate-300" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">

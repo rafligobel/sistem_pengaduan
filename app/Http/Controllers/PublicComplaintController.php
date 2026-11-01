@@ -141,7 +141,7 @@ class PublicComplaintController extends Controller
             'how'            => $data['how'],
             // Lampiran & Status
             'attachment'     => $finalAttachmentPath, 
-            'status'         => 'pending',
+            'status'         => 'menunggu',
         ]);
 
         session()->forget(['complaint_data', 'complaint_attachments']);

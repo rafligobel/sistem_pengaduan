@@ -1,8 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        {{-- Konsistensi Header --}}
         <h2 class="font-bold text-2xl text-slate-900 leading-tight tracking-tight">
-            {{ __('Profile') }}
+            {{ __('Profil Pengguna') }}
         </h2>
     </x-slot>
 
@@ -10,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             {{-- Card 1: Update Profile Information --}}
             <div
-                class="p-4 sm:p-8 bg-white border border-gray-200 shadow-lg sm:rounded-lg">
+                class="p-4 sm:p-8 bg-white border border-slate-200 shadow-sm sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-profile-information-form')
                 </div>

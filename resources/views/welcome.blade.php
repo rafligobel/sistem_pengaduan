@@ -717,8 +717,7 @@
             align-items: center !important;
             justify-content: center !important;
             text-align: center !important;
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.72) 45%, rgba(15, 23, 42, 0.95) 100%),
-                        radial-gradient(circle at 50% 20%, rgba(14, 165, 233, 0.22) 0%, transparent 60%),
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.60) 50%, rgba(0, 0, 0, 0.75) 100%),
                         url("{{ asset('images/inspektorat.jpg') }}") center center / cover no-repeat !important;
             background-attachment: scroll !important;
             overflow: hidden;
