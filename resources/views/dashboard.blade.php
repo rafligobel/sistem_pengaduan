@@ -10,22 +10,53 @@
         </div>
     </x-slot>
 
-    {{-- Fetch data once --}}
+    {{-- Fetch data once if not passed --}}
     @php
-        $complaints = Auth::user()->complaints()->with('category')->latest()->get();
+        if (!isset($complaints)) {
+            $complaints = Auth::user()->complaints()->with('category')->latest()->get();
+        }
+        if (!isset($stats)) {
+            $stats = [
+                'total'         => $complaints->count(),
+                'menunggu'      => $complaints->where('status', 'menunggu')->count() + $complaints->where('status', 'pending')->count(),
+                'diproses'      => $complaints->where('status', 'diproses')->count() + $complaints->where('status', 'proses')->count(),
+                'terverifikasi' => $complaints->where('status', 'terverifikasi')->count() + $complaints->where('status', 'selesai')->count(),
+                'ditolak'       => $complaints->where('status', 'ditolak')->count(),
+            ];
+        }
     @endphp
 
     <div class="py-5" x-data="{ activeModal: null }">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-5">
 
             {{-- Greeting Section --}}
-            <div class="mb-5 px-2">
+            <div class="px-2">
                 <h2 class="text-lg text-slate-800 flex items-center flex-wrap gap-1">
                     Selamat datang, <span class="font-bold text-blue-600">{{ Auth::user()->name }}</span>!
                 </h2>
-                <p class="text-slate-600 mt-1">
-                    Berikut adalah riwayat pengaduan yang telah Anda kirimkan.
+                <p class="text-slate-600 mt-1 text-sm">
+                    Berikut adalah rekap dan riwayat laporan pengaduan tindak pidana korupsi yang Anda ajukan.
                 </p>
+            </div>
+
+            {{-- Stat Cards --}}
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-white rounded-lg p-3.5 border border-slate-200 shadow-sm">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase">Total Aduan</p>
+                    <p class="text-2xl font-black text-slate-900 mt-0.5">{{ $stats['total'] }}</p>
+                </div>
+                <div class="bg-amber-50/60 rounded-lg p-3.5 border border-amber-200 shadow-sm">
+                    <p class="text-[10px] font-bold text-amber-800 uppercase">⏳ Menunggu</p>
+                    <p class="text-2xl font-black text-amber-900 mt-0.5">{{ $stats['menunggu'] }}</p>
+                </div>
+                <div class="bg-blue-50/60 rounded-lg p-3.5 border border-blue-200 shadow-sm">
+                    <p class="text-[10px] font-bold text-blue-800 uppercase">⚙️ Diproses</p>
+                    <p class="text-2xl font-black text-blue-900 mt-0.5">{{ $stats['diproses'] }}</p>
+                </div>
+                <div class="bg-emerald-50/60 rounded-lg p-3.5 border border-emerald-200 shadow-sm">
+                    <p class="text-[10px] font-bold text-emerald-800 uppercase">✅ Terverifikasi</p>
+                    <p class="text-2xl font-black text-emerald-900 mt-0.5">{{ $stats['terverifikasi'] }}</p>
+                </div>
             </div>
 
             {{-- Main Card --}}
@@ -34,7 +65,7 @@
                 <div class="p-6 bg-slate-50 border-b border-slate-300 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold text-slate-800">Daftar Laporan Saya</h3>
-                        <p class="text-sm text-slate-500">Kelola dan pantau status tiket Anda.</p>
+                        <p class="text-sm text-slate-500">Kelola dan pantau status tiket pengaduan Anda.</p>
                     </div>
 
                     <a href="{{ route('complaint.public.step1.create') }}">
@@ -80,20 +111,20 @@
                                                 {{ $complaint->created_at->format('d M Y') }}
                                             </td>
                                             <td class="px-6 py-4">
-                                                @if ($complaint->status == 'pending')
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200">
+                                                @if ($complaint->status == 'menunggu' || $complaint->status == 'pending')
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
                                                         ⏳ Menunggu
                                                     </span>
-                                                @elseif($complaint->status == 'proses')
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
-                                                        ⚙️ Proses
+                                                @elseif($complaint->status == 'diproses' || $complaint->status == 'proses')
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                                                        ⚙️ Diproses
                                                     </span>
-                                                @elseif($complaint->status == 'selesai')
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                                        ✅ Selesai
+                                                @elseif($complaint->status == 'terverifikasi' || $complaint->status == 'selesai')
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                                        ✅ Terverifikasi
                                                     </span>
                                                 @else
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 border border-red-200">
                                                         ❌ Ditolak
                                                     </span>
                                                 @endif
@@ -199,35 +230,35 @@
                                     {{-- Status --}}
                                     <div>
                                         <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Status Laporan</p>
-                                        @if ($complaint->status == 'pending')
-                                            <div class="flex items-center gap-2 text-amber-700 bg-amber-50 px-3 py-2 rounded-lg border border-amber-100">
+                                        @if ($complaint->status == 'menunggu' || $complaint->status == 'pending')
+                                            <div class="flex items-center gap-2 text-amber-700 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
                                                 <span class="relative flex h-2 w-2">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
                                                 </span>
-                                                <span class="text-xs font-bold uppercase">Menunggu Verifikasi</span>
+                                                <span class="text-xs font-bold uppercase">⏳ Menunggu Telaah Admin</span>
                                             </div>
-                                        @elseif($complaint->status == 'proses')
-                                            <div class="flex items-center gap-2 text-blue-700 bg-blue-50 px-3 py-2 rounded-lg border border-blue-100">
+                                        @elseif($complaint->status == 'diproses' || $complaint->status == 'proses')
+                                            <div class="flex items-center gap-2 text-blue-700 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200">
                                                 <span class="relative flex h-2 w-2">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                                                 </span>
-                                                <span class="text-xs font-bold uppercase">Sedang Diproses</span>
+                                                <span class="text-xs font-bold uppercase">⚙️ Sedang Diproses (Diteruskan ke Tim Khusus)</span>
                                             </div>
-                                        @elseif($complaint->status == 'selesai')
-                                            <div class="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-100">
+                                        @elseif($complaint->status == 'terverifikasi' || $complaint->status == 'selesai')
+                                            <div class="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-200">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                                 </svg>
-                                                <span class="text-xs font-bold uppercase">Selesai</span>
+                                                <span class="text-xs font-bold uppercase">✅ Terverifikasi (Lolos)</span>
                                             </div>
                                         @else
-                                            <div class="flex items-center gap-2 text-red-700 bg-red-50 px-3 py-2 rounded-lg border border-red-100">
+                                            <div class="flex items-center gap-2 text-red-700 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
                                                 <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
-                                                <span class="text-xs font-bold uppercase">Ditolak</span>
+                                                <span class="text-xs font-bold uppercase">❌ Laporan Ditolak</span>
                                             </div>
                                         @endif
                                     </div>
@@ -295,8 +326,10 @@
                                     @if ($complaint->attachment)
                                         <div>
                                             <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Bukti Pendukung</p>
-                                            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-50 p-2">
-                                                <img src="{{ route('attachments.show', $complaint->id) }}" class="w-full h-auto object-contain max-h-64 mx-auto rounded-md shadow-sm" alt="Bukti">
+                                            <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-50 p-2 text-center">
+                                                <a href="{{ route('attachments.show', $complaint->id) }}" target="_blank" class="text-xs font-bold text-blue-600 hover:underline">
+                                                    Lihat Dokumen Bukti Lampiran &rarr;
+                                                </a>
                                             </div>
                                         </div>
                                     @else
@@ -312,7 +345,7 @@
                                 {{-- Footer --}}
                                 <div class="bg-slate-50 px-4 py-4 sm:px-6 flex flex-col sm:flex-row-reverse gap-2 border-t border-slate-100">
                                     <a href="{{ route('complaint.public.finish', $complaint->token) }}" class="inline-flex w-full sm:w-auto justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">
-                                        Lihat Selengkapnya
+                                        Lihat Lembar Tiket
                                     </a>
                                     <button type="button" class="inline-flex w-full sm:w-auto justify-center rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 transition-all" @click="activeModal = null">
                                         Tutup

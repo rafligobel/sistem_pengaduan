@@ -83,14 +83,14 @@
                                         {{ $complaint->created_at->format('d M Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                         @if ($complaint->status == 'pending')
-                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-amber-700 bg-amber-100 rounded-full">Pending</span>
-                                        @elseif($complaint->status == 'proses')
-                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-blue-700 bg-blue-100 rounded-full">Proses</span>
-                                        @elseif($complaint->status == 'selesai')
-                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-emerald-700 bg-emerald-100 rounded-full">Selesai</span>
+                                         @if ($complaint->status == 'menunggu' || $complaint->status == 'pending')
+                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-amber-700 bg-amber-100 rounded-full">⏳ Menunggu</span>
+                                        @elseif($complaint->status == 'diproses' || $complaint->status == 'proses')
+                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-blue-700 bg-blue-100 rounded-full">⚙️ Diproses</span>
+                                        @elseif($complaint->status == 'terverifikasi' || $complaint->status == 'selesai')
+                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-emerald-700 bg-emerald-100 rounded-full">✅ Terverifikasi</span>
                                         @elseif($complaint->status == 'ditolak')
-                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-red-700 bg-red-100 rounded-full">Ditolak</span>
+                                            <span class="inline-flex px-2 text-[10px] font-semibold leading-5 text-red-700 bg-red-100 rounded-full">❌ Ditolak</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-medium">

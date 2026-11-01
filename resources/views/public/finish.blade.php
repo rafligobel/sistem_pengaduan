@@ -82,7 +82,7 @@
                     <ul class="space-y-1.5 pl-5 list-disc text-slate-600">
                         <li><strong>Simpan Kode Tiket:</strong> Catat atau simpan kode tiket di atas sebagai bukti resmi bahwa laporan Anda telah terdaftar.</li>
                         <li><strong>Pelacakan Status:</strong> Anda dapat melacak tahapan telaah dan tindak lanjut laporan melalui menu <em>Cek Status</em> menggunakan kode tiket ini.</li>
-                        <li><strong>Waktu Verifikasi:</strong> Tim verifikator APIP Inspektorat Daerah memproses kelengkapan laporan dalam waktu 1&ndash;3 hari kerja.</li>
+                        <li><strong>Tahapan Pemeriksaan:</strong> Laporan Anda akan ditelaah awal oleh Administrator dan diteruskan ke Tim Khusus APIP Inspektorat untuk verifikasi dalam waktu 1&ndash;3 hari kerja.</li>
                         <li><strong>Kerahasiaan:</strong> Identitas pelapor dilindungi secara ketat sesuai pedoman Whistleblowing System (WBS).</li>
                     </ul>
                 </div>

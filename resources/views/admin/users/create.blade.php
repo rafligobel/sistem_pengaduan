@@ -26,7 +26,7 @@
                         <div>
                             <x-input-label for="nik" value="Nomor Induk Kependudukan (NIK)" />
                             <x-text-input id="nik" name="nik" type="text" class="mt-1 block w-full"
-                                :value="old('nik')" maxlength="16" inputmode="numeric" placeholder="16 digit NIK (opsional jika bukan masyarakat)" />
+                                :value="old('nik')" maxlength="16" inputmode="numeric" placeholder="16 digit NIK (opsional jika bukan pelapor/pengguna)" />
                             <x-input-error :messages="$errors->get('nik')" class="mt-2" />
                         </div>
 
