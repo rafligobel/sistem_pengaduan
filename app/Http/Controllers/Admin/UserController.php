@@ -48,8 +48,9 @@ class UserController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        // Tetapkan roles ke user
-        $user->syncRoles($validatedData['roles']);
+        // Tetapkan role tunggal ke user (mencegah double role)
+        $role = $validatedData['role'] ?? ($validatedData['roles'][0] ?? 'masyarakat');
+        $user->syncRoles([$role]);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil dibuat.');
@@ -89,8 +90,11 @@ class UserController extends Controller
         // Update user
         $user->update($updateData);
 
-        // Update roles
-        $user->syncRoles($validatedData['roles']);
+        // Update role tunggal (mencegah double role)
+        $role = $validatedData['role'] ?? ($validatedData['roles'][0] ?? null);
+        if ($role) {
+            $user->syncRoles([$role]);
+        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil diperbarui.');

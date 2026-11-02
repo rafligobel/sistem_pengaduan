@@ -62,20 +62,20 @@
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                         </div>
 
-                        {{-- Roles (Checkbox) --}}
+                        {{-- Role (Dropdown Tunggal - Mencegah Double Role) --}}
                         <div>
-                            <x-input-label value="Roles" />
-                            <div class="mt-2 space-y-2">
+                            <x-input-label for="role" value="Role Pengguna" />
+                            <select id="role" name="role" required
+                                class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <option value="" disabled {{ old('role') ? '' : 'selected' }}>-- Pilih Satu Role Hak Akses --</option>
                                 @foreach ($roles as $role)
-                                    <label for="role_{{ $role->id }}" class="flex items-center">
-                                        <input id="role_{{ $role->id }}" name="roles[]" type="checkbox"
-                                             value="{{ $role->name }}"
-                                             class="rounded border-slate-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
-                                        <span class="ms-2 text-sm text-slate-600 font-medium">{{ ucfirst($role->name) }}</span>
-                                    </label>
+                                    <option value="{{ $role->name }}" @selected(old('role') == $role->name)>
+                                        {{ ucfirst($role->name) }}
+                                    </option>
                                 @endforeach
-                            </div>
-                            <x-input-error :messages="$errors->get('roles')" class="mt-2" />
+                            </select>
+                            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                            <p class="mt-1 text-xs text-slate-500">Setiap pengguna hanya memiliki tepat 1 role hak akses untuk mencegah konflik kewenangan.</p>
                         </div>
 
                         {{-- Tombol Aksi --}}

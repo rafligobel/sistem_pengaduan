@@ -64,7 +64,7 @@
                                         </span>
                                     @elseif($complaint->status == 'diproses' || $complaint->status == 'proses')
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
-                                            ⚙️ Diproses (Diteruskan ke Tim Khusus)
+                                            ⚙️ Diproses (Diteruskan ke Verifikator)
                                         </span>
                                     @elseif($complaint->status == 'terverifikasi' || $complaint->status == 'selesai')
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
@@ -238,7 +238,7 @@
                         </div>
                     @endrole
 
-                    {{-- 2. AKSI ADMIN (MENERIMA LAPORAN, PROSES KE TIM KHUSUS / TOLAK, DAN TANGGAPI) --}}
+                    {{-- 2. AKSI ADMIN (MENERIMA LAPORAN, PROSES KE VERIFIKATOR / TOLAK, DAN TANGGAPI) --}}
                     @role('admin')
                         {{-- Panel Aksi Awal Admin jika status 'menunggu' --}}
                         @if($complaint->status == 'menunggu' || $complaint->status == 'pending')
@@ -251,27 +251,27 @@
                                         Aksi Admin: Telaah Laporan Masuk
                                     </h3>
                                     <p class="text-[11px] text-amber-100 mt-0.5">
-                                        Laporan ini baru masuk. Tentukan apakah laporan diproses dan diteruskan ke Tim Khusus atau ditolak.
+                                        Laporan ini baru masuk. Tentukan apakah laporan diproses dan diteruskan ke Verifikator atau ditolak.
                                     </p>
                                 </div>
 
                                 <div class="p-5 space-y-4">
-                                    {{-- Form Proses (Teruskan ke Tim Khusus) --}}
-                                    <form method="POST" action="{{ route('admin.complaints.update', $complaint) }}" class="space-y-3" onsubmit="return confirm('Apakah Anda yakin ingin memproses laporan ini dan meneruskannya ke Tim Khusus?');">
+                                    {{-- Form Proses (Teruskan ke Verifikator) --}}
+                                    <form method="POST" action="{{ route('admin.complaints.update', $complaint) }}" class="space-y-3" onsubmit="return confirm('Apakah Anda yakin ingin memproses laporan ini dan meneruskannya ke Verifikator?');">
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="status" value="diproses">
 
                                         <div>
                                             <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan Tindakan (Opsional)</label>
-                                            <textarea name="note" rows="2" class="w-full text-xs rounded-lg border-slate-300 focus:border-blue-500 focus:ring-blue-500" placeholder="Catatan atau instruksi untuk Tim Khusus..."></textarea>
+                                            <textarea name="note" rows="2" class="w-full text-xs rounded-lg border-slate-300 focus:border-blue-500 focus:ring-blue-500" placeholder="Catatan atau instruksi untuk Verifikator..."></textarea>
                                         </div>
 
                                         <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-xs rounded-lg shadow transition">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
                                             </svg>
-                                            Proses & Teruskan ke Tim Khusus
+                                            Proses & Teruskan ke Verifikator
                                         </button>
                                     </form>
 
@@ -307,7 +307,7 @@
                                 <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Status Saat Ini</h4>
                                 @if($complaint->status == 'diproses')
                                     <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-xs text-blue-800">
-                                        Laporan telah diproses dan diteruskan ke <strong>Tim Khusus</strong> untuk verifikasi lapangan.
+                                        Laporan telah diproses dan diteruskan ke <strong>Verifikator</strong> untuk verifikasi.
                                     </div>
                                 @elseif($complaint->status == 'terverifikasi')
                                     <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-xs text-emerald-800">
@@ -343,7 +343,7 @@
                                     <select name="status" id="status" class="w-full text-xs rounded-lg border-slate-300 focus:border-blue-500 focus:ring-blue-500">
                                         <option value="" selected>-- Tetap Gunakan Status Saat Ini ({{ ucfirst($complaint->status) }}) --</option>
                                         <option value="menunggu">Menunggu</option>
-                                        <option value="diproses">Diproses (Teruskan ke Tim Khusus)</option>
+                                        <option value="diproses">Diproses (Teruskan ke Verifikator)</option>
                                         <option value="terverifikasi">Terverifikasi</option>
                                         <option value="ditolak">Ditolak</option>
                                     </select>
@@ -359,8 +359,8 @@
                         </div>
                     @endrole
 
-                    {{-- 3. AKSI TIM KHUSUS (MENERIMA LAPORAN YANG DITERUSKAN OLEH ADMIN, VERIFIKASI ATAU TOLAK) --}}
-                    @role('tim khusus')
+                    {{-- 3. AKSI VERIFIKATOR (MENERIMA LAPORAN YANG DITERUSKAN OLEH ADMIN, VERIFIKASI ATAU TOLAK) --}}
+                    @role('verifikator')
                         @if($complaint->status == 'diproses')
                             <div class="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
                                 <div class="bg-blue-600 px-5 py-3 text-white">
@@ -368,10 +368,10 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        Aksi Tim Khusus: Verifikasi Laporan
+                                        Aksi Verifikator: Verifikasi Laporan
                                     </h3>
                                     <p class="text-[11px] text-blue-100 mt-0.5">
-                                        Laporan ini telah diteruskan oleh Admin untuk diverifikasi. Tentukan hasil verifikasi Tim Khusus.
+                                        Laporan ini telah diteruskan oleh Admin untuk diverifikasi. Tentukan hasil verifikasi Verifikator.
                                     </p>
                                 </div>
 
@@ -426,7 +426,7 @@
                                 <span class="text-2xl">⏳</span>
                                 <h4 class="font-bold text-xs text-amber-900 mt-2">Menunggu Telaah Awal Admin</h4>
                                 <p class="text-[11px] text-amber-700 mt-1 leading-relaxed">
-                                    Laporan ini belum diteruskan ke Tim Khusus. Admin akan menelaah laporan terlebih dahulu dan mengubah status menjadi "Diproses" sebelum Anda dapat memverifikasinya.
+                                    Laporan ini belum diteruskan ke Verifikator. Admin akan menelaah laporan terlebih dahulu dan mengubah status menjadi "Diproses" sebelum Anda dapat memverifikasinya.
                                 </p>
                             </div>
                         @elseif($complaint->status == 'terverifikasi')
@@ -434,7 +434,7 @@
                                 <span class="text-2xl">✅</span>
                                 <h4 class="font-bold text-xs text-emerald-900 mt-2">Telah Terverifikasi</h4>
                                 <p class="text-[11px] text-emerald-700 mt-1">
-                                    Laporan ini telah dinyatakan lolos verifikasi oleh Tim Khusus.
+                                    Laporan ini telah dinyatakan lolos verifikasi oleh Verifikator.
                                 </p>
                             </div>
                         @elseif($complaint->status == 'ditolak')
@@ -470,7 +470,7 @@
                                                     {{ $response->user->name ?? 'Petugas' }}
                                                 </p>
                                                 <p class="text-[10px] text-slate-400">
-                                                    {{ $response->user->roles->pluck('name')->first() ?? 'Internal' }}
+                                                    {{ ucfirst($response->user->roles->pluck('name')->first() ?? 'Internal') }}
                                                 </p>
                                             </div>
                                         </div>

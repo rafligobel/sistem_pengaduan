@@ -16,7 +16,7 @@ class UpdateComplaintStatusRequest extends FormRequest
     {
         return $this->user()->can('process_complaints') 
             || $this->user()->can('verify_complaints')
-            || $this->user()->hasAnyRole(['admin', 'tim khusus']);
+            || $this->user()->hasAnyRole(['admin', 'verifikator']);
     }
 
     /**

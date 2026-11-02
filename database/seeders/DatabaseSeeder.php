@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Panggil Seeder Roles dan User Admin/Petugas
+        // Panggil Seeder 4 Roles dan User Resmi (Admin, Masyarakat, Verifikator, Pimpinan)
         $this->call(RolesAndPermissionsSeeder::class);
 
         // Kategori Pengaduan Tindak Pidana Korupsi (UU Tipikor + Tidak Diketahui)

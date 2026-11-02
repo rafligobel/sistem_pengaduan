@@ -18,6 +18,17 @@ class UpdateUserRequest extends FormRequest
     }
 
     /**
+     * Persiapkan data sebelum validasi (dukung single-role dropdown).
+     */
+    protected function prepareForValidation(): void
+    {
+        if (!$this->has('role') && $this->has('roles')) {
+            $roles = (array) $this->input('roles');
+            $this->merge(['role' => $roles[0] ?? null]);
+        }
+    }
+
+    /**
      * Ambil aturan validasi yang berlaku untuk request ini.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -44,8 +55,7 @@ class UpdateUserRequest extends FormRequest
             ],
             // Password bersifat opsional saat update
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-            'roles' => 'required|array',
-            'roles.*' => 'exists:roles,name',
+            'role' => 'required|string|exists:roles,name', // Dropdown single-role
         ];
     }
 }

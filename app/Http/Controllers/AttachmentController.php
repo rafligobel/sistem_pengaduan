@@ -25,8 +25,8 @@ class AttachmentController extends Controller
 
         // A. Jika user login
         if ($user) {
-            // Admin, Tim Khusus, Pimpinan (dan legacy role) boleh melihat semua
-            if ($user->hasAnyRole(['admin', 'tim khusus', 'pimpinan', 'petugas', 'walikota'])) {
+            // Admin, Verifikator, Pimpinan boleh melihat semua lampiran
+            if ($user->hasAnyRole(['admin', 'verifikator', 'pimpinan'])) {
                 $isAuthorized = true;
             }
             // Pemilik tiket boleh melihat

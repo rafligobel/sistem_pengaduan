@@ -27,12 +27,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
 
             {{-- Info Banner Khusus Role --}}
-            @role('tim khusus')
+            @role('verifikator')
                 <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-xs flex items-center gap-2">
                     <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span><strong>Tugas Tim Khusus:</strong> Fokus pada laporan berstatus <strong>Diproses</strong> yang telah diteruskan oleh Admin untuk dilakukan verifikasi lapangan atau penolakan.</span>
+                    <span><strong>Tugas Verifikator:</strong> Fokus pada laporan berstatus <strong>Diproses</strong> yang telah diteruskan oleh Admin untuk dilakukan verifikasi atau penolakan.</span>
                 </div>
             @endrole
 

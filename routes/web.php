@@ -30,9 +30,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// 3. FITUR PENGADUAN (HANYA USER LOGIN SEBAGAI PENGGUNA)
+// 3. FITUR PENGADUAN (HANYA USER LOGIN SEBAGAI MASYARAKAT)
 // Middleware 'auth' memastikan hanya pengguna terautentikasi yang bisa akses
-Route::middleware(['auth', 'role:pengguna|masyarakat'])->prefix('lapor')->name('complaint.public.')->group(function () {
+Route::middleware(['auth', 'role:masyarakat'])->prefix('lapor')->name('complaint.public.')->group(function () {
 
     // Step 1: Input Data Laporan
     Route::get('/step-1', [PublicComplaintController::class, 'createStep1'])->name('step1.create');
@@ -53,7 +53,7 @@ Route::post('/cek-status', [PublicStatusController::class, 'check'])->name('stat
 Route::get('/status/{token}', [PublicStatusController::class, 'show'])->name('status.show'); // Menampilkan hasil
 
 // Route untuk Lampiran Aman (Secure Attachment)
-// Akses: Admin/Tim Khusus/Pimpinan (Session Auth) ATAU Pelapor / Publik (via Token Tiket di URL)
+// Akses: Admin/Verifikator/Pimpinan (Session Auth) ATAU Pelapor / Publik (via Token Tiket di URL)
 Route::get('/attachments/{complaint}', [\App\Http\Controllers\AttachmentController::class, 'show'])->name('attachments.show');
 
 // 5. MANAJEMEN PROFIL (Breeze Default)
@@ -63,8 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// 6. AREA INTERNAL (ADMIN, TIM KHUSUS, PIMPINAN)
-Route::middleware(['auth', 'role:admin|tim khusus|pimpinan|petugas|walikota'])->prefix('admin')->name('admin.')->group(function () {
+// 6. AREA INTERNAL (ADMIN, VERIFIKATOR, PIMPINAN)
+Route::middleware(['auth', 'role:admin|verifikator|pimpinan'])->prefix('admin')->name('admin.')->group(function () {
 
     // A. Dashboard Internal
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -76,7 +76,7 @@ Route::middleware(['auth', 'role:admin|tim khusus|pimpinan|petugas|walikota'])->
     Route::get('/complaints', [ComplaintController::class, 'index'])->name('complaints.index');
     Route::get('/complaints/{complaint}', [ComplaintController::class, 'show'])->name('complaints.show');
 
-    // C. Action Pengaduan (Admin: Proses/Tolak, Tim Khusus: Verifikasi/Tolak)
+    // C. Action Pengaduan (Admin: Proses/Tolak, Verifikator: Verifikasi/Tolak)
     Route::middleware('permission:process_complaints|verify_complaints')->group(function () {
         Route::put('/complaints/{complaint}', [ComplaintController::class, 'update'])->name('complaints.update');
     });

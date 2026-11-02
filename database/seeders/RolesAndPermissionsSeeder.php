@@ -18,17 +18,17 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Buat 4 Roles Resmi
+        // 1. Buat Tepat 4 Roles Resmi
         $roleAdmin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $rolePengguna = Role::firstOrCreate(['name' => 'pengguna', 'guard_name' => 'web']);
-        $roleTimKhusus = Role::firstOrCreate(['name' => 'tim khusus', 'guard_name' => 'web']);
+        $roleMasyarakat = Role::firstOrCreate(['name' => 'masyarakat', 'guard_name' => 'web']);
+        $roleVerifikator = Role::firstOrCreate(['name' => 'verifikator', 'guard_name' => 'web']);
         $rolePimpinan = Role::firstOrCreate(['name' => 'pimpinan', 'guard_name' => 'web']);
 
         // 2. Buat Permissions (Hak Akses Granular)
         $permissions = [
             'view_complaints',      // Melihat daftar dan detail laporan
-            'process_complaints',   // Admin: tolak atau proses (teruskan ke tim khusus)
-            'verify_complaints',    // Tim Khusus: tolak atau verifikasi
+            'process_complaints',   // Admin: tolak atau proses (teruskan ke verifikator)
+            'verify_complaints',    // Verifikator: tolak atau verifikasi
             'respond_complaints',   // Admin: menanggapi laporan
             'delete_complaints',    // Admin: menghapus laporan
             'manage_master',        // Admin: kelola kategori & user
@@ -53,8 +53,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage_system',
         ]);
 
-        // _tim khusus: menerima laporan yang diteruskan admin, tolak atau verifikasi jika lolos
-        $roleTimKhusus->syncPermissions([
+        // _verifikator: menerima laporan yang diteruskan admin, tolak atau verifikasi jika lolos
+        $roleVerifikator->syncPermissions([
             'view_complaints',
             'verify_complaints',
         ]);
@@ -64,8 +64,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_complaints',
         ]);
 
-        // _pengguna (masyarakat/pelapor): membuat & memantau pengaduan
-        $rolePengguna->syncPermissions([]);
+        // _masyarakat: pelapor pengaduan (membuat & memantau pengaduan)
+        $roleMasyarakat->syncPermissions([]);
 
         // 4. Default Accounts (Opsional)
         $adminUser = User::firstOrCreate(
@@ -77,14 +77,14 @@ class RolesAndPermissionsSeeder extends Seeder
         );
         $adminUser->syncRoles([$roleAdmin]);
 
-        $timKhususUser = User::firstOrCreate(
+        $verifikatorUser = User::firstOrCreate(
             ['email' => 'timkhusus@example.com'],
             [
-                'name' => 'Tim Khusus Inspektorat',
+                'name' => 'Verifikator Inspektorat',
                 'password' => Hash::make('password'),
             ]
         );
-        $timKhususUser->syncRoles([$roleTimKhusus]);
+        $verifikatorUser->syncRoles([$roleVerifikator]);
 
         $pimpinanUser = User::firstOrCreate(
             ['email' => 'pimpinan@example.com'],
@@ -95,14 +95,14 @@ class RolesAndPermissionsSeeder extends Seeder
         );
         $pimpinanUser->syncRoles([$rolePimpinan]);
 
-        $penggunaUser = User::firstOrCreate(
+        $masyarakatUser = User::firstOrCreate(
             ['email' => 'warga@example.com'],
             [
                 'name' => 'Masyarakat Contoh',
                 'password' => Hash::make('password'),
             ]
         );
-        $penggunaUser->syncRoles([$rolePengguna]);
+        $masyarakatUser->syncRoles([$roleMasyarakat]);
 
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     }

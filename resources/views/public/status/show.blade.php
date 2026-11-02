@@ -135,7 +135,7 @@
                         @elseif($complaint->status == 'diproses' || $complaint->status == 'proses')
                             <div class="w-full py-4 text-center bg-blue-50 rounded-lg border border-blue-200 ring-2 ring-blue-50/50">
                                 <span class="block text-2xl font-black text-blue-600 mb-1">DIPROSES</span>
-                                <span class="text-[10px] font-bold text-blue-800 tracking-wide uppercase">Diteruskan & Diverifikasi Tim Khusus</span>
+                                <span class="text-[10px] font-bold text-blue-800 tracking-wide uppercase">Diteruskan & Diverifikasi Verifikator</span>
                             </div>
                         @elseif($complaint->status == 'terverifikasi' || $complaint->status == 'selesai')
                             <div class="w-full py-4 text-center bg-emerald-50 rounded-lg border border-emerald-200 ring-2 ring-emerald-50/50">
@@ -182,7 +182,7 @@
                                         <h3 class="flex items-center mb-1 text-xs font-bold text-slate-900">
                                             {{ $response->user->name ?? 'Admin' }}
                                             <span class="bg-purple-100 text-purple-700 text-[10px] font-bold mr-2 px-1.5 py-0.5 rounded ml-2 uppercase tracking-wide">
-                                                {{ $response->user->roles->pluck('name')->first() ?? 'Petugas' }}
+                                                {{ ucfirst($response->user->roles->pluck('name')->first() ?? 'Petugas') }}
                                             </span>
                                         </h3>
                                         <time class="block mb-2 text-[10px] font-medium text-slate-400">{{ $response->created_at->format('d M Y, H:i') }}</time>

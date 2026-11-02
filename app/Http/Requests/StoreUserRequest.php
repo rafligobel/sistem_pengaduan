@@ -17,6 +17,17 @@ class StoreUserRequest extends FormRequest
     }
 
     /**
+     * Persiapkan data sebelum validasi (dukung single-role dropdown).
+     */
+    protected function prepareForValidation(): void
+    {
+        if (!$this->has('role') && $this->has('roles')) {
+            $roles = (array) $this->input('roles');
+            $this->merge(['role' => $roles[0] ?? null]);
+        }
+    }
+
+    /**
      * Ambil aturan validasi yang berlaku untuk request ini.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -29,8 +40,7 @@ class StoreUserRequest extends FormRequest
             'phone' => 'nullable|string|max:20',
             'email' => 'required|string|lowercase|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'roles' => 'required|array', // Pastikan roles dikirim sebagai array
-            'roles.*' => 'exists:roles,name', // Pastikan setiap role ada di tabel roles
+            'role' => 'required|string|exists:roles,name', // Dropdown single-role
         ];
     }
 }

@@ -1869,7 +1869,7 @@
                         </div>
                         <div class="sidebar-user-details">
                             <p class="sidebar-user-name">{{ Auth::user()->name }}</p>
-                            <p class="sidebar-user-role">{{ Auth::user()->roles->pluck('name')->first() ?? 'Pengguna' }}</p>
+                            <p class="sidebar-user-role">{{ ucfirst(Auth::user()->roles->pluck('name')->first() ?? 'Masyarakat') }}</p>
                         </div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

@@ -73,7 +73,7 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="mt-2 text-[10px] text-blue-700 font-semibold">Diteruskan ke Tim Khusus</p>
+                    <p class="mt-2 text-[10px] text-blue-700 font-semibold">Diteruskan ke Verifikator</p>
                 </div>
 
                 {{-- CARD 4: TERVERIFIKASI --}}
@@ -125,7 +125,7 @@
                         </div>
                         <h3 class="text-xl font-bold mb-2">Penerimaan & Penerusan Pengaduan</h3>
                         <p class="text-blue-100 text-xs leading-relaxed max-w-xl">
-                            Sebagai Admin, tugas utama Anda adalah menerima laporan masyarakat, menelaah kelengkapan data awal, dan memilih tindakan: <strong>Tolak</strong> atau <strong>Proses</strong> (meneruskan ke Tim Khusus), serta memberikan tanggapan tindak lanjut.
+                            Sebagai Admin, tugas utama Anda adalah menerima laporan masyarakat, menelaah kelengkapan data awal, dan memilih tindakan: <strong>Tolak</strong> atau <strong>Proses</strong> (meneruskan ke Verifikator), serta memberikan tanggapan tindak lanjut.
                         </p>
                     </div>
                     <div class="mt-6 flex flex-wrap items-center gap-3">

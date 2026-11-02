@@ -244,7 +244,7 @@
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                                                 </span>
-                                                <span class="text-xs font-bold uppercase">⚙️ Sedang Diproses (Diteruskan ke Tim Khusus)</span>
+                                                <span class="text-xs font-bold uppercase">⚙️ Sedang Diproses (Diteruskan ke Verifikator)</span>
                                             </div>
                                         @elseif($complaint->status == 'terverifikasi' || $complaint->status == 'selesai')
                                             <div class="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-200">

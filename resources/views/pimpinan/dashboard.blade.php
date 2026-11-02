@@ -28,7 +28,7 @@
                     </span>
                     <h3 class="text-xl font-bold">Selamat datang, {{ Auth::user()->name }}</h3>
                     <p class="text-slate-300 text-xs mt-1 leading-relaxed max-w-xl">
-                        Sistem menyajikan seluruh pengaduan tindak pidana korupsi secara utuh dan terperinci. Anda dapat meninjau kronologi 5W+1H, berkas lampiran pendukung, serta catatan verifikasi dari Admin dan Tim Khusus.
+                        Sistem menyajikan seluruh pengaduan tindak pidana korupsi secara utuh dan terperinci. Anda dapat meninjau kronologi 5W+1H, berkas lampiran pendukung, serta catatan verifikasi dari Admin dan Verifikator.
                     </p>
                 </div>
                 <a href="{{ route('admin.complaints.index') }}"
@@ -55,7 +55,7 @@
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-blue-200 bg-blue-50/30">
                     <p class="text-[11px] font-bold text-blue-800 uppercase tracking-wider">⚙️ Diproses</p>
                     <h3 class="text-3xl font-black text-blue-900 mt-1">{{ $stats['diproses'] }}</h3>
-                    <p class="mt-2 text-[10px] text-blue-700">Verifikasi Tim Khusus</p>
+                    <p class="mt-2 text-[10px] text-blue-700">Verifikasi Verifikator</p>
                 </div>
 
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-emerald-200 bg-emerald-50/30">

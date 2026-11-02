@@ -50,8 +50,8 @@ class ComplaintController extends Controller
 
     /**
      * Update status pengaduan:
-     * - Admin: Menelaah laporan 'menunggu' -> 'diproses' (diteruskan ke tim khusus) atau 'ditolak'
-     * - Tim Khusus: Memverifikasi laporan 'diproses' -> 'terverifikasi' atau 'ditolak'
+     * - Admin: Menelaah laporan 'menunggu' -> 'diproses' (diteruskan ke Verifikator) atau 'ditolak'
+     * - Verifikator: Memverifikasi laporan 'diproses' -> 'terverifikasi' atau 'ditolak'
      * - Pimpinan: Hanya melihat (dilarang mengubah status)
      */
     public function update(UpdateComplaintStatusRequest $request, Complaint $complaint)
@@ -66,19 +66,19 @@ class ComplaintController extends Controller
             abort(403, 'Pimpinan hanya memiliki hak akses untuk memantau laporan.');
         }
 
-        // Logic Hak Akses: Tim Khusus
-        if ($user->hasRole('tim khusus') && !$user->hasRole('admin')) {
+        // Logic Hak Akses: Verifikator
+        if ($user->hasRole('verifikator') && !$user->hasRole('admin')) {
             if ($complaint->status !== 'diproses') {
-                return back()->with('error', 'Tim Khusus hanya dapat memverifikasi laporan yang telah diteruskan oleh Admin (berstatus Diproses).');
+                return back()->with('error', 'Verifikator hanya dapat memverifikasi laporan yang telah diteruskan oleh Admin (berstatus Diproses).');
             }
             if (!in_array($targetStatus, ['terverifikasi', 'ditolak'])) {
-                return back()->with('error', 'Tim Khusus hanya dapat mengubah status menjadi Terverifikasi atau Ditolak.');
+                return back()->with('error', 'Verifikator hanya dapat mengubah status menjadi Terverifikasi atau Ditolak.');
             }
         }
 
         // Logic Hak Akses: Admin
         if ($user->hasRole('admin')) {
-            // Admin bebas mengubah status atau meneruskan ke Tim Khusus
+            // Admin bebas mengubah status atau meneruskan ke Verifikator
             if ($complaint->status === 'menunggu' && !in_array($targetStatus, ['diproses', 'ditolak'])) {
                 return back()->with('error', 'Laporan yang baru masuk dapat diubah menjadi Diproses (diteruskan) atau Ditolak.');
             }
@@ -97,15 +97,15 @@ class ComplaintController extends Controller
 
         // Tentukan pesan sukses berdasarkan peran dan tindakan
         $successMessage = 'Status pengaduan berhasil diperbarui.';
-        if ($user->hasRole('tim khusus') && !$user->hasRole('admin')) {
+        if ($user->hasRole('verifikator') && !$user->hasRole('admin')) {
             if ($targetStatus === 'terverifikasi') {
-                $successMessage = 'Laporan berhasil diverifikasi oleh Tim Khusus.';
+                $successMessage = 'Laporan berhasil diverifikasi oleh Verifikator.';
             } elseif ($targetStatus === 'ditolak') {
-                $successMessage = 'Laporan telah ditolak oleh Tim Khusus.';
+                $successMessage = 'Laporan telah ditolak oleh Verifikator.';
             }
         } else {
             if ($targetStatus === 'diproses') {
-                $successMessage = 'Laporan berhasil diproses dan diteruskan ke Tim Khusus.';
+                $successMessage = 'Laporan berhasil diproses dan diteruskan ke Verifikator.';
             } elseif ($targetStatus === 'ditolak') {
                 $successMessage = 'Laporan telah ditolak.';
             } elseif ($targetStatus === 'terverifikasi') {

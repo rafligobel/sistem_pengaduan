@@ -59,8 +59,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Assign default role 'pengguna' so users can access complaint features
-        $user->assignRole('pengguna');
+        // Tetapkan role default 'masyarakat' agar pengguna dapat mengakses fitur pengaduan
+        $user->assignRole('masyarakat');
 
         event(new Registered($user));
 

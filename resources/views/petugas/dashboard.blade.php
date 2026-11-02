@@ -3,14 +3,14 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h2 class="font-bold text-2xl text-slate-900 leading-tight">
-                    Area Kerja Tim Khusus
+                    Area Kerja Verifikator
                 </h2>
                 <p class="text-xs text-slate-500 mt-1">
                     Verifikasi dan tindak lanjut laporan pengaduan yang diteruskan oleh Administrator.
                 </p>
             </div>
             <p class="text-xs text-slate-700 font-medium bg-white px-3 py-1.5 rounded-full shadow-sm border border-slate-200">
-                Petugas: <span class="font-bold text-blue-600">{{ Auth::user()->name }}</span>
+                Verifikator: <span class="font-bold text-blue-600">{{ Auth::user()->name }}</span>
             </p>
         </div>
     </x-slot>
@@ -22,7 +22,7 @@
             <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-800 text-blue-200 border border-blue-700 mb-2">
-                        Tim Khusus Verifikator APIP
+                        Verifikator APIP Inspektorat
                     </span>
                     <h3 class="text-xl font-bold">Selamat bertugas, {{ Auth::user()->name }}</h3>
                     <p class="text-blue-100 text-xs mt-1 leading-relaxed max-w-xl">
@@ -101,7 +101,7 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="mt-2 text-[10px] text-slate-500">Belum diteruskan ke tim khusus</p>
+                    <p class="mt-2 text-[10px] text-slate-500">Belum diteruskan ke Verifikator</p>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@
                 <div class="px-5 py-3.5 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                         <h4 class="font-bold text-slate-900 text-sm">Laporan Diteruskan untuk Verifikasi</h4>
-                        <p class="text-[11px] text-slate-500">Daftar laporan berstatus 'Diproses' yang menunggu aksi verifikasi atau penolakan oleh Tim Khusus.</p>
+                        <p class="text-[11px] text-slate-500">Daftar laporan berstatus 'Diproses' yang menunggu aksi verifikasi atau penolakan oleh Verifikator.</p>
                     </div>
                     <a href="{{ route('admin.complaints.index', ['status' => 'diproses']) }}" class="text-xs font-bold text-blue-600 hover:underline">
                         Lihat Semua ({{ $stats['diproses'] }}) &rarr;
@@ -165,7 +165,7 @@
                                         <svg class="w-8 h-8 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        Tidak ada laporan yang sedang menunggu verifikasi Tim Khusus saat ini.
+                                        Tidak ada laporan yang sedang menunggu verifikasi Verifikator saat ini.
                                     </td>
                                 </tr>
                             @endforelse

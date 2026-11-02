@@ -25,7 +25,7 @@ class DashboardController extends Controller
                 'complaints_terverifikasi' => Complaint::where('status', 'terverifikasi')->count(),
                 'complaints_ditolak'       => Complaint::where('status', 'ditolak')->count(),
                 'users_count'              => User::whereDoesntHave('roles', function($q) {
-                                                $q->whereIn('name', ['admin', 'tim khusus', 'pimpinan', 'petugas', 'walikota']);
+                                                $q->whereIn('name', ['admin', 'verifikator', 'pimpinan']);
                                             })->count(),
                 'categories_count'         => Category::count(),
             ];
@@ -39,9 +39,9 @@ class DashboardController extends Controller
         }
 
         // -----------------------------------------------------------
-        // 2. DASHBOARD TIM KHUSUS (Verifikasi Laporan Diteruskan)
+        // 2. DASHBOARD VERIFIKATOR (Verifikasi Laporan Diteruskan)
         // -----------------------------------------------------------
-        elseif ($user->hasAnyRole(['tim khusus', 'petugas'])) {
+        elseif ($user->hasRole('verifikator')) {
             $stats = [
                 'diproses'      => Complaint::where('status', 'diproses')->count(), // Perlu verifikasi
                 'terverifikasi' => Complaint::where('status', 'terverifikasi')->count(),
@@ -63,7 +63,7 @@ class DashboardController extends Controller
         // -----------------------------------------------------------
         // 3. DASHBOARD PIMPINAN (Pengawasan Eksekutif - Read Only)
         // -----------------------------------------------------------
-        elseif ($user->hasAnyRole(['pimpinan', 'walikota'])) {
+        elseif ($user->hasRole('pimpinan')) {
             $stats = [
                 'total'         => Complaint::count(),
                 'menunggu'      => Complaint::where('status', 'menunggu')->count(),
@@ -81,7 +81,7 @@ class DashboardController extends Controller
         }
 
         // -----------------------------------------------------------
-        // 4. DASHBOARD PENGGUNA (Masyarakat / Pelapor)
+        // 4. DASHBOARD MASYARAKAT (Pelapor Pengaduan)
         // -----------------------------------------------------------
         else {
             $complaints = Auth::user()->complaints()->with('category')->latest()->get();
