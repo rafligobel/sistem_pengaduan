@@ -10,7 +10,16 @@
                     <span class="font-mono text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded">#{{ $complaint->token }}</span>
                 </div>
             </div>
-            <div>
+            <div class="flex items-center gap-2">
+                @if($complaint->status == 'terverifikasi' || $complaint->status == 'selesai')
+                    <a href="{{ route('complaints.pdf', $complaint->id) }}" target="_blank"
+                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-md font-bold text-xs shadow-sm transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span>Unduh PDF</span>
+                    </a>
+                @endif
                 <a href="{{ route('admin.complaints.index') }}"
                    class="inline-flex items-center px-3 py-1.5 bg-white border border-slate-300 rounded-md font-semibold text-xs text-slate-700 hover:bg-slate-50 transition shadow-sm">
                     &larr; Kembali ke Daftar
@@ -310,8 +319,15 @@
                                         Laporan telah diproses dan diteruskan ke <strong>Verifikator</strong> untuk verifikasi.
                                     </div>
                                 @elseif($complaint->status == 'terverifikasi')
-                                    <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-xs text-emerald-800">
-                                        Laporan telah <strong>Terverifikasi</strong> dan dinyatakan lolos verifikasi.
+                                    <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-lg text-xs text-emerald-800 space-y-2.5">
+                                        <p>Laporan telah <strong>Terverifikasi</strong> dan dinyatakan lolos verifikasi.</p>
+                                        <a href="{{ route('complaints.pdf', $complaint->id) }}" target="_blank"
+                                           class="inline-flex items-center justify-center gap-1.5 w-full px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs rounded-md shadow-sm transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            <span>Unduh Dokumen PDF Resmi</span>
+                                        </a>
                                     </div>
                                 @elseif($complaint->status == 'ditolak')
                                     <div class="bg-red-50 border border-red-200 p-3 rounded-lg text-xs text-red-800">
@@ -433,9 +449,16 @@
                             <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
                                 <span class="text-2xl">✅</span>
                                 <h4 class="font-bold text-xs text-emerald-900 mt-2">Telah Terverifikasi</h4>
-                                <p class="text-[11px] text-emerald-700 mt-1">
+                                <p class="text-[11px] text-emerald-700 mt-1 mb-3">
                                     Laporan ini telah dinyatakan lolos verifikasi oleh Verifikator.
                                 </p>
+                                <a href="{{ route('complaints.pdf', $complaint->id) }}" target="_blank"
+                                   class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs rounded-md shadow-sm transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span>Unduh Dokumen PDF Resmi</span>
+                                </a>
                             </div>
                         @elseif($complaint->status == 'ditolak')
                             <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">

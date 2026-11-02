@@ -51,19 +51,25 @@ Route::middleware(['auth', 'role:masyarakat'])->prefix('lapor')->name('complaint
 Route::get('/cek-status', [PublicStatusController::class, 'index'])->name('status.index');
 Route::post('/cek-status', [PublicStatusController::class, 'check'])->name('status.check'); // Form submit pencarian
 Route::get('/status/{token}', [PublicStatusController::class, 'show'])->name('status.show'); // Menampilkan hasil
+Route::get('/status/{token}/pdf', [\App\Http\Controllers\ComplaintPdfController::class, 'downloadByToken'])->name('complaints.pdf.token'); // Unduh PDF via token publik
 
 // Route untuk Lampiran Aman (Secure Attachment)
 // Akses: Admin/Verifikator/Pimpinan (Session Auth) ATAU Pelapor / Publik (via Token Tiket di URL)
 Route::get('/attachments/{complaint}', [\App\Http\Controllers\AttachmentController::class, 'show'])->name('attachments.show');
 
-// 5. MANAJEMEN PROFIL (Breeze Default)
+// 5. FITUR UNDUH PDF RESMI (Semua Role: Admin, Verifikator, Pimpinan, Masyarakat)
+Route::middleware('auth')->group(function () {
+    Route::get('/complaints/{complaint}/pdf', [\App\Http\Controllers\ComplaintPdfController::class, 'download'])->name('complaints.pdf');
+});
+
+// 6. MANAJEMEN PROFIL (Breeze Default)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// 6. AREA INTERNAL (ADMIN, VERIFIKATOR, PIMPINAN)
+// 7. AREA INTERNAL (ADMIN, VERIFIKATOR, PIMPINAN)
 Route::middleware(['auth', 'role:admin|verifikator|pimpinan'])->prefix('admin')->name('admin.')->group(function () {
 
     // A. Dashboard Internal

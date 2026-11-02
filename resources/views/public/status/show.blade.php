@@ -142,6 +142,15 @@
                                 <span class="block text-2xl font-black text-emerald-600 mb-1">TERVERIFIKASI</span>
                                 <span class="text-[10px] font-bold text-emerald-800 tracking-wide uppercase">Laporan Selesai Diverifikasi</span>
                             </div>
+                            <div class="mt-3">
+                                <a href="{{ route('complaints.pdf.token', $complaint->token) }}" target="_blank"
+                                   class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg text-xs font-bold shadow-sm transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span>Unduh Lembar PDF Terverifikasi</span>
+                                </a>
+                            </div>
                         @elseif($complaint->status == 'ditolak')
                             <div class="w-full py-4 text-center bg-red-50 rounded-lg border border-red-200 ring-2 ring-red-50/50">
                                 <span class="block text-2xl font-black text-red-600 mb-1">DITOLAK</span>

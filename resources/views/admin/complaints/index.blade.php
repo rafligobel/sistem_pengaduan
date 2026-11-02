@@ -141,6 +141,16 @@
                                                     class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-transparent rounded-md font-bold text-xs transition-colors">
                                                     Lihat Detail
                                                 </a>
+
+                                                @if($item->status == 'terverifikasi' || $item->status == 'selesai')
+                                                <a href="{{ route('complaints.pdf', $item->id) }}" target="_blank" title="Unduh Berkas PDF Resmi"
+                                                    class="inline-flex items-center px-2.5 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-md font-bold text-xs transition-colors">
+                                                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    PDF
+                                                </a>
+                                                @endif
                                                 
                                                 @can('delete_complaints')
                                                 <form action="{{ route('admin.complaints.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data pengaduan ini?');">
