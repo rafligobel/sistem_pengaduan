@@ -11,6 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Percayai semua proxy (diperlukan untuk ngrok / reverse proxy)
+        $middleware->trustProxies(at: '*');
 
         // --- PENYEMPURNAAN KODE DI SINI ---
         // Daftarkan alias untuk middleware Spatie
