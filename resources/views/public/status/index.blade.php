@@ -57,8 +57,8 @@
         </div>
     </div>
 
-    {{-- Riwayat Pengaduan (Login Only) --}}
-    @auth
+    {{-- Riwayat Pengaduan (Hanya untuk Masyarakat) --}}
+    @role('masyarakat')
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-bold text-slate-800">Riwayat Pengaduan Saya</h2>
@@ -129,5 +129,5 @@
                 </div>
             </div>
         </div>
-    @endauth
+    @endrole
 </x-public-layout>
