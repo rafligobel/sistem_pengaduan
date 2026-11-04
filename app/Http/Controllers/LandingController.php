@@ -4,16 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Gallery;
 use App\Models\News;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LandingController extends Controller
 {
     public function index()
     {
-        // Ambil 8 galeri terbaru untuk ditampilkan di landing page
-        $galleries = Gallery::latest()->take(8)->get();
-        // Ambil 12 berita terbaru (untuk mendukung scroll horizontal 2 baris)
-        $news = News::latest()->take(12)->get();
+        // Cache galeri & berita selama 10 menit untuk mempercepat response beranda
+        $galleries = Cache::remember('landing_galleries', 600, function () {
+            return Gallery::select('id', 'title', 'description', 'image_path')
+                ->latest()
+                ->take(8)
+                ->get();
+        });
+
+        $news = Cache::remember('landing_news', 600, function () {
+            return News::select('id', 'title', 'content', 'image_path', 'created_at')
+                ->latest()
+                ->take(12)
+                ->get();
+        });
         
         return view('welcome', compact('galleries', 'news'));
     }

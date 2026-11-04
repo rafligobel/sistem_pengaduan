@@ -23,6 +23,14 @@ class News extends Model
      */
     protected static function booted()
     {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_news');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_news');
+        });
+
         static::deleting(function ($news) {
             if ($news->image_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($news->image_path)) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($news->image_path);
