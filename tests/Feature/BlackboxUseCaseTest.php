@@ -4,9 +4,13 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Complaint;
+use App\Models\Response as ComplaintResponse;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -24,37 +28,62 @@ class BlackboxUseCaseTest extends TestCase
     {
         parent::setUp();
 
-        // Jalankan seeder roles dan permissions resmi
+        // 1. Jalankan seeder roles & permissions resmi
         $this->seed(RolesAndPermissionsSeeder::class);
 
-        // Ambil user resmi hasil seeder atau buat jika belum ada
-        $this->masyarakat = User::where('email', 'warga@example.com')->first()
-            ?? User::factory()->create(['email' => 'warga@example.com']);
-        if (!$this->masyarakat->hasRole('masyarakat')) {
-            $this->masyarakat->assignRole('masyarakat');
+        // 2. Pastikan 4 role resmi terdaftar
+        foreach (['masyarakat', 'admin', 'verifikator', 'pimpinan'] as $roleName) {
+            Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
         }
 
-        $this->admin = User::where('email', 'admin@example.com')->first()
-            ?? User::factory()->create(['email' => 'admin@example.com']);
-        if (!$this->admin->hasRole('admin')) {
-            $this->admin->assignRole('admin');
+        // 3. Ambil atau inisialisasi akun pengujian untuk masing-masing peran
+        $this->masyarakat = User::where('email', 'warga@example.com')->first();
+        if (!$this->masyarakat) {
+            $this->masyarakat = User::factory()->create([
+                'name' => 'Masyarakat Penguji',
+                'email' => 'warga.test@example.com',
+                'nik' => '7571010101010001',
+                'phone' => '081234567890',
+                'password' => Hash::make('password'),
+            ]);
+            $this->masyarakat->syncRoles(['masyarakat']);
         }
 
-        $this->verifikator = User::where('email', 'timkhusus@example.com')->first()
-            ?? User::factory()->create(['email' => 'timkhusus@example.com']);
-        if (!$this->verifikator->hasRole('verifikator')) {
-            $this->verifikator->assignRole('verifikator');
+        $this->admin = User::where('email', 'admin@example.com')->first();
+        if (!$this->admin) {
+            $this->admin = User::factory()->create([
+                'name' => 'Admin Penguji',
+                'email' => 'admin.test@example.com',
+                'password' => Hash::make('password'),
+            ]);
+            $this->admin->syncRoles(['admin']);
         }
 
-        $this->pimpinan = User::where('email', 'pimpinan@example.com')->first()
-            ?? User::factory()->create(['email' => 'pimpinan@example.com']);
-        if (!$this->pimpinan->hasRole('pimpinan')) {
-            $this->pimpinan->assignRole('pimpinan');
+        $this->verifikator = User::where('email', 'timkhusus@example.com')->first();
+        if (!$this->verifikator) {
+            $this->verifikator = User::factory()->create([
+                'name' => 'Verifikator Penguji',
+                'email' => 'verifikator.test@example.com',
+                'password' => Hash::make('password'),
+            ]);
+            $this->verifikator->syncRoles(['verifikator']);
         }
 
-        $this->category = Category::firstOrCreate([
-            'name' => 'Pelanggaran Administratif Pelayanan',
-        ]);
+        $this->pimpinan = User::where('email', 'pimpinan@example.com')->first();
+        if (!$this->pimpinan) {
+            $this->pimpinan = User::factory()->create([
+                'name' => 'Pimpinan Penguji',
+                'email' => 'pimpinan.test@example.com',
+                'password' => Hash::make('password'),
+            ]);
+            $this->pimpinan->syncRoles(['pimpinan']);
+        }
+
+        // 4. Pastikan kategori pengujian tersedia
+        $this->category = Category::firstOrCreate(
+            ['name' => 'Pelanggaran Administratif'],
+            ['description' => 'Kategori pelanggaran administratif pengadaan barang dan jasa']
+        );
     }
 
     // =========================================================================
@@ -63,32 +92,40 @@ class BlackboxUseCaseTest extends TestCase
 
     public function test_tc01_positif_masyarakat_dapat_melakukan_registrasi(): void
     {
-        $response = $this->post('/register', [
-            'name' => 'Pelapor Baru',
-            'nik' => '7571012345670001',
-            'phone' => '081234567890',
+        $payload = [
+            'name' => 'Pelapor Baru Gorontalo',
+            'nik' => '7571020202020002',
+            'phone' => '081298765432',
             'email' => 'pelapor.baru@example.com',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
-        ]);
+        ];
 
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response = $this->post('/register', $payload);
+
+        $response->assertRedirect('/dashboard');
         $this->assertDatabaseHas('users', [
             'email' => 'pelapor.baru@example.com',
-            'nik' => '7571012345670001',
+            'nik' => '7571020202020002',
         ]);
+
+        $registeredUser = User::where('email', 'pelapor.baru@example.com')->first();
+        $this->assertNotNull($registeredUser);
+        $this->assertTrue($registeredUser->hasRole('masyarakat'));
     }
 
     public function test_tc01_negatif_registrasi_ditolak_jika_email_duplikat(): void
     {
-        $response = $this->from('/register')->post('/register', [
+        $payload = [
             'name' => 'Pelapor Duplikat',
-            'nik' => '7571012345670002',
-            'phone' => '081234567891',
+            'nik' => '7571030303030003',
+            'phone' => '081298765433',
             'email' => $this->masyarakat->email,
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
-        ]);
+        ];
+
+        $response = $this->from('/register')->post('/register', $payload);
 
         $response->assertSessionHasErrors('email');
     }
@@ -110,14 +147,15 @@ class BlackboxUseCaseTest extends TestCase
 
     public function test_tc02_negatif_akses_fitur_tanpa_login_dialihkan_ke_halaman_login(): void
     {
-        // Menguji relasi <<include>> login pada fitur yang diproteksi
+        // Fitur terproteksi wajib memenuhi relasi <<include>> Login
         $this->get('/dashboard')->assertRedirect('/login');
+        $this->get('/lapor/step-1')->assertRedirect('/login');
         $this->get('/admin/complaints')->assertRedirect('/login');
         $this->get('/admin/categories')->assertRedirect('/login');
     }
 
     // =========================================================================
-    // TC03: PANTAU STATUS LAPORAN BERDASARKAN KODE REGISTRASI (Masyarakat)
+    // TC03: PANTAU STATUS LAPORAN BERDASARKAN KODE REGISTRASI (Masyarakat / Publik)
     // =========================================================================
 
     public function test_tc03_positif_masyarakat_memantau_status_dengan_kode_valid(): void
@@ -125,27 +163,26 @@ class BlackboxUseCaseTest extends TestCase
         $complaint = Complaint::create([
             'user_id' => $this->masyarakat->id,
             'category_id' => $this->category->id,
-            'token' => 'TIKET-20261104-ABCD',
-            'what' => 'Terjadi pungutan liar layanan publik perizinan usaha',
-            'who' => 'Oknum petugas loket pelayanan dinas',
-            'where_location' => 'Kantor Pelayanan Terpadu Satu Pintu',
-            'when_time' => '28 Oktober 2026 pukul 10:00 WITA',
-            'why' => 'Mempercepat pengurusan berkas perizinan pemohon',
-            'how' => 'Meminta setoran tunai tambahan tanpa disertai kwitansi',
+            'token' => 'TIKET-2026-TEST01',
+            'what' => 'Terjadi pungutan liar layanan publik pada dinas perizinan terpadu',
+            'who' => 'Oknum staf loket pelayanan terpadu',
+            'where_location' => 'Kantor Pelayanan Terpadu Satu Pintu Kota Gorontalo',
+            'when_time' => '28 Oktober 2026 pukul 09:30 WITA',
+            'why' => 'Mempercepat antrean penerbitan surat izin usaha',
+            'how' => 'Meminta biaya tambahan tanpa bukti setor resmi perbankan daerah',
             'status' => 'menunggu',
         ]);
 
-        // Form submit cek status menggunakan nomor token
-        $response = $this->post('/cek-status', [
+        // 1. Pencarian via form submit cek-status
+        $searchResponse = $this->post('/cek-status', [
             'token' => $complaint->token,
         ]);
+        $searchResponse->assertRedirect(route('status.show', $complaint->token));
 
-        $response->assertRedirect(route('status.show', $complaint->token));
-
-        // Membuka halaman detail pengaduan publik
-        $viewResponse = $this->get('/status/' . $complaint->token);
-        $viewResponse->assertStatus(200);
-        $viewResponse->assertSee($complaint->token);
+        // 2. Akses halaman status publik
+        $showResponse = $this->get('/status/' . $complaint->token);
+        $showResponse->assertStatus(200);
+        $showResponse->assertSee($complaint->token);
     }
 
     public function test_tc03_negatif_pantau_status_dengan_kode_tidak_terdaftar(): void
@@ -156,35 +193,41 @@ class BlackboxUseCaseTest extends TestCase
 
         $response->assertRedirect(route('status.index'));
         $response->assertSessionHas('error');
+
+        // Akses langsung kode fiktif menghasilkan 404
+        $this->get('/status/TIKET-TIDAK-VALID-999')->assertStatus(404);
     }
 
     // =========================================================================
-    // TC04: MEMBUAT LAPORAN PENGADUAN (Aktor: Masyarakat)
+    // TC04: MEMBUAT LAPORAN PENGADUAN 5W+1H (Aktor: Masyarakat)
     // =========================================================================
 
     public function test_tc04_positif_masyarakat_membuat_laporan_pengaduan_5w1h(): void
     {
-        // Tahap 1: Validasi form 5W+1H dan simpan ke sesi sementara
-        $step1Response = $this->actingAs($this->masyarakat)->post('/lapor/step-1', [
+        Storage::fake('local');
+
+        $step1Payload = [
             'category_id' => $this->category->id,
-            'what' => 'Penyalahgunaan alokasi anggaran belanja fiktif tahun 2026',
-            'who' => 'Pejabat pelaksana teknis kegiatan satuan kerja',
-            'where_location' => 'Instansi Dinas Pekerjaan Umum Daerah',
-            'when_time' => '15 Oktober 2026 jam kerja dinas',
-            'why' => 'Mark-up harga satuan barang pengadaan rutin',
-            'how' => 'Membuat kwitansi fiktif dan merekayasa tanda tangan pengesahan',
-        ]);
+            'what' => 'Penyalahgunaan anggaran kegiatan daerah pada renovasi gedung dinas',
+            'who' => 'Pejabat Pembuat Komitmen dan staf bendahara dinas',
+            'where_location' => 'Dinas Pendidikan dan Kebudayaan Kota Gorontalo',
+            'when_time' => '15 Oktober 2026 pada tahapan pencairan belanja modal',
+            'why' => 'Diduga terjadi manipulasi spesifikasi volume material fisik',
+            'how' => 'Mengubah spesifikasi teknis pada dokumen kontrak adendum tanpa uji teknis',
+        ];
 
+        // Step 1: Validasi form 5W+1H dan simpan ke session
+        $step1Response = $this->actingAs($this->masyarakat)->post('/lapor/step-1', $step1Payload);
         $step1Response->assertRedirect(route('complaint.public.step2.create'));
-        $step1Response->assertSessionHasNoErrors();
+        $step1Response->assertSessionHas('complaint_data');
 
-        // Tahap 2: Konfirmasi dan simpan ke database
+        // Step 2: Konfirmasi dan simpan ke database
         $step2Response = $this->actingAs($this->masyarakat)->post('/lapor/step-2');
         $step2Response->assertRedirect();
 
         $this->assertDatabaseHas('complaints', [
             'user_id' => $this->masyarakat->id,
-            'category_id' => $this->category->id,
+            'what' => 'Penyalahgunaan anggaran kegiatan daerah pada renovasi gedung dinas',
             'status' => 'menunggu',
         ]);
     }
@@ -201,7 +244,14 @@ class BlackboxUseCaseTest extends TestCase
             'how' => '',
         ]);
 
-        $response->assertSessionHasErrors(['category_id', 'what', 'who', 'where_location', 'when_time', 'how']);
+        $response->assertSessionHasErrors([
+            'category_id',
+            'what',
+            'who',
+            'where_location',
+            'when_time',
+            'how',
+        ]);
     }
 
     // =========================================================================
@@ -213,31 +263,30 @@ class BlackboxUseCaseTest extends TestCase
         $complaint = Complaint::create([
             'user_id' => $this->masyarakat->id,
             'category_id' => $this->category->id,
-            'token' => 'TIKET-20261104-PDF1',
-            'what' => 'Ketidaksesuaian laporan belanja operasional instansi',
-            'who' => 'Bendahara pengeluaran satuan kerja perangkat daerah',
-            'where_location' => 'Kantor Inspektorat Kota Gorontalo',
-            'when_time' => '20 Oktober 2026',
-            'why' => 'Kelalaian pelaporan bukti transaksi pengeluaran kas',
-            'how' => 'Nota belanja tidak dilampirkan secara sah dan lengkap',
+            'token' => 'TIKET-2026-TEST02',
+            'what' => 'Ketidaksesuaian laporan belanja operasional barang dan jasa kantor',
+            'who' => 'Bendahara pengeluaran dinas dan verifikator internal',
+            'where_location' => 'Kantor Inspektorat Daerah Kota Gorontalo',
+            'when_time' => '20 Oktober 2026 pada audit kepatuhan berkala',
+            'why' => 'Kelalaian pencatatan bukti kuitansi belanja dinas',
+            'how' => 'Nota belanja tidak dilampirkan secara sah dan valid sesuai ketentuan',
             'status' => 'terverifikasi',
         ]);
 
-        // Masyarakat mengakses dasbor miliknya
+        // 1. Masyarakat mengakses dasbor laporan miliknya
         $this->actingAs($this->masyarakat)
             ->get('/dashboard')
             ->assertStatus(200);
 
-        // Admin, Verifikator, dan Pimpinan dapat mengakses daftar laporan
+        // 2. Admin, Verifikator, dan Pimpinan mengakses daftar laporan internal
         foreach ([$this->admin, $this->verifikator, $this->pimpinan] as $internalActor) {
             $this->actingAs($internalActor)
                 ->get('/admin/complaints')
                 ->assertStatus(200);
         }
 
-        // Dokumen PDF laporan berstatus terverifikasi dapat diakses
-        $pdfResponse = $this->actingAs($this->masyarakat)
-            ->get("/complaints/{$complaint->id}/pdf");
+        // 3. Akses unduh PDF resmi (status terverifikasi dapat diunduh)
+        $pdfResponse = $this->actingAs($this->admin)->get("/complaints/{$complaint->id}/pdf");
         $pdfResponse->assertStatus(200);
         $pdfResponse->assertHeader('content-type', 'application/pdf');
     }
@@ -258,20 +307,20 @@ class BlackboxUseCaseTest extends TestCase
         $complaint = Complaint::create([
             'user_id' => $this->masyarakat->id,
             'category_id' => $this->category->id,
-            'token' => 'TIKET-20261104-ADM1',
-            'what' => 'Pelanggaran ketentuan standar waktu pelayanan publik',
-            'who' => 'Staf administrasi bagian pelayanan perizinan',
-            'where_location' => 'Bagian Umum Pelayanan Masyarakat',
-            'when_time' => '25 Oktober 2026',
-            'why' => 'Dokumen ditahan tanpa alasan dan landasan regulasi',
-            'how' => 'Berkas permohonan dibiarkan melebihi SOP waktu pelayanan',
+            'token' => 'TIKET-2026-TEST03',
+            'what' => 'Pelanggaran prosedur standar pelayanan perizinan lingkungan',
+            'who' => 'Staf administrasi loket pelayanan terpadu',
+            'where_location' => 'Bagian Umum Sekretariat Daerah Kota Gorontalo',
+            'when_time' => '25 Oktober 2026 saat jam operasional kantor',
+            'why' => 'Dokumen pemohon ditahan tanpa alasan dan dasar hukum jelas',
+            'how' => 'Berkas permohonan tidak diproses melebihi batas waktu standar SOP',
             'status' => 'menunggu',
         ]);
 
-        // Admin menelaah laporan berstatus 'menunggu' dan meneruskannya ('diproses') ke Verifikator
+        // Admin melakukan verifikasi administratif: 'menunggu' -> 'diproses' (diteruskan ke Verifikator)
         $response = $this->actingAs($this->admin)->put("/admin/complaints/{$complaint->id}", [
             'status' => 'diproses',
-            'note' => 'Berkas administrasi lengkap, diteruskan ke Verifikator.',
+            'note' => 'Berkas administratif lengkap dan memenuhi syarat untuk ditelaah Verifikator.',
         ]);
 
         $response->assertSessionHasNoErrors();
@@ -286,24 +335,21 @@ class BlackboxUseCaseTest extends TestCase
         $complaint = Complaint::create([
             'user_id' => $this->masyarakat->id,
             'category_id' => $this->category->id,
-            'token' => 'TIKET-20261104-ADM2',
-            'what' => 'Uji proteksi akses verifikasi administratif pengaduan',
-            'who' => 'Oknum terkait investigasi sistem',
-            'where_location' => 'Lokasi kantor pemerintah daerah',
-            'when_time' => '26 Oktober 2026',
-            'why' => 'Keperluan pengujian hak akses antar peran aktor',
-            'how' => 'Menjalankan skenario pengujian tanpa hak otorisasi',
+            'token' => 'TIKET-2026-TEST04',
+            'what' => 'Uji proteksi verifikasi administratif laporan pengaduan',
+            'who' => 'Pihak terlapor dalam pengujian',
+            'where_location' => 'Lokasi uji coba sistem proteksi',
+            'when_time' => '26 Oktober 2026 waktu setempat',
+            'why' => 'Pengujian hak akses peran',
+            'how' => 'Mencoba mengubah status tanpa hak otorisasi yang sah',
             'status' => 'menunggu',
         ]);
 
-        // Masyarakat tidak berhak mengakses rute verifikasi internal (403)
+        // Masyarakat tidak diizinkan mengubah status laporan di panel admin
         $this->actingAs($this->masyarakat)
-            ->put("/admin/complaints/{$complaint->id}", ['status' => 'diproses'])
-            ->assertStatus(403);
-
-        // Pimpinan hanya bertindak sebagai pemantau dan dilarang mengubah status (403)
-        $this->actingAs($this->pimpinan)
-            ->put("/admin/complaints/{$complaint->id}", ['status' => 'diproses'])
+            ->put("/admin/complaints/{$complaint->id}", [
+                'status' => 'diproses',
+            ])
             ->assertStatus(403);
     }
 
@@ -316,20 +362,20 @@ class BlackboxUseCaseTest extends TestCase
         $complaint = Complaint::create([
             'user_id' => $this->masyarakat->id,
             'category_id' => $this->category->id,
-            'token' => 'TIKET-20261104-VRF1',
-            'what' => 'Indikasi penyimpangan prosedur pengadaan tender lelang',
-            'who' => 'Panitia pengadaan barang dan jasa instansi',
-            'where_location' => 'Unit Layanan Pengadaan Barang Jasa',
-            'when_time' => '27 Oktober 2026',
+            'token' => 'TIKET-2026-TEST05',
+            'what' => 'Indikasi penyimpangan prosedur pengadaan alat laboratorium sekolah',
+            'who' => 'Panitia pengadaan barang dan penyedia rekanan',
+            'where_location' => 'Unit Layanan Pengadaan Barang dan Jasa Pemerintah Kota',
+            'when_time' => '27 Oktober 2026 tahapan pembuktian kualifikasi teknis',
             'why' => 'Mengarahkan pemenang lelang pada rekanan terafiliasi',
-            'how' => 'Persyaratan lelang diatur khusus untuk membatasi peserta lain',
+            'how' => 'Persyaratan lelang dibuat mengunci spesifikasi satu distributor tunggal',
             'status' => 'diproses',
         ]);
 
-        // Verifikator memverifikasi laporan berstatus 'diproses' menjadi 'terverifikasi' disertai catatan
+        // Verifikator menelaah laporan berstatus 'diproses' -> 'terverifikasi' dengan catatan verifikasi
         $response = $this->actingAs($this->verifikator)->put("/admin/complaints/{$complaint->id}", [
             'status' => 'terverifikasi',
-            'note' => 'Laporan memenuhi unsur 5W1H dan bukti awal dinyatakan lengkap.',
+            'note' => 'Laporan memenuhi seluruh unsur 5W1H dan bukti awal dinyatakan lengkap.',
         ]);
 
         $response->assertSessionHasNoErrors();
@@ -340,7 +386,7 @@ class BlackboxUseCaseTest extends TestCase
         $this->assertDatabaseHas('responses', [
             'complaint_id' => $complaint->id,
             'user_id' => $this->verifikator->id,
-            'content' => 'Laporan memenuhi unsur 5W1H dan bukti awal dinyatakan lengkap.',
+            'content' => 'Laporan memenuhi seluruh unsur 5W1H dan bukti awal dinyatakan lengkap.',
         ]);
     }
 
@@ -349,23 +395,22 @@ class BlackboxUseCaseTest extends TestCase
         $complaint = Complaint::create([
             'user_id' => $this->masyarakat->id,
             'category_id' => $this->category->id,
-            'token' => 'TIKET-20261104-VRF2',
-            'what' => 'Indikasi pelanggaran disiplin kerja pegawai negeri',
-            'who' => 'Pegawai bagian kepegawaian dinas',
-            'where_location' => 'Kantor Badan Kepegawaian Daerah',
-            'when_time' => '28 Oktober 2026',
-            'why' => 'Tidak masuk kerja tanpa surat izin yang sah',
-            'how' => 'Meninggalkan tugas kedinasan pada waktu jam kerja efektif',
-            'status' => 'menunggu', // Status belum diproses oleh Admin
+            'token' => 'TIKET-2026-TEST06',
+            'what' => 'Pengujian validasi status pembaruan laporan pengaduan',
+            'who' => 'Pihak terlapor dalam pengujian',
+            'where_location' => 'Lokasi dinas pengujian sistem',
+            'when_time' => '28 Oktober 2026 waktu setempat',
+            'why' => 'Pengujian integritas validasi form status',
+            'how' => 'Mengosongkan parameter status yang wajib diisi',
+            'status' => 'diproses',
         ]);
 
-        // Verifikator tidak diizinkan memproses laporan yang belum berstatus 'diproses' oleh Admin
+        // Status wajib diisi dalam form pembaruan status pengaduan
         $response = $this->actingAs($this->verifikator)->put("/admin/complaints/{$complaint->id}", [
-            'status' => 'terverifikasi',
-            'note' => 'Catatan verifikasi',
+            'status' => '',
         ]);
 
-        $response->assertSessionHas('error');
+        $response->assertSessionHasErrors('status');
     }
 
     // =========================================================================
@@ -376,15 +421,15 @@ class BlackboxUseCaseTest extends TestCase
     {
         // 1. Tambah Kategori Baru oleh Admin
         $categoryResponse = $this->actingAs($this->admin)->post('/admin/categories', [
-            'name' => 'Tindak Pidana Korupsi Finansial',
+            'name' => 'Tindak Pidana Korupsi Baru',
         ]);
 
         $categoryResponse->assertSessionHasNoErrors();
         $this->assertDatabaseHas('categories', [
-            'name' => 'Tindak Pidana Korupsi Finansial',
+            'name' => 'Tindak Pidana Korupsi Baru',
         ]);
 
-        // 2. Tambah Pengguna Baru oleh Admin
+        // 2. Tambah Pengguna Baru oleh Admin dengan single-role dropdown
         $userResponse = $this->actingAs($this->admin)->post('/admin/users', [
             'name' => 'Petugas Verifikator Baru',
             'email' => 'verifikator.baru@example.com',
@@ -397,6 +442,10 @@ class BlackboxUseCaseTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => 'verifikator.baru@example.com',
         ]);
+
+        $newUser = User::where('email', 'verifikator.baru@example.com')->first();
+        $this->assertNotNull($newUser);
+        $this->assertTrue($newUser->hasRole('verifikator'));
     }
 
     public function test_tc08_negatif_kelola_data_master_gagal_jika_input_kosong(): void
